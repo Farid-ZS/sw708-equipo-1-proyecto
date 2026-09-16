@@ -68,3 +68,30 @@ Le siguen en prioridad **P1** los tres que protegen la operación:
 Aunque los tres son P1, el de acceso es de dificultad baja, por lo que conviene implementarlo temprano como *"quick win"*.
 
 La **usabilidad** queda en **P2** porque no bloquea la operación: un sistema correcto pero algo menos cómodo sigue vendiendo entradas, y la mejora se afina mejor con feedback real de los vendedores de taquilla.
+
+## Revisión de escenarios de calidad — Grupo N°
+
+Defecto que cruza los 5 escenarios
+
+Ninguno nombra el instrumento. Las medidas están numéricamente bien construidas (número + unidad + condición, que es justo lo que pide la guía), pero la pregunta de la crítica cruzada es literal: ¿con qué instrumento concreto se mide esto, y quién lo va a correr? Aquí no hay un solo k6, pytest, chaos script, OWASP ZAP ni nada. Comparado con el ejemplo de ComedorUNI (que sí nombra k6, toxiproxy, pip-audit), esto es la diferencia entre "sabemos qué queremos medir" y "sabemos cómo lo vamos a medir". Se corrige rápido, pero hay que corregirlo en los 5, no en uno.
+
+Por escenario
+
+1 — Doble venta (Concurrencia). El mejor de los cinco. La medida es agresiva y correcta (1000 intentos, 1 venta, 0 duplicados). Lo único que falta: el mecanismo. "El artefacto es el programa y la BD" no dice si la solución es un lock optimista, un SELECT ... FOR UPDATE, o una unique constraint. Sin nombrar el mecanismo, no sabes si el equipo sabe cómo van a lograrlo o solo qué quieren que pase. Instrumento sugerido: script de carga (k6/locust) disparando 1000 requests concurrentes al mismo asiento, verificado con un SELECT COUNT(*) agrupado por asiento+función en la BD.
+
+2 — Cancelación con auditoría. Tiene un problema de diseño, no de redacción: mezcla dos atributos de calidad en un solo escenario. "0 registros alterables" es integridad/auditoría (no-repudio). "Buscar el historial en <1s" es eficiencia de desempeño. Son dos exigencias distintas con dos instrumentos distintos (uno se prueba intentando un UPDATE/DELETE contra la tabla de auditoría y esperando rechazo; el otro se prueba con una query de performance). Yo lo partiría en dos escenarios, o sacaría la métrica de tiempo y la dejaría 100% enfocada en inmutabilidad. Instrumento para lo que sí es el foco: intentar UPDATE/DELETE directo sobre la tabla de auditoría (vía API y vía SQL directo) y confirmar que la BD lo rechaza (tabla append-only, o REVOKE UPDATE, DELETE a nivel de rol).
+
+3 — Solo administradores. Este es el que más me preocupa como el "de seguridad de verdad". "Intenta usar funciones de administrador" es ambiguo entre intenta hacer clic en la UI y intenta llamar al endpoint directo con Postman/curl. Si el control solo vive en el frontend (ocultar botones), esto no pasa la prueba de seguridad real — cualquiera con el token de un vendedor común puede pegarle al endpoint admin directo. El escenario tiene que decir explícitamente que el ataque es a nivel de API, no de UI. Instrumento: colección de requests (Postman/Newman o script con requests) golpeando cada endpoint administrativo con un JWT de rol no-admin, esperando 401/403 en el 100% de los casos, corrida en CI en cada deploy — no a mano.
+
+4 — Venta rápida (Usabilidad). El mejor definido en términos de persona ("vendedor nuevo con poco entrenamiento" — eso es exactamente cómo se escribe un escenario de usabilidad, con el perfil del usuario real). Un solo hueco: "1 error por cada 20 ventas" no dice qué cuenta como error (¿vendedor le da clic al asiento equivocado? ¿el sistema no le avisa que ya estaba ocupado?). Sin esa definición, dos personas midiendo el mismo test cuentan errores distintos. Instrumento: sesión de test de usabilidad con N vendedores nuevos, tareas guionadas, grabación de pantalla, conteo de clics por evento instrumentado en el frontend.
+
+5 — Caída del sistema (Disponibilidad). Ojo con lo que en realidad están prometiendo: "se recupera en menos de 60 segundos" describe tiempo de reinicio, no alta disponibilidad. Si el servidor es un solo nodo y la recuperación es "se reinicia y ya", eso es tolerable para un cine (no es un sistema crítico de vida o muerte), pero hay que ser honestos en la ficha: esto es recuperación ante falla, no redundancia activa. Si de verdad hay un balanceador con instancia de respaldo, dilo explícito en el artefacto. Instrumento: chaos test tipo kill -9/docker stop sobre el proceso, con un probe de salud (/health) cada segundo midiendo tiempo de recuperación, y un script de reconciliación que compare el estado de asientos antes/después.
+
+Sobre la tabla de priorización
+
+Está bien pensada — me gusta la columna "Tipo" que agregaron, eso no lo tenía el ejemplo de referencia. Pero el profesor es explícito: "decir que todo es importante equivale a no haber priorizado", y aquí 3 de 5 escenarios comparten P1. El párrafo de abajo sí los desempata en prosa (auditoría, luego acceso por ser quick-win, luego disponibilidad), pero eso debería reflejarse en la tabla con un rango único 1–5, no solo en el texto. Si el profesor pide la tabla como evidencia y alguien la lee sin el párrafo, ve tres empates.
+
+Veredicto tipo crítica cruzada
+
+Si yo fuera el equipo que revisa esto en clase: Escenario 1 pasa. Escenarios 2, 3, 4 y 5 no pasan tal cual están — no porque las medidas estén mal pensadas, sino porque ninguno nombra el instrumento y quién lo corre, que es literalmente la única pregunta que hace la guía. Es una corrección rápida (agregar una frase de instrumento a cada uno), pero es la que tumba escenarios en el paso 04.
+
