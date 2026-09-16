@@ -38,10 +38,77 @@ Lumiere es un sistema integral para cines que centraliza la programación de la 
 
 ## Cómo se levanta hoy (Sistema original)
 
-1. Clonar el repositorio y correr `composer install` y `npm install` para bajar todo el peso de las dependencias.
-2. Duplicar el archivo `.env.example`, renombrarlo a `.env`, generar la key de la app y configurar las credenciales locales de MySQL.
-3. Crear la base de datos vacía y ejecutar `php artisan migrate --seed` *(paso crítico, porque si no se corre el seeder con la data falsa, la vista principal se rompe al no encontrar películas)*.
-4. Abrir dos terminales: en una correr `php artisan serve` y en la otra `npm run dev`.
+1. **Instalar los requisitos**
+   - Docker Desktop para Windows.
+   - Docker Compose, incluido normalmente en Docker Desktop.
+   - Git, si se clonará el repositorio.
+   - Al menos 6 GB de RAM disponibles para Docker, debido a Oracle XE.
+
+2. **Clonar o abrir el proyecto**
+   ```powershell
+   git clone https://github.com/gonzalouni/CineStar-Barrio.git
+   cd CineStar-Barrio
+   ```
+
+3. **Crear el archivo `.env` en la raíz del proyecto**
+
+   Debe estar junto a `docker-compose.yml`:
+
+   ```env
+   ORACLE_PASSWORD=uni123
+   ORACLE_OPS_USER=CINESTAR_OPS
+   ORACLE_OPS_PASSWORD=OpsPass2024!
+   ORACLE_ADMIN_USER=CINESTAR_ADMIN
+   ORACLE_ADMIN_PASSWORD=AdminPass2024!
+
+   PORT=3000
+   DB_PORT=1521
+   DB_SERVICE=XEPDB1
+
+   JWT_SECRET=cinestar-secret-change-me
+   JWT_EXPIRATION=8h
+   JWT_REFRESH_EXPIRATION=24h
+   NODE_ENV=development
+   ```
+
+4. **Construir y levantar todos los servicios**
+
+   Ejecutar desde la carpeta raíz:
+
+   ```powershell
+   docker compose up --build
+   ```
+
+   Se levantarán:
+   - Oracle Database 21c XE.
+   - Backend Node.js/Express en el puerto `3000`.
+   - Frontend React/Vite en el puerto `5173`.
+
+5. **Abrir la aplicación**
+
+   Frontend:
+
+   [http://localhost:5173](http://localhost:5173)
+
+   Backend:
+
+   [http://localhost:3000](http://localhost:3000)
+
+6. **Iniciar sesión con usuarios de prueba**
+
+   - Administrador:
+     - Usuario: `admin`
+     - Contraseña: `admin123`
+
+   - Operador:
+     - Usuario: `operador1`
+     - Contraseña: `operador123`
+
+   - Segundo operador:
+     - Usuario: `operador2`
+     - Contraseña: `operador123`
+
+El proyecto necesita principalmente Docker Desktop y el archivo `.env`; no es necesario instalar Oracle, Node.js ni React directamente en Windows para usar el despliegue mediante Docker.
 
 ## Qué le falta o qué le duele
 
