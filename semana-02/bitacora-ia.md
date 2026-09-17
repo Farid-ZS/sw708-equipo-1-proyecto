@@ -31,11 +31,6 @@ La solicitud textual de esta interacción fue:
 >
 > Basa tus observaciones en los documentos proporcionados. No inventes componentes, rutas de API, resultados de pruebas, responsables ni aprobaciones. Distingue lo documentado de lo propuesto y señala cualquier contradicción del stack que afecte las pruebas. No exijas elegir una solución técnica para considerar medible un escenario ni presentes esta revisión como la crítica cruzada de otro equipo.
 
-
-> ¿Con qué instrumento concreto se mide esto, y quién lo va a correr?
-
-El archivo de escenarios contiene una revisión previa, pero no registra su prompt original ni identifica al equipo revisor. Por ello, no se reproduce un prompt supuesto ni se atribuye esa revisión a una persona o herramienta sin evidencia.
-
 ## 3. Resumen de la respuesta de la IA
 
 Los cinco escenarios tienen las seis partes rotuladas: fuente, estímulo, artefacto, entorno, respuesta y medida. Sin embargo, sus bloques originales no identifican instrumentos ni responsables de ejecución. La revisión agregada al final propone herramientas, pero todavía hace falta incorporar un procedimiento concreto en cada escenario.
