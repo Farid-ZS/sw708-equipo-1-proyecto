@@ -1,0 +1,94 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.posterWrap {
+  position: relative;
+  margin-bottom: 0.5rem;
+  transition: transform 0.25s;
+
+  .card:hover & {
+    transform: translateY(-4px);
+  }
+}
+
+.clasificacion {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  background: rgba(18, 14, 9, 0.85);
+  border: 1px solid var(--gold);
+  color: var(--gold-soft);
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.adulto {
+  background: #7a1f1a;
+  border-color: #d9584f;
+  color: #ffd9d5;
+}
+
+.titulo {
+  font-size: 1.3rem;
+}
+
+.meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.estreno {
+  margin: 0.4rem 0 0;
+  color: var(--gold-soft);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.funciones {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.35rem 0.75rem;
+    line-height: 1.2;
+    transition: background 0.2s, border-color 0.2s;
+
+    strong {
+      font-weight: 600;
+    }
+
+    span {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--gold-soft);
+    }
+
+    &:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg);
+
+      span {
+        color: var(--bg);
+      }
+    }
+  }
+}

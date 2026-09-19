@@ -1,0 +1,175 @@
+.carrusel {
+  position: relative;
+}
+
+.viewport {
+  overflow: hidden;
+}
+
+.pista {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+}
+
+.slide {
+  position: relative;
+  flex: 0 0 100%;
+  min-width: 0;
+  // Reserva abajo el espacio de los controles
+  padding: clamp(2rem, 6vw, 4.5rem) var(--gutter) 5rem;
+
+  // Rayos del sol, teñidos con el tono de cada película
+  &::before {
+    content: '';
+    position: absolute;
+    inset: auto -10% -60% -10%;
+    height: 140%;
+    background: repeating-conic-gradient(from 270deg at 50% 100%, hsl(var(--tono) 70% 55% / 0.11) 0 4deg, transparent 4deg 10deg);
+    mask-image: radial-gradient(ellipse at 50% 100%, #000, transparent 70%);
+    pointer-events: none;
+  }
+}
+
+.contenido {
+  position: relative;
+  // Mismo ancho de contenido que el header y las secciones
+  max-width: calc(var(--max-width) - 2 * var(--gutter));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr minmax(200px, 300px);
+  gap: 3rem;
+  align-items: center;
+  user-select: none;
+
+  h1 {
+    font-size: clamp(2.6rem, 6vw, 4.6rem);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gold-soft);
+    margin-block: 0.5rem 1rem;
+  }
+}
+
+.etiqueta {
+  margin: 0;
+  color: var(--gold);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.meta {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+.sinopsis {
+  max-width: 34rem;
+  font-size: 1.1rem;
+  margin: 0 0 2rem;
+}
+
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.primario,
+.secundario {
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--gold);
+  transition: background 0.2s, color 0.2s;
+}
+
+.primario {
+  background: var(--gold);
+  color: var(--bg);
+
+  &:hover {
+    background: var(--gold-soft);
+  }
+}
+
+.secundario {
+  color: var(--gold-soft);
+
+  &:hover {
+    background: rgba(196, 137, 30, 0.15);
+  }
+}
+
+.poster {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  transform: rotate(2deg);
+}
+
+.controles {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.flecha {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  padding: 0 0 0.2rem;
+  font-size: 1.6rem;
+  line-height: 1;
+  background: rgba(18, 14, 9, 0.6);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+
+  &:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--bg);
+  }
+}
+
+.puntos {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.punto,
+.puntoActivo {
+  height: 0.55rem;
+  width: 0.55rem;
+  padding: 0;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  background: transparent;
+  transition: width 0.3s, background 0.3s;
+}
+
+.puntoActivo {
+  width: 1.8rem;
+  background: var(--gold);
+}
+
+@media (max-width: 760px) {
+  .contenido {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .poster {
+    order: -1;
+    max-width: 220px;
+  }
+}

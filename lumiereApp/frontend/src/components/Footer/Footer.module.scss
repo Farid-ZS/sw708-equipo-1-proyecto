@@ -1,0 +1,13 @@
+.footer {
+  margin-top: 4rem;
+  padding: 2.5rem var(--gutter);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+
+  img {
+    height: 5rem;
+    opacity: 0.9;
+  }
+}

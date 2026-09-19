@@ -1,0 +1,96 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(18, 14, 9, 0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0.6rem var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo img {
+  display: block;
+  height: 4rem;
+}
+
+.nav {
+  display: flex;
+  gap: 1.75rem;
+  margin-left: 1rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  a {
+    color: var(--muted);
+    padding-block: 0.3rem;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+
+    &:hover {
+      color: var(--gold-soft);
+      border-color: var(--gold);
+    }
+  }
+}
+
+.acciones {
+  margin-left: auto;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.sede {
+  background: var(--surface);
+  color: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.45rem 0.7rem;
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.ingresar {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold-soft);
+  border-radius: var(--radius);
+  padding: 0.45rem 1.1rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    background: var(--gold);
+    color: var(--bg);
+  }
+}
+
+@media (max-width: 760px) {
+  .inner {
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+    margin: 0;
+    gap: 1.25rem;
+    overflow-x: auto;
+  }
+
+  .logo img {
+    height: 2.8rem;
+  }
+}

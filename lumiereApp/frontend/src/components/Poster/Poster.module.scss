@@ -1,0 +1,32 @@
+.poster {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 50% 38%, hsl(var(--tono) 75% 55% / 0.85), transparent 45%),
+    linear-gradient(170deg, hsl(var(--tono) 55% 22%), hsl(var(--tono) 45% 7%));
+  border: 1px solid var(--border);
+}
+
+// Rayos del sol del logo
+.sol {
+  position: absolute;
+  inset: -20% -20% 30% -20%;
+  background: repeating-conic-gradient(from 0deg at 50% 100%, hsl(var(--tono) 70% 70% / 0.16) 0 5deg, transparent 5deg 12deg);
+  mask-image: linear-gradient(to top, #000, transparent 85%);
+}
+
+.titulo {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+}
