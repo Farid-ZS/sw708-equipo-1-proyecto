@@ -45,31 +45,67 @@
 - **Respuesta:** Las ventas ya confirmadas se conservan; las que estaban a medias se descartan sin dejar asientos ocupados por error, y el sistema vuelve a funcionar.
 - **Medida:** Se recupera en menos de 60 segundos; se conservan todas las ventas confirmadas; ningún asiento queda en un estado raro.
 
-## Tabla de priorización
+## 6 — Consultar la cartelera por cuenta propia - Autoservicio de información
 
-| # | Escenario | Tipo | Impacto | Dificultad | Prioridad |
-|---|-----------|------|---------|------------|-----------|
-| 1 | Dos vendedores venden el mismo asiento | Concurrencia / integridad | Alto | Alta | P0 |
-| 2 | Cancelación con registro | Auditoría / trazabilidad | Alto | Media | P1 |
-| 3 | Solo administradores en administración | Seguridad de acceso | Alto | Baja | P1 |
-| 4 | Vender rápido con el mapa de asientos | Usabilidad | Medio | Baja | P2 |
-| 5 | El sistema se cae durante la jornada | Disponibilidad | Alto | Media | P1 |
+- **Fuente:** Cliente que desea elegir una película y una función.
+- **Estímulo:** Consulta la cartelera y aplica filtros por película, fecha o función disponible.
+- **Artefacto:** Interfaz pública de cartelera y servicio de consulta de funciones.
+- **Entorno:** Cartelera publicada y varios clientes consultando el sistema al mismo tiempo.
+- **Respuesta:** El sistema muestra únicamente funciones vigentes, con película, fecha, hora, sala y disponibilidad de butacas; el cliente puede consultar la información sin ayuda de un empleado.
+- **Medida:** En 100 consultas de cartelera, las 100 responden en menos de 2 segundos y ninguna muestra una función vencida o inexistente.
+
+## 7 — Recuperar la entrada digital - Autoservicio de comprobante
+
+- **Fuente:** Cliente que ya tiene una compra confirmada.
+- **Estímulo:** Solicita consultar o descargar nuevamente su entrada utilizando el identificador de la compra.
+- **Artefacto:** Módulo de consulta de compras y generador de comprobantes digitales.
+- **Entorno:** La compra existe y el cliente accede desde un navegador sin intervención de taquilla.
+- **Respuesta:** El sistema valida la compra y permite visualizar o descargar el comprobante correspondiente, sin crear una venta nueva ni modificar la reserva original.
+- **Medida:** En 100 consultas de compras válidas, las 100 muestran el comprobante correcto en menos de 3 segundos; 0 consultas generan una venta duplicada o muestran datos de otra compra.
+
+## 8 — Consultar el estado de una compra - Autoservicio de seguimiento
+
+- **Fuente:** Cliente con una compra confirmada o en proceso.
+- **Estímulo:** Consulta el estado de su operación mediante el identificador proporcionado por el sistema.
+- **Artefacto:** Módulo de consulta de estado de compra y registro de ventas.
+- **Entorno:** Existen compras confirmadas y operaciones que no llegaron a completarse.
+- **Respuesta:** El sistema informa si la operación está confirmada, pendiente o no completada, sin exponer compras de otros clientes y sin permitir que la consulta cambie el estado de la operación.
+- **Medida:** En 100 consultas con identificadores válidos, las 100 devuelven el estado correspondiente; 0 consultas permiten acceder a datos de otra compra y 0 consultas modifican una venta.
+
+## 9 — Obtener información de una función antes de asistir - Autoservicio de consulta
+
+- **Fuente:** Cliente que necesita conocer los detalles de una función antes de decidir su visita.
+- **Estímulo:** Selecciona una función de la cartelera para consultar sus datos disponibles.
+- **Artefacto:** Vista pública de detalle de la función.
+- **Entorno:** La función está publicada en la cartelera y el cliente no ha iniciado una venta.
+- **Respuesta:** El sistema presenta la información disponible de la película, la clasificación por edad, la sala, la fecha y la hora, sin requerir asistencia del personal.
+- **Medida:** En 100 consultas de funciones publicadas, las 100 muestran la información completa registrada y ninguna permite seleccionar una tarifa incompatible con la clasificación de la película.
+
+## Tabla de priorización actualizada
+
+| #   | Escenario                                      | Tipo                        | Impacto | Dificultad | Prioridad |
+| --- | ---------------------------------------------- | --------------------------- | ------- | ---------- | --------- |
+| 1   | Dos vendedores venden el mismo asiento         | Concurrencia / integridad   | Alto    | Alta       | P0        |
+| 2   | Cancelación con registro                       | Auditoría / trazabilidad    | Alto    | Media      | P1        |
+| 3   | Solo administradores en administración         | Seguridad de acceso         | Alto    | Baja       | P1        |
+| 5   | El sistema se cae durante la jornada           | Disponibilidad              | Alto    | Media      | P1        |
+| 6   | Consultar la cartelera por cuenta propia       | Autoservicio de información | Alto    | Baja       | P2        |
+| 4   | Vender rápido con el mapa de asientos          | Usabilidad                  | Medio   | Baja       | P2        |
+| 7   | Recuperar la entrada digital                   | Autoservicio de comprobante | Medio   | Baja       | P2        |
+| 8   | Consultar el estado de una compra              | Autoservicio de seguimiento | Medio   | Baja       | P3        |
+| 9   | Obtener información de una función antes de... | Autoservicio de consulta    | Medio   | Baja       | P3        |
 
 ### Justificación del orden
 
-El escenario 1 es el único **P0** porque es la razón de ser del sistema: eliminar la sobreventa es el problema que justifica todo el proyecto, así que sin él los demás escenarios pierden sentido.
+El escenario 1 se mantiene como el P0 indiscutible. Si la concurrencia falla y hay sobreventa, la viabilidad del proyecto se ve comprometida porque no resuelve el problema principal del negocio.
 
-Le siguen en prioridad **P1** los tres que protegen la operación:
+En el nivel P1 se agrupan los requisitos críticos para proteger la operación: la auditoría (2), la seguridad de acceso (3) y la disponibilidad (5). Estos protegen la operación diaria. Un sistema caído en horas pico o un cajero borrando ventas sin dejar rastro reproduce exactamente el caos que Lumiere quiere evitar. Aunque son críticos, el de acceso (3) es un quick win por su baja dificultad.
 
-- La **auditoría** (permite confiar en las cancelaciones y responder ante reclamos).
-- El **control de acceso** (evita usos indebidos del módulo administrativo).
-- La **disponibilidad** (un sistema caído en horas pico reproduce exactamente el problema original de atención manual).
+Para el bloque P2 agrupamos las funcionalidades de interacción directa y ágil: vender rápido en taquilla (4), consultar la cartelera (6) y recuperar la entrada digital (7). Son vitales para que el cine despache rápido y se eviten las colas inmensas. Estos escenarios garantizan la fluidez en el servicio al cliente, pero dependen de la estabilidad y seguridad proporcionada por los niveles P0 y P1.
 
-Aunque los tres son P1, el de acceso es de dificultad baja, por lo que conviene implementarlo temprano como *"quick win"*.
+Finalmente, en P3 dejamos el seguimiento del estado de compra (8) y la consulta detallada antes de asistir (9). Son características excelentes para redondear la experiencia del cliente y darle autonomía, pero si el equipo necesita priorizar tiempos de entrega para salir a producción, el negocio puede sobrevivir la primera semana de estreno sin ellos.
 
-La **usabilidad** queda en **P2** porque no bloquea la operación: un sistema correcto pero algo menos cómodo sigue vendiendo entradas, y la mejora se afina mejor con feedback real de los vendedores de taquilla.
-
-## Revisión de escenarios de calidad — Grupo N°
+## Revisión de escenarios de calidad — Grupo N° 4
 
 Defecto que cruza los 5 escenarios
 
@@ -77,7 +113,7 @@ Ninguno nombra el instrumento. Las medidas están numéricamente bien construida
 
 Por escenario
 
-1 — Doble venta (Concurrencia). El mejor de los cinco. La medida es agresiva y correcta (1000 intentos, 1 venta, 0 duplicados). Lo único que falta: el mecanismo. "El artefacto es el programa y la BD" no dice si la solución es un lock optimista, un SELECT ... FOR UPDATE, o una unique constraint. Sin nombrar el mecanismo, no sabes si el equipo sabe cómo van a lograrlo o solo qué quieren que pase. Instrumento sugerido: script de carga (k6/locust) disparando 1000 requests concurrentes al mismo asiento, verificado con un SELECT COUNT(*) agrupado por asiento+función en la BD.
+1 — Doble venta (Concurrencia). El mejor de los cinco. La medida es agresiva y correcta (1000 intentos, 1 venta, 0 duplicados). Lo único que falta: el mecanismo. "El artefacto es el programa y la BD" no dice si la solución es un lock optimista, un SELECT ... FOR UPDATE, o una unique constraint. Sin nombrar el mecanismo, no sabes si el equipo sabe cómo van a lograrlo o solo qué quieren que pase. Instrumento sugerido: script de carga (k6/locust) disparando 1000 requests concurrentes al mismo asiento, verificado con un SELECT COUNT(\*) agrupado por asiento+función en la BD.
 
 2 — Cancelación con auditoría. Tiene un problema de diseño, no de redacción: mezcla dos atributos de calidad en un solo escenario. "0 registros alterables" es integridad/auditoría (no-repudio). "Buscar el historial en <1s" es eficiencia de desempeño. Son dos exigencias distintas con dos instrumentos distintos (uno se prueba intentando un UPDATE/DELETE contra la tabla de auditoría y esperando rechazo; el otro se prueba con una query de performance). Yo lo partiría en dos escenarios, o sacaría la métrica de tiempo y la dejaría 100% enfocada en inmutabilidad. Instrumento para lo que sí es el foco: intentar UPDATE/DELETE directo sobre la tabla de auditoría (vía API y vía SQL directo) y confirmar que la BD lo rechaza (tabla append-only, o REVOKE UPDATE, DELETE a nivel de rol).
 
@@ -94,4 +130,3 @@ Está bien pensada — me gusta la columna "Tipo" que agregaron, eso no lo tení
 Veredicto tipo crítica cruzada
 
 Si yo fuera el equipo que revisa esto en clase: Escenario 1 pasa. Escenarios 2, 3, 4 y 5 no pasan tal cual están — no porque las medidas estén mal pensadas, sino porque ninguno nombra el instrumento y quién lo corre, que es literalmente la única pregunta que hace la guía. Es una corrección rápida (agregar una frase de instrumento a cada uno), pero es la que tumba escenarios en el paso 04.
-
