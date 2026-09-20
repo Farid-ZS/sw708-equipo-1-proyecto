@@ -1,13 +1,154 @@
 .footer {
   margin-top: 4rem;
-  padding: 2.5rem var(--gutter);
+  background: var(--card);
   border-top: 1px solid var(--border);
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.85rem;
+}
 
+.contenido,
+.inferior {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+
+.contenido {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.4fr) repeat(3, minmax(150px, 1fr));
+  gap: 2.5rem 2rem;
+  padding-block: 3rem 2.5rem;
+}
+
+.marca {
   img {
     height: 5rem;
-    opacity: 0.9;
+  }
+
+  p {
+    max-width: 22rem;
+    margin: 1rem 0 1.25rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+}
+
+.redes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+
+  a {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--gold-soft);
+    background: var(--bg);
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover {
+      background: var(--gold);
+      color: var(--bg);
+    }
+  }
+}
+
+.columna {
+  h3 {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  a {
+    color: var(--muted);
+    font-size: 0.9rem;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--gold-soft);
+    }
+  }
+}
+
+.inferior {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+
+  // Línea separadora del ancho del contenido
+  &::before {
+    content: '';
+    flex: 0 0 100%;
+    border-top: 1px solid rgba(243, 230, 200, 0.08);
+    margin-bottom: 0.25rem;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+// Botón del Libro de Reclamaciones
+.reclamaciones {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  color: var(--cream);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  transition: background 0.2s, color 0.2s;
+
+  svg {
+    color: var(--gold-soft);
+  }
+
+  &:hover {
+    background: var(--gold);
+    color: var(--bg);
+
+    svg {
+      color: var(--bg);
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .contenido {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .marca {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .contenido {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

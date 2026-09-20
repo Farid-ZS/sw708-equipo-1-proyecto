@@ -50,13 +50,30 @@
 }
 
 .sede {
-  background: var(--surface);
+  appearance: none;
+  background-color: var(--surface);
+  // Flecha propia (chevron dorado) para controlar su separación del borde
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%23e0b25c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
   color: var(--cream);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 0.45rem 0.7rem;
+  padding: 0.45rem 2.4rem 0.45rem 0.9rem;
   font: inherit;
   font-size: 0.85rem;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: var(--gold);
+  }
+
+  option {
+    background: var(--surface);
+    color: var(--cream);
+  }
 }
 
 .ingresar {

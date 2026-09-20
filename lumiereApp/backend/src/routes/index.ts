@@ -7,6 +7,7 @@ import { peliculasRouter } from './peliculas.routes.ts'
 import { reportesRouter } from './reportes.routes.ts'
 import { reservasRouter } from './reservas.routes.ts'
 import { salasRouter } from './salas.routes.ts'
+import { sedesRouter } from './sedes.routes.ts'
 import { ventasRouter } from './ventas.routes.ts'
 
 // Cada pantalla nueva = un archivo *.routes.ts + una línea aquí.
@@ -19,6 +20,7 @@ apiRouter.get('/health', (_req, res) => {
 apiRouter.use('/auth', authRouter)
 apiRouter.use('/peliculas', peliculasRouter)
 apiRouter.use('/funciones', funcionesRouter)
+apiRouter.use('/sedes', sedesRouter)
 apiRouter.use('/salas', salasRouter)
 apiRouter.use('/reservas', reservasRouter)
 apiRouter.use('/ventas', ventasRouter)

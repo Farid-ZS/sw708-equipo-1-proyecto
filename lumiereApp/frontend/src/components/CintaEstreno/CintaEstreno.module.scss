@@ -1,0 +1,18 @@
+.cinta {
+  position: absolute;
+  top: 1.7rem;
+  left: -3.4rem;
+  width: 11rem;
+  padding: 0.3rem 0;
+  transform: rotate(-45deg);
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #1a1208;
+  // Dorado de la marca con un brillo al centro
+  background: linear-gradient(90deg, #c4891e 0%, #e9c26e 50%, #c4891e 100%);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}

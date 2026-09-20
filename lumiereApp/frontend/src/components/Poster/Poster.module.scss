@@ -5,7 +5,7 @@
   display: flex;
   align-items: flex-end;
   padding: 1rem;
-  border-radius: var(--radius);
+  border-radius: var(--radius-poster);
   background:
     radial-gradient(circle at 50% 38%, hsl(var(--tono) 75% 55% / 0.85), transparent 45%),
     linear-gradient(170deg, hsl(var(--tono) 55% 22%), hsl(var(--tono) 45% 7%));
@@ -29,4 +29,11 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+}
+
+.imagen {
+  display: block;
+  width: 100%;
+  padding: 0;
+  object-fit: cover;
 }

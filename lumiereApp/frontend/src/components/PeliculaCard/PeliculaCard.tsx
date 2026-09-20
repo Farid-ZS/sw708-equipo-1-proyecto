@@ -1,44 +1,32 @@
 import type { Pelicula } from '../../data/peliculas.mock.ts'
+import { CintaEstreno } from '../CintaEstreno/CintaEstreno.tsx'
+import { PeliculaDatos } from '../PeliculaDatos/PeliculaDatos.tsx'
 import { Poster } from '../Poster/Poster.tsx'
+import { Restriccion } from '../Restriccion/Restriccion.tsx'
 import styles from './PeliculaCard.module.scss'
 
-interface Props {
-  pelicula: Pelicula
-  /** Funciones a mostrar (ya filtradas por día). */
-  funciones?: Pelicula['funciones']
-}
-
-export function PeliculaCard({ pelicula, funciones = pelicula.funciones }: Props) {
-  const { titulo, tono, clasificacion, generos, duracionMin, estreno } = pelicula
+export function PeliculaCard({ pelicula }: { pelicula: Pelicula }) {
+  const { titulo, clasificacion, duracionMin, esEstreno, fechaEstreno } = pelicula
 
   return (
     <article className={styles.card}>
-      <div className={styles.posterWrap}>
-        <Poster titulo={titulo} tono={tono} />
-        <span className={`${styles.clasificacion} ${clasificacion === '+18' ? styles.adulto : ''}`} title="Clasificación">
-          {clasificacion}
+      <div className={styles.foto}>
+        <Poster pelicula={pelicula} className={styles.poster} />
+        {esEstreno && <CintaEstreno />}
+        <span className={styles.duracion} title="Duración">
+          {duracionMin} min
         </span>
       </div>
 
-      <h3 className={styles.titulo}>{titulo}</h3>
-      <p className={styles.meta}>
-        {generos.join(' · ')} · {duracionMin} min
-      </p>
+      <div className={styles.cuerpo}>
+        <div className={styles.encabezado}>
+          <h3 title={titulo}>{titulo}</h3>
+          <Restriccion clasificacion={clasificacion} />
+        </div>
 
-      {estreno ? (
-        <p className={styles.estreno}>Estreno: {estreno}</p>
-      ) : (
-        <ul className={styles.funciones}>
-          {funciones.map((f) => (
-            <li key={`${f.sala}-${f.hora}`}>
-              <button type="button" title={`${f.sala} · ${f.formato}`}>
-                <strong>{f.hora}</strong>
-                <span>{f.formato}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+        <PeliculaDatos pelicula={pelicula} sinRestriccion sinDuracion />
+        {fechaEstreno && <p className={styles.fecha}>Llega: {fechaEstreno}</p>}
+      </div>
     </article>
   )
 }

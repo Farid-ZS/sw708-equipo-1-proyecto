@@ -1,0 +1,38 @@
+.datos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+
+  li {
+    padding: 0.15rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--cream);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+}
+
+.formato {
+  color: var(--gold-soft) !important;
+  border-color: var(--gold) !important;
+  background: transparent !important;
+}
+
+// El sello de restricción trae su propio estilo
+.restriccion {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.grande li {
+  padding: 0.3rem 0.9rem;
+  font-size: 0.85rem;
+}

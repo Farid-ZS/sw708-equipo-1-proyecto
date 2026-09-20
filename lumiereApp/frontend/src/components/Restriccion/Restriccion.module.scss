@@ -1,0 +1,24 @@
+.sello {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  color: var(--gold-soft);
+  background: rgba(196, 137, 30, 0.12);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  white-space: nowrap;
+}
+
+.grande {
+  padding: 0.35rem 0.9rem;
+  font-size: 1rem;
+}
+
+.adulto {
+  color: #ffd9d5;
+  background: #7a1f1a;
+  border-color: #d9584f;
+}

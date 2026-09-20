@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
+import { useSede } from '../../context/sedeContext.ts'
 import logo from '../../assets/images/logo_lumiere.png'
 import styles from './Header.module.scss'
 
 export function Header() {
+  const { sede, cambiarSede } = useSede()
+
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -13,14 +16,12 @@ export function Header() {
         <nav className={styles.nav} aria-label="Principal">
           <a href="#cartelera">Cartelera</a>
           <a href="#proximamente">Próximamente</a>
-          <a href="#confiteria">Confitería</a>
         </nav>
 
         <div className={styles.acciones}>
-          <select className={styles.sede} aria-label="Sede">
-            <option>Lumiere Centro</option>
-            <option>Lumiere Norte</option>
-          </select>
+          <button type="button" className={styles.sede} onClick={cambiarSede} aria-label={`Cine: ${sede.nombre}. Cambiar de cine`}>
+            {sede.nombre}
+          </button>
           <button type="button" className={styles.ingresar}>
             Ingresar
           </button>

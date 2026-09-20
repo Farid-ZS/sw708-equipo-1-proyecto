@@ -1,0 +1,10 @@
+// El footer queda abajo aunque la página tenga poco contenido
+.pagina {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.contenido {
+  flex: 1;
+}

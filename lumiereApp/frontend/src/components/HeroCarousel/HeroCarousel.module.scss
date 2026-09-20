@@ -36,7 +36,7 @@
   max-width: calc(var(--max-width) - 2 * var(--gutter));
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr minmax(200px, 300px);
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 300px);
   gap: 3rem;
   align-items: center;
   user-select: none;
@@ -60,14 +60,14 @@
 }
 
 .meta {
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
   color: var(--muted);
 }
 
 .sinopsis {
   max-width: 34rem;
   font-size: 1.1rem;
-  margin: 0 0 2rem;
+  margin: 1.25rem 0 2rem;
 }
 
 .botones {
@@ -164,7 +164,7 @@
 
 @media (max-width: 760px) {
   .contenido {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2rem;
   }
 
