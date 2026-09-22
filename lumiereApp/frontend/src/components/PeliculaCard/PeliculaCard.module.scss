@@ -7,6 +7,11 @@
   border-radius: 20px;
   transition: transform 0.25s, background 0.25s;
 
+  // Con boletos disponibles la tarjeta es un <Link> (<a>): se ve y se comporta como botón.
+  &:is(a) {
+    cursor: pointer;
+  }
+
   &:hover {
     transform: translateY(-4px);
     background: var(--card-hover);
@@ -85,3 +90,4 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+

@@ -1,0 +1,56 @@
+.carrusel {
+  position: relative;
+}
+
+.viewport {
+  overflow: hidden;
+}
+
+.pista {
+  display: flex;
+  gap: 1.25rem;
+  touch-action: pan-y pinch-zoom;
+}
+
+.slide {
+  flex: 0 0 min(220px, 42vw);
+  min-width: 0;
+}
+
+.flecha {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  padding: 0 0 0.2rem;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--cream);
+  background: rgba(18, 14, 9, 0.75);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+
+  &:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--bg);
+  }
+}
+
+.anterior {
+  left: -0.75rem;
+}
+
+.siguiente {
+  right: -0.75rem;
+}
+
+@media (max-width: 640px) {
+  .flecha {
+    display: none;
+  }
+}

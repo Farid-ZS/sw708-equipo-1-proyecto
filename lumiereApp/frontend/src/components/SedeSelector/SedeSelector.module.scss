@@ -20,14 +20,6 @@
     backdrop-filter: blur(1px);
   }
 
-  // Sin sede: el fondo es opaco para que no se vea ninguna pantalla detrás
-  &.obligatorio::backdrop {
-    background:
-      repeating-conic-gradient(from 270deg at 50% 100%, rgba(196, 137, 30, 0.07) 0 4deg, transparent 4deg 10deg),
-      var(--bg);
-    backdrop-filter: none;
-  }
-
   h2 {
     font-size: 1.5rem;
     letter-spacing: 0.14em;

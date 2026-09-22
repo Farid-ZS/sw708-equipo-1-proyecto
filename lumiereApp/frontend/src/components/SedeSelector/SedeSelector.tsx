@@ -6,8 +6,6 @@ import styles from './SedeSelector.module.scss'
 
 interface Props {
   abierto: boolean
-  /** Sin sede elegida: no se puede cerrar hasta escoger una. */
-  obligatorio: boolean
   sedeActual: Sede | null
   alElegir: (sede: Sede) => void
   alCerrar: () => void
@@ -15,7 +13,7 @@ interface Props {
 
 const normalizar = (t: string) => t.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
 
-export function SedeSelector({ abierto, obligatorio, sedeActual, alElegir, alCerrar }: Props) {
+export function SedeSelector({ abierto, sedeActual, alElegir, alCerrar }: Props) {
   const dialogo = useRef<HTMLDialogElement>(null)
   const [busqueda, setBusqueda] = useState('')
 
@@ -48,29 +46,16 @@ export function SedeSelector({ abierto, obligatorio, sedeActual, alElegir, alCer
   const ciudades = [...new Set(visibles.map((s) => s.ciudad))]
 
   return (
-    <dialog
-      ref={dialogo}
-      className={`${styles.dialogo} ${obligatorio ? styles.obligatorio : ''}`}
-      aria-labelledby="sede-titulo"
-      // ESC no cierra mientras la sede sea obligatoria
-      onCancel={(e) => obligatorio && e.preventDefault()}
-      onClose={alCerrar}
-    >
+    <dialog ref={dialogo} className={styles.dialogo} aria-labelledby="sede-titulo" onClose={alCerrar}>
       <div className={styles.cabecera}>
         <img src={logo} alt="Lumiere Cines" className={styles.logo} />
-        {!obligatorio && (
-          <button type="button" className={styles.cerrar} onClick={alCerrar} aria-label="Cerrar">
-            ×
-          </button>
-        )}
+        <button type="button" className={styles.cerrar} onClick={alCerrar} aria-label="Cerrar">
+          ×
+        </button>
       </div>
 
       <h2 id="sede-titulo">Elige tu cine</h2>
-      <p className={styles.ayuda}>
-        {obligatorio
-          ? 'Para ver la cartelera, preventas y estrenos, primero selecciona el cine donde quieres ir.'
-          : 'Cambiar de cine actualiza la cartelera y los horarios.'}
-      </p>
+      <p className={styles.ayuda}>Para comprar entradas primero necesitamos saber a qué cine quieres ir.</p>
 
       <input
         type="search"

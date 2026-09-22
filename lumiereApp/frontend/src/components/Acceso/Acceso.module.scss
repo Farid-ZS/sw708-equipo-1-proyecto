@@ -1,0 +1,152 @@
+// Mismo panel lateral (pegado al borde derecho) que SedeSelector.
+.dialogo {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(420px, 100%);
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 1.5rem 1.5rem 1.75rem;
+  color: var(--cream);
+  background: var(--surface);
+  border: none;
+  border-left: 1px solid var(--border);
+  border-radius: 0;
+  overflow-y: auto;
+  animation: entrar-panel 0.25s ease-out;
+
+  &::backdrop {
+    background: rgba(8, 6, 3, 0.55);
+    backdrop-filter: blur(1px);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--gold-soft);
+  }
+}
+
+@keyframes entrar-panel {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 520px) {
+  .dialogo {
+    width: 100%;
+    border-left: none;
+  }
+}
+
+.cabecera {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.logo {
+  height: 3.5rem;
+}
+
+.cerrar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.6rem;
+  line-height: 1;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+
+  &:hover {
+    border-color: var(--gold);
+    color: var(--gold-soft);
+  }
+}
+
+.ayuda {
+  margin: 0.5rem auto 1.5rem;
+  max-width: 28rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+.formulario {
+  display: grid;
+  gap: 1.1rem;
+
+  label {
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  input {
+    padding: 0.7rem 1rem;
+    font: inherit;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--cream);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    &:focus-visible {
+      border-color: var(--gold);
+      outline: none;
+    }
+  }
+}
+
+.enlace {
+  justify-self: start;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--gold-soft);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: var(--gold);
+  }
+}
+
+.primario {
+  margin-top: 0.25rem;
+  padding: 0.8rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--gold);
+  border: none;
+  border-radius: var(--radius);
+  transition: background 0.2s;
+
+  &:hover {
+    background: var(--gold-soft);
+  }
+}
+
+.pie {
+  margin: 1.5rem 0 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+}

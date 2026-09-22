@@ -15,11 +15,12 @@ export interface Pelicula {
   tono: number
   /** URL de la foto real. Si falta, se genera un póster con CSS. */
   imagen?: string
-  estado: 'cartelera' | 'proximamente'
+  /** "preventa": ya no está en cartelera pero ya se pueden comprar boletos anticipados. */
+  estado: 'cartelera' | 'preventa' | 'proximamente'
   /** Marca "ESTRENO": solo las películas que son estreno la traen en true. */
   esEstreno: boolean
   formatos: Formato[]
-  /** Solo para "próximamente": fecha de estreno en formato ISO (YYYY-MM-DD). */
+  /** Para "preventa" y "próximamente": fecha de estreno en formato ISO (YYYY-MM-DD). */
   fechaEstreno?: string
 }
 
@@ -105,7 +106,7 @@ export const peliculas: Pelicula[] = [
     duracionMin: 92,
     clasificacion: 'APT',
     tono: 120,
-    estado: 'proximamente',
+    estado: 'preventa',
     esEstreno: false,
     formatos: ['2D', '3D'],
     fechaEstreno: '2026-10-01',

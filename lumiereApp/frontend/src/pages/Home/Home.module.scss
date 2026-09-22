@@ -20,6 +20,50 @@
   }
 }
 
+// La sección siguiente trae su propio divisor (con el botón "Ver más" encima):
+// se apaga la línea por defecto para no duplicarla.
+.sinLinea::before {
+  display: none;
+}
+
+// Línea entre secciones con un botón centrado encima.
+.divisor {
+  position: relative;
+  max-width: var(--max-width);
+  margin: 2.5rem auto 0;
+  padding: 0 var(--gutter);
+  display: flex;
+  justify-content: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: var(--gutter);
+    right: var(--gutter);
+    border-top: 1px solid var(--border);
+  }
+}
+
+.verMas {
+  position: relative;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  background: var(--bg);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    background: var(--gold);
+    color: var(--bg);
+  }
+}
+
 .sedeActual {
   margin: -0.75rem 0 1.75rem;
   color: var(--muted);
