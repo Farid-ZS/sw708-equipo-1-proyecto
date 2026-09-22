@@ -1,18 +1,23 @@
+// Panel lateral pegado al borde derecho (al estilo Cinemark), a toda la altura.
 .dialogo {
-  width: min(680px, calc(100% - 2rem));
-  max-height: min(90vh, 760px);
-  margin: auto;
-  padding: 1.5rem clamp(1.25rem, 4vw, 2.25rem) 1.75rem;
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(420px, 100%);
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 1.5rem 1.5rem 1.75rem;
   color: var(--cream);
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: none;
+  border-left: 1px solid var(--border);
+  border-radius: 0;
   overflow-y: auto;
-  scrollbar-color: var(--bronze) var(--surface-2);
+  animation: entrar-panel 0.25s ease-out;
 
   &::backdrop {
-    background: rgba(8, 6, 3, 0.75);
-    backdrop-filter: blur(4px);
+    background: rgba(8, 6, 3, 0.55);
+    backdrop-filter: blur(1px);
   }
 
   // Sin sede: el fondo es opaco para que no se vea ninguna pantalla detrás
@@ -24,11 +29,27 @@
   }
 
   h2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     text-align: center;
     color: var(--gold-soft);
+  }
+}
+
+@keyframes entrar-panel {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 520px) {
+  .dialogo {
+    width: 100%;
+    border-left: none;
   }
 }
 
@@ -40,7 +61,7 @@
 }
 
 .logo {
-  height: 5.5rem;
+  height: 3.5rem;
 }
 
 .cerrar {

@@ -5,6 +5,11 @@ import { Poster } from '../Poster/Poster.tsx'
 import { Restriccion } from '../Restriccion/Restriccion.tsx'
 import styles from './PeliculaCard.module.scss'
 
+function formatearFechaEstreno(fechaIso: string): string {
+  const [anio, mes, dia] = fechaIso.split('-')
+  return `${dia}/${mes}/${anio}`
+}
+
 export function PeliculaCard({ pelicula }: { pelicula: Pelicula }) {
   const { titulo, clasificacion, duracionMin, esEstreno, fechaEstreno } = pelicula
 
@@ -25,7 +30,7 @@ export function PeliculaCard({ pelicula }: { pelicula: Pelicula }) {
         </div>
 
         <PeliculaDatos pelicula={pelicula} sinRestriccion sinDuracion />
-        {fechaEstreno && <p className={styles.fecha}>Llega: {fechaEstreno}</p>}
+        {fechaEstreno && <p className={styles.fecha}>{formatearFechaEstreno(fechaEstreno)}</p>}
       </div>
     </article>
   )

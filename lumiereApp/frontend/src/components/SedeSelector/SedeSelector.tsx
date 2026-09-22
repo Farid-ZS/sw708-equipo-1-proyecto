@@ -26,6 +26,23 @@ export function SedeSelector({ abierto, obligatorio, sedeActual, alElegir, alCer
     if (!abierto && d.open) d.close()
   }, [abierto])
 
+  // El panel es un <dialog> a media altura del viewport: sin esto, la página
+  // de fondo conserva su propia barra de scroll y queda una doble barra.
+  // Se compensa el ancho de esa barra con padding para que el contenido no
+  // se corra al ocultarla (y al mostrarla de nuevo al cerrar).
+  useEffect(() => {
+    if (!abierto) return
+    const anchoBarra = window.innerWidth - document.documentElement.clientWidth
+    const overflowOriginal = document.body.style.overflow
+    const paddingOriginal = document.body.style.paddingRight
+    document.body.style.overflow = 'hidden'
+    if (anchoBarra > 0) document.body.style.paddingRight = `${anchoBarra}px`
+    return () => {
+      document.body.style.overflow = overflowOriginal
+      document.body.style.paddingRight = paddingOriginal
+    }
+  }, [abierto])
+
   const filtro = normalizar(busqueda.trim())
   const visibles = sedes.filter((s) => normalizar(`${s.nombre} ${s.ciudad} ${s.direccion}`).includes(filtro))
   const ciudades = [...new Set(visibles.map((s) => s.ciudad))]

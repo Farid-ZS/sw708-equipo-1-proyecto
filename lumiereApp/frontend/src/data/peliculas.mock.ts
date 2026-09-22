@@ -19,7 +19,7 @@ export interface Pelicula {
   /** Marca "ESTRENO": solo las películas que son estreno la traen en true. */
   esEstreno: boolean
   formatos: Formato[]
-  /** Solo para "próximamente": cuándo llega a cartelera. */
+  /** Solo para "próximamente": fecha de estreno en formato ISO (YYYY-MM-DD). */
   fechaEstreno?: string
 }
 
@@ -108,7 +108,7 @@ export const peliculas: Pelicula[] = [
     estado: 'proximamente',
     esEstreno: false,
     formatos: ['2D', '3D'],
-    fechaEstreno: 'Próximo jueves',
+    fechaEstreno: '2026-10-01',
   },
   {
     id: 8,
@@ -121,7 +121,7 @@ export const peliculas: Pelicula[] = [
     estado: 'proximamente',
     esEstreno: false,
     formatos: ['2D'],
-    fechaEstreno: 'En dos semanas',
+    fechaEstreno: '2026-10-06',
   },
   {
     id: 9,
@@ -134,6 +134,6 @@ export const peliculas: Pelicula[] = [
     estado: 'proximamente',
     esEstreno: false,
     formatos: ['2D', '3D', 'VIP'],
-    fechaEstreno: 'En tres semanas',
+    fechaEstreno: '2026-10-13',
   },
 ]
