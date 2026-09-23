@@ -55,17 +55,17 @@ Lumiere es un sistema integral para cines que centraliza la programación de la 
    Debe estar junto a `docker-compose.yml`:
 
    ```env
-   ORACLE_PASSWORD=tu_contraseña_oracle
-   ORACLE_OPS_USER=CINESTAR_OPS
-   ORACLE_OPS_PASSWORD=tu_contraseña_ops
-   ORACLE_ADMIN_USER=CINESTAR_ADMIN
-   ORACLE_ADMIN_PASSWORD=tu_contraseña_admin
-   
+   ORACLE_PASSWORD=
+   ORACLE_OPS_USER=
+   ORACLE_OPS_PASSWORD=
+   ORACLE_ADMIN_USER=
+   ORACLE_ADMIN_PASSWORD=
+
    PORT=3000
    DB_PORT=1521
    DB_SERVICE=XEPDB1
-   
-   JWT_SECRET=tu_clave_secreta_jwt_muy_larga_y_segura
+
+   JWT_SECRET=
    JWT_EXPIRATION=8h
    JWT_REFRESH_EXPIRATION=24h
    NODE_ENV=development
