@@ -55,17 +55,17 @@ Lumiere es un sistema integral para cines que centraliza la programación de la 
    Debe estar junto a `docker-compose.yml`:
 
    ```env
-   ORACLE_PASSWORD=uni123
+   ORACLE_PASSWORD=tu_contraseña_oracle
    ORACLE_OPS_USER=CINESTAR_OPS
-   ORACLE_OPS_PASSWORD=OpsPass2024!
+   ORACLE_OPS_PASSWORD=tu_contraseña_ops
    ORACLE_ADMIN_USER=CINESTAR_ADMIN
-   ORACLE_ADMIN_PASSWORD=AdminPass2024!
-
+   ORACLE_ADMIN_PASSWORD=tu_contraseña_admin
+   
    PORT=3000
    DB_PORT=1521
    DB_SERVICE=XEPDB1
-
-   JWT_SECRET=cinestar-secret-change-me
+   
+   JWT_SECRET=tu_clave_secreta_jwt_muy_larga_y_segura
    JWT_EXPIRATION=8h
    JWT_REFRESH_EXPIRATION=24h
    NODE_ENV=development
@@ -96,17 +96,9 @@ Lumiere es un sistema integral para cines que centraliza la programación de la 
 
 6. **Iniciar sesión con usuarios de prueba**
 
-   - Administrador:
-     - Usuario: `admin`
-     - Contraseña: `admin123`
+   - Administrador
 
-   - Operador:
-     - Usuario: `operador1`
-     - Contraseña: `operador123`
-
-   - Segundo operador:
-     - Usuario: `operador2`
-     - Contraseña: `operador123`
+   - Operador
 
 El proyecto necesita principalmente Docker Desktop y el archivo `.env`; no es necesario instalar Oracle, Node.js ni React directamente en Windows para usar el despliegue mediante Docker.
 
