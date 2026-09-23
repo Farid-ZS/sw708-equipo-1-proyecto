@@ -179,5 +179,3 @@ El modelo C4 para `Lumiere` sugiere una arquitectura centrada en tres capas clav
 3. Base de datos relacional con reglas de integridad y trazabilidad
 
 Esto encaja con los objetivos de negocio descritos en la ficha del sistema y con los escenarios de calidad priorizados en `docs/escenarios.md`.
-
-Si quieres, puedo dejarte ahora una versión más formal en formato de documento para entregar en clase, o una versión con diagramas en PlantUML para que la puedas pegar directamente en una presentación.
