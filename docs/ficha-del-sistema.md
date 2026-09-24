@@ -1,6 +1,6 @@
 ## Nombre del sistema
 
-**Lumiere**
+**CineStar-Barrio**
 
 ## Origen
 
@@ -19,15 +19,17 @@ Lumiere es un sistema integral para cines que centraliza la programación de la 
 
 ## Lenguaje y stack
 
-- **Lenguaje:** TypeScript (Fullstack).
-- **Framework:** Node.js (Express/NestJS) para el backend y React para el frontend.
-- **Base de datos:** PostgreSQL.
-- **Estilos:** SASS (con CSS Modules).
-- **Herramienta de construcción:** Vite (empaquetado del frontend) y NPM/Yarn.
+- **Lenguajes:** TypeScript, PL/SQL y CSS.
+- **Backend:** Node.js 20 con Express y TypeScript.
+- **Frontend:** React 18 con Vite, TypeScript y React Router.
+- **Base de datos:** Oracle Database 21c XE.
+- **Autenticación:** JWT y bcryptjs.
+- **Estilos:** CSS tradicional, sin SASS ni CSS Modules.
+- **Despliegue:** Docker Compose.
 
 ## Repositorio
 
-[https://github.com/Farid-ZS/sw708-equipo-1-proyecto](https://github.com/Farid-ZS/sw708-equipo-1-proyecto)
+[https://github.com/gonzalouni/CineStar-Barrio](https://github.com/gonzalouni/CineStar-Barrio)
 *(El profesor del curso ya está agregado con permisos de colaborador/lectura para revisión).*
 
 ## Reglas de negocio
