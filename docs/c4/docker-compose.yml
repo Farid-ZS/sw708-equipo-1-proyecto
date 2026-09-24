@@ -1,8 +1,10 @@
-version: "3"
 services:
   structurizr:
-    image: structurizr/lite
+    image: structurizr/structurizr:latest
+    container_name: cinestar-structurizr
+    command: local
     ports:
       - "8080:8080"
     volumes:
-      - ./:/usr/local/structurizr
+      - ./:/usr/local/structurizr:rw
+    restart: unless-stopped

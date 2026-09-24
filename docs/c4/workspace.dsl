@@ -1,97 +1,102 @@
-workspace "CineStar-Barrio" "Arquitectura del sistema de cine" {
+workspace "CineStar Barrio" "Sistema de Gestión de Reservas y Venta de Entradas" {
 
     model {
-        // --- ACTORES ---
-        cliente = person "Cliente" "Usuario que navega por la cartelera, selecciona horarios y reserva asientos." "Actor"
-        administrador = person "Administrador" "Personal del cine. Gestiona películas, salas, reportes y permisos." "Actor"
+        operador = person "Operador" "Atiende clientes presenciales (taquilla) y por teléfono; registra reservas, ventas y cancelaciones"
+        administrador = person "Administrador" "Configura cartelera, salas, usuarios y consulta reportes"
 
-        // --- SISTEMA PRINCIPAL ---
-        cineStarBarrio = softwareSystem "CineStar-Barrio" "Sistema integral de gestión de reservas de cine." "Sistema" {
-            
-            frontend = container "Frontend SPA" "Aplicación web que provee la interfaz de usuario para clientes y personal." "React 18 / Vite / TypeScript" "WebBrowser"
-            database = container "Base de Datos" "Almacena esquemas transaccionales, usuarios, permisos y configuración." "Oracle 21c XE" "Database"
-            
-            backend = container "API Backend" "API de servicios que procesa la lógica de negocio, autenticación y reservas." "Node.js / Express / TypeScript" "API" {
-                // --- COMPONENTES DEL BACKEND ---
-                seguridad = component "Módulo de Seguridad" "Gestiona la autenticación, autorización y cuentas de usuario." "Express Router / Controller"
-                catalogo = component "Catálogo de Cine" "Administra el registro de películas y la infraestructura de salas." "Express Router / Controller"
-                programacion = component "Programación de Funciones" "Gestiona la cartelera, horarios y asignación de películas." "Express Router / Controller"
-                reservas = component "Gestión de Reservas" "Procesa la selección de asientos y confirmación de entradas." "Express Router / Controller"
-                analitica = component "Analítica y Reportes" "Genera métricas, estadísticas y consultas para administración." "Express Router / Controller"
-                dbManager = component "Gestor de Base de Datos" "Centraliza el pool de conexiones y transacciones hacia Oracle." "Node.js Module / OracleDB"
+        cineStar = softwareSystem "CineStar Barrio" "Centraliza cartelera, asientos, reservas, ventas y cancelaciones evitando sobreventa" {
+
+            termTaquilla = container "Terminal de Taquilla" "Mapa de asientos, reservas, ventas, cancelaciones, consultas" "Aplicación cliente"
+            termAdmin = container "Terminal Administrativa" "Cartelera, funciones, salas, usuarios, reportes" "Aplicación cliente"
+
+            appServer = container "Servidor de Aplicación" "Autenticación, reglas de negocio, control de concurrencia, auditoría" "Backend" {
+                auth = component "Autenticación y Autorización" "Valida credenciales, roles y permisos por esquema"
+                cartelera = component "Cartelera y Funciones" "CRUD de películas/funciones, valida solapamiento de horarios"
+                salas = component "Salas y Asientos" "Configura disposición de asientos por sala"
+                reservas = component "Reservas y Ventas" "Control de concurrencia, transacciones atómicas, código único de boleto"
+                cancelaciones = component "Cancelaciones" "Libera asientos y dispara registro de auditoría"
+                consultas = component "Consultas" "Disponibilidad en tiempo real e historial"
+                reportes = component "Reportes" "Ocupación, ventas, cancelaciones; exporta PDF/CSV"
+                auditoria = component "Auditoría / Logging" "Registra operaciones críticas con usuario y timestamp"
             }
 
-            // --- RELACIONES INTERNAS (Contenedores) ---
-            frontend -> backend "Realiza peticiones de datos a" "JSON/HTTPS"
-            backend -> database "Lee y escribe registros en" "SQL"
-
-            // --- RELACIONES: Frontend -> Componentes ---
-            frontend -> seguridad "Inicia sesión y gestiona usuarios en" "JSON/HTTPS"
-            frontend -> catalogo "Consulta el catálogo de películas en" "JSON/HTTPS"
-            frontend -> programacion "Consulta las funciones disponibles en" "JSON/HTTPS"
-            frontend -> reservas "Realiza el flujo de compra de boletos en" "JSON/HTTPS"
-            frontend -> analitica "Solicita métricas para el dashboard en" "JSON/HTTPS"
-
-            // --- RELACIONES: Componentes -> Gestor DB ---
-            seguridad -> dbManager "Valida credenciales y roles mediante" "Llamada a función"
-            catalogo -> dbManager "Lee y actualiza el catálogo mediante" "Llamada a función"
-            programacion -> dbManager "Consulta horarios de cartelera mediante" "Llamada a función"
-            reservas -> dbManager "Registra transacciones de compra mediante" "Llamada a función"
-            analitica -> dbManager "Ejecuta consultas de agregación mediante" "Llamada a función"
-
-            // --- RELACIONES: Gestor DB -> Base de Datos ---
-            dbManager -> database "Ejecuta sentencias SQL y procedimientos almacenados en" "SQL / TCP"
+            dbOperativo = container "Esquema Operativo" "Películas, funciones, salas, asientos, reservas, ventas" "Oracle 21c XE" "Database"
+            dbAdmin = container "Esquema Administrativo / Auditoría" "Usuarios, roles, logs, reportes" "Oracle 21c XE" "Database"
         }
 
-        // --- RELACIONES EXTERNAS (Contexto) ---
-        cliente -> frontend "Visualiza cartelera y reserva entradas en" "HTTPS"
-        administrador -> frontend "Gestiona operaciones internas y reportes en" "HTTPS"
+        # Relaciones de contexto
+        operador -> cineStar "Reserva y cancela entradas"
+        administrador -> cineStar "Gestiona cartelera y reportes"
+
+        # Relaciones de contenedores
+        operador -> termTaquilla "Usa"
+        administrador -> termAdmin "Usa"
+        termTaquilla -> appServer "Solicitudes de reserva/venta/consulta" "API/TCP"
+        termAdmin -> appServer "Solicitudes de administración/reportes" "API/TCP"
+        appServer -> dbOperativo "Lee y escribe (transacciones atómicas)" "SQL"
+        appServer -> dbAdmin "Lee y escribe (usuarios, logs, reportes)" "SQL"
+
+        # Relaciones de componentes
+        cartelera -> dbOperativo "Lee/escribe"
+        salas -> dbOperativo "Lee/escribe"
+        reservas -> dbOperativo "Lee/escribe"
+        consultas -> dbOperativo "Lee"
+        cancelaciones -> dbOperativo "Actualiza"
+        cancelaciones -> auditoria "Notifica evento"
+        reservas -> auditoria "Notifica evento"
+        auditoria -> dbAdmin "Escribe logs"
+        reportes -> dbAdmin "Lee logs/usuarios"
+        reportes -> dbOperativo "Lee datos operativos"
+        auth -> dbAdmin "Valida usuarios y roles"
+
+        termTaquilla -> auth "Autentica"
+        termAdmin -> auth "Autentica"
+        termTaquilla -> reservas "Crea/consulta reservas y ventas"
+        termTaquilla -> cancelaciones "Cancela reservas"
+        termTaquilla -> consultas "Consulta disponibilidad"
+        termAdmin -> cartelera "Administra"
+        termAdmin -> salas "Administra"
+        termAdmin -> reportes "Genera y exporta"
     }
 
     views {
-        systemContext cineStarBarrio "SystemContext" {
+        systemContext cineStar "Contexto" {
             include *
             autoLayout
         }
 
-        container cineStarBarrio "ContainerView" {
+        container cineStar "Contenedores" {
             include *
             autoLayout
         }
 
-        component backend "ComponentView" {
+        component appServer "Componentes" {
             include *
-            autoLayout tb
+            autoLayout
         }
-        
-        // --- REGLAS VISUALES ---
+
         styles {
-            element "Actor" {
-                shape Person
-                background #08427b
+            element "Person" {
+                shape person
+                background #999999
                 color #ffffff
             }
-            element "Sistema" {
+            element "Software System" {
+                background #a8112e
+                color #ffffff
+            }
+            element "Container" {
                 background #1168bd
                 color #ffffff
             }
-            element "WebBrowser" {
-                shape WebBrowser
-                background #438dd5
-                color #ffffff
-            }
-            element "API" {
-                shape RoundedBox
-                background #438dd5
-                color #ffffff
-            }
             element "Database" {
-                shape Cylinder
-                background #2e6093
-                color #ffffff
+                shape cylinder
+            }
+            element "Component" {
+                background #85bbf0
+                color #000000
             }
         }
-        
-        theme default
     }
+
 }
