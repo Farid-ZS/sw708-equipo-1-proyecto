@@ -5,6 +5,9 @@ import { Acceso } from '../Acceso/Acceso.tsx'
 import logo from '../../assets/images/logo_lumiere.png'
 import styles from './Header.module.scss'
 
+// Enlaces de la barra principal. Para agregar una sección nueva, basta con sumar un elemento aquí.
+const enlaces = [{ to: '/peliculas', texto: 'Películas' }]
+
 export function Header() {
   const { sede, cambiarSede } = useSede()
   const [accesoAbierto, setAccesoAbierto] = useState(false)
@@ -17,9 +20,11 @@ export function Header() {
         </Link>
 
         <nav className={styles.nav} aria-label="Principal">
-          <a href="#cartelera">Cartelera</a>
-          <a href="#preventa">Preventa</a>
-          <a href="#proximamente">Próximamente</a>
+          {enlaces.map((enlace) => (
+            <Link key={enlace.to} to={enlace.to}>
+              {enlace.texto}
+            </Link>
+          ))}
         </nav>
 
         <div className={styles.acciones}>

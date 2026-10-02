@@ -3,6 +3,7 @@ import { Layout } from './components/Layout/Layout.tsx'
 import { SedeProvider } from './context/SedeProvider.tsx'
 import EnConstruccion from './pages/EnConstruccion/EnConstruccion.tsx'
 import Home from './pages/Home/Home.tsx'
+import Peliculas from './pages/Peliculas/Peliculas.tsx'
 
 // Cada pantalla nueva = una <Route> aquí + su carpeta en src/pages.
 // Las que van dentro de <Layout> llevan header y footer.
@@ -12,6 +13,7 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/peliculas" element={<Peliculas />} />
           <Route path="*" element={<EnConstruccion />} />
         </Route>
       </Routes>
