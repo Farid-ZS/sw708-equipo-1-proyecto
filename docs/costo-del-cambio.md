@@ -8,11 +8,11 @@
 
 | | Versión A, un solo paquete | Versión B, por capas |
 |---|---|---|
-| Minutos hasta la prueba en verde | *[Por confirmar con Integrante 1]* | *[Por confirmar con Integrante 2]* |
-| Archivos tocados | 3 archivos (`Prestamo.java`, `PrestamoService.java`, `PrestamoServiceTest.java`) | *[Por confirmar]* |
-| Líneas agregadas y borradas | 70 agregadas, 13 borradas (+70 / -13, 83 total) | *[Por confirmar]* |
-| Pruebas que se rompieron | *[Por confirmar con Integrante 1]* | *[Por confirmar con Integrante 2]* |
-| Lugares donde hubo que buscar | *[Por confirmar con Integrante 1]* | *[Por confirmar con Integrante 2]* |
+| Minutos hasta la prueba en verde | 3,6 min (3:34) | 4,4 min (4:22) |
+| Archivos tocados | 3 archivos (`Prestamo.java`, `PrestamoService.java`, `PrestamoServiceTest.java`) | 5 archivos (`Prestamo.java`, `dominio/PrestamoService.java`, `dominio/ReglasDePrestamo.java`, `dominio/PrestamoServiceTest.java`, `infraestructura/RepositorioEnMemoriaTest.java`) |
+| Líneas agregadas y borradas | 70 agregadas, 13 borradas (+70 / -13, 83 total) | 42 agregadas, 17 borradas (+42 / -17, 59 total) |
+| Pruebas que se rompieron | Ninguna; las 4 pruebas iniciales siguieron en verde | 5 errores de compilación en las pruebas (0 fallos de aserción) |
+| Lugares donde hubo que buscar | 3 archivos del mismo paquete: modelo, servicio y prueba | 5 archivos distribuidos entre dominio e infraestructura: modelo, servicio, reglas, prueba del servicio y prueba del repositorio |
 
 ## La conclusión, en tres líneas
 
@@ -34,9 +34,16 @@ Un número incómodo bien argumentado vale más que uno acomodado. Si la versió
 ### Evidencias registradas en el repositorio
 
 - **Compilación inicial limpia (Paso 1):**
-  - Versión A: [test-pruebas-1.png](costo-del-cambio/test-pruebas-1.png) (4 tests en verde).
-  - Versión B: [test-pruebas-2.png](costo-del-cambio/test-pruebas-2.png) (5 tests en verde).
-- **Métricas Versión A tras el requisito (Paso 2):**
-  - Archivos tocados (`git status --short`): [git-status-final.png](costo-del-cambio/git-status-final.png).
-  - Líneas agregadas/borradas (`git diff --stat`): [git-diff--stat.png](costo-del-cambio/git-diff--stat.png).
-  - Pruebas finales en verde: [test-pruebas-3.png](costo-del-cambio/test-pruebas-3.png) (8 tests en verde).
+  - Versión A: [test-pruebas-01-version-A-antes.png](costo-del-cambio/version-a/test-pruebas-01-version-A-antes.png) (4 tests en verde).
+  - Versión B: [inicio-version-b.png](costo-del-cambio/version-b/inicio-version-b.png) (5 tests en verde).
+- **Métricas y resultado de la Versión A tras el requisito (Paso 2):**
+  - Archivos tocados (`git status --short`): [git-status-final.png](costo-del-cambio/version-a/git-status-final.png).
+  - Líneas agregadas/borradas (`git diff --stat`): [git-diff--stat.png](costo-del-cambio/version-a/git-diff--stat.png).
+  - Pruebas finales en verde: [test-pruebas-03-version-A-después.png](costo-del-cambio/version-a/test-pruebas-03-version-A-después.png) (8 tests en verde).
+- **Métricas y resultado de la Versión B tras el requisito (Paso 2):**
+  - Pruebas rotas antes de corregir el cambio: [test-pruebas-rotas.png](costo-del-cambio/version-b/test-pruebas-rotas.png) (5 errores de compilación).
+  - Archivos tocados (`git status --short`): [git-status--short.png](costo-del-cambio/version-b/git-status--short.png).
+  - Líneas agregadas/borradas (`git diff --stat`): [git-diff--stat.png](costo-del-cambio/version-b/git-diff--stat.png).
+  - Pruebas finales en verde: [test-pruebas-verde.png](costo-del-cambio/version-b/test-pruebas-verde.png) (5 tests en verde).
+
+Los tiempos se calcularon con las marcas de las capturas: en A, de 11:22:02 a 11:25:36; en B, de 16:30:50 a 16:35:12. Se mide desde la primera ejecución afectada por el cambio hasta la ejecución verde posterior, no desde la compilación inicial.
