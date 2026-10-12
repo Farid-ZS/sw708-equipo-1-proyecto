@@ -8,7 +8,7 @@
 
 | | Versión A, un solo paquete | Versión B, por capas |
 |---|---|---|
-| Minutos hasta la prueba en verde | 3,6 min (3:34) | 4,4 min (4:22) |
+| Minutos hasta la prueba en verde | 3,6 min (3:34) | 18:35 |
 | Archivos tocados | 3 archivos (`Prestamo.java`, `PrestamoService.java`, `PrestamoServiceTest.java`) | 5 archivos (`Prestamo.java`, `dominio/PrestamoService.java`, `dominio/ReglasDePrestamo.java`, `dominio/PrestamoServiceTest.java`, `infraestructura/RepositorioEnMemoriaTest.java`) |
 | Líneas agregadas y borradas | 70 agregadas, 13 borradas (+70 / -13, 83 total) | 42 agregadas, 17 borradas (+42 / -17, 59 total) |
 | Pruebas que se rompieron | Ninguna; las 4 pruebas iniciales siguieron en verde | 5 errores de compilación en las pruebas (0 fallos de aserción) |
