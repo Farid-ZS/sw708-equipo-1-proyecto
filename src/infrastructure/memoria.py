@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from src.domain.cinema import Boleto, BoletoRepository
+from src.domain.cinema import Boleto
+from src.domain.puertos import BoletoRepository
 
 
 class InMemoryBoletoRepository(BoletoRepository):

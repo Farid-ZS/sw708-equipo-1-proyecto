@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional
 import uuid
+
+from src.domain.puertos import BoletoRepository
 
 
 @dataclass
@@ -23,15 +23,6 @@ class Boleto:
             asiento=asiento,
             nombre_cliente=nombre_cliente,
         )
-
-
-# interfaz que la infra debe implementar
-class BoletoRepository(ABC):
-    @abstractmethod
-    def guardar(self, boleto: Boleto) -> None: ...
-
-    @abstractmethod
-    def buscar_por_asiento(self, funcion_id: str, asiento: str) -> Optional[Boleto]: ...
 
 
 class AsientoOcupadoError(Exception):
