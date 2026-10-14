@@ -1,0 +1,11 @@
+[importlinter]
+root_package = src
+
+[importlinter:contract:dominio-limpio]
+name = El dominio no depende de infraestructura ni presentacion
+type = forbidden
+source_modules = 
+    src.domain
+forbidden_modules = 
+    src.infrastructure
+    src.presentation
