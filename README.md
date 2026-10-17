@@ -1,5 +1,15 @@
 # CineStar-Barrio
 
+## Integrantes
+
+| Integrante | Usuario de GitHub |
+|---|---|
+| Gonzalo Albornoz | [@gonzalouni](https://github.com/gonzalouni) |
+| Carlos Chavez | [@carloz-chavez](https://github.com/carloz-chavez) |
+| Dino Suazo | [@SuazoDino](https://github.com/SuazoDino) |
+| Angel Vargas | [@AngelVarP](https://github.com/AngelVarP) |
+| Farid Zamudio | [@Farid-ZS](https://github.com/Farid-ZS) |
+
 ## Qué es
 
 CineStar-Barrio es un sistema integral para la gestión de un cine. Centraliza la programación de la cartelera, la venta de entradas y la confitería.
