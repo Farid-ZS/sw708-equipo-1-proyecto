@@ -1,5 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useSede } from '../../context/sedeContext.ts'
+import { Link } from 'react-router-dom'
 import type { Pelicula } from '../../data/peliculas.mock.ts'
 import { CintaEstreno } from '../CintaEstreno/CintaEstreno.tsx'
 import { PeliculaDatos } from '../PeliculaDatos/PeliculaDatos.tsx'
@@ -15,13 +14,10 @@ function formatearFechaEstreno(fechaIso: string): string {
 export function PeliculaCard({ pelicula }: { pelicula: Pelicula }) {
   const { id, titulo, clasificacion, duracionMin, esEstreno, estado, fechaEstreno } = pelicula
   const enPreventa = estado === 'preventa'
-  // En cartelera y preventa ya se pueden comprar boletos; en próximamente todavía no.
-  const esComprable = estado === 'cartelera' || enPreventa
-  const { requerirSede } = useSede()
-  const navigate = useNavigate()
 
-  const contenido = (
-    <>
+  // Toda la tarjeta lleva a la ficha de la película; ahí se eligen cine y horario.
+  return (
+    <Link to={`/pelicula/${id}`} className={styles.card} aria-label={`Ver ${titulo}`}>
       <div className={styles.foto}>
         <Poster pelicula={pelicula} className={styles.poster} />
         {esEstreno && <CintaEstreno />}
@@ -39,27 +35,6 @@ export function PeliculaCard({ pelicula }: { pelicula: Pelicula }) {
         <PeliculaDatos pelicula={pelicula} sinRestriccion sinDuracion />
         {fechaEstreno && !enPreventa && <p className={styles.fecha}>{formatearFechaEstreno(fechaEstreno)}</p>}
       </div>
-    </>
+    </Link>
   )
-
-  // Con boletos disponibles la tarjeta completa hace de botón (aún sin pantalla de
-  // compra: cae en la ruta comodín). Si todavía no hay cine elegido, primero se pide.
-  if (esComprable) {
-    const destino = `/comprar/${id}`
-    return (
-      <Link
-        to={destino}
-        className={styles.card}
-        aria-label={`Comprar entradas: ${titulo}`}
-        onClick={(e) => {
-          e.preventDefault()
-          requerirSede(() => navigate(destino))
-        }}
-      >
-        {contenido}
-      </Link>
-    )
-  }
-
-  return <article className={styles.card}>{contenido}</article>
 }

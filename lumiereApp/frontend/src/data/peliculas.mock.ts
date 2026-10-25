@@ -2,7 +2,7 @@
 /** APT: apta para todo público · M14 / M18: mayores de esa edad · R: restringida. */
 export type Clasificacion = 'APT' | 'M14' | 'M18' | 'R'
 
-export type Formato = '2D' | '3D' | 'VIP'
+export type Formato = '2D' | '3D'
 
 export interface Pelicula {
   id: number
@@ -22,6 +22,8 @@ export interface Pelicula {
   formatos: Formato[]
   /** Para "preventa" y "próximamente": fecha de estreno en formato ISO (YYYY-MM-DD). */
   fechaEstreno?: string
+  director?: string
+  reparto?: string[]
 }
 
 export const peliculas: Pelicula[] = [
@@ -36,7 +38,9 @@ export const peliculas: Pelicula[] = [
     tono: 32,
     estado: 'cartelera',
     esEstreno: false,
-    formatos: ['2D', 'VIP'],
+    formatos: ['2D'],
+    director: 'Lucía Benavides',
+    reparto: ['Mariana Ríos', 'Tomás Herrera', 'Elena Quispe'],
   },
   {
     id: 2,
@@ -49,6 +53,8 @@ export const peliculas: Pelicula[] = [
     estado: 'cartelera',
     esEstreno: true,
     formatos: ['2D', '3D'],
+    director: 'Andrés Kato',
+    reparto: ['Diego Salcedo', 'Valeria Montes', 'Iván Prado'],
   },
   {
     id: 3,
@@ -61,6 +67,8 @@ export const peliculas: Pelicula[] = [
     estado: 'cartelera',
     esEstreno: false,
     formatos: ['2D'],
+    director: 'Rosa Huamán',
+    reparto: ['Camila Torres', 'Mateo Villa', 'Julia Ccori'],
   },
   {
     id: 4,
@@ -73,6 +81,8 @@ export const peliculas: Pelicula[] = [
     estado: 'cartelera',
     esEstreno: true,
     formatos: ['2D'],
+    director: 'Gabriel Ortiz',
+    reparto: ['Sofía Llanos', 'Rodrigo Paz', 'Ana Céspedes'],
   },
   {
     id: 5,
@@ -84,7 +94,9 @@ export const peliculas: Pelicula[] = [
     tono: 200,
     estado: 'cartelera',
     esEstreno: false,
-    formatos: ['2D', 'VIP'],
+    formatos: ['2D'],
+    director: 'Paula Medina',
+    reparto: ['Joaquín Ruiz', 'Daniela Ferré', 'Bruno Cáceres'],
   },
   {
     id: 6,
@@ -96,7 +108,9 @@ export const peliculas: Pelicula[] = [
     tono: 12,
     estado: 'cartelera',
     esEstreno: true,
-    formatos: ['2D', '3D', 'VIP'],
+    formatos: ['2D', '3D'],
+    director: 'Martín Aguirre',
+    reparto: ['Carla Vidal', 'Hugo Salas', 'Nadia Rey'],
   },
   {
     id: 7,
@@ -110,6 +124,8 @@ export const peliculas: Pelicula[] = [
     esEstreno: false,
     formatos: ['2D', '3D'],
     fechaEstreno: '2026-10-01',
+    director: 'Inés Calderón',
+    reparto: ['Lía Romero', 'Pedro Gálvez', 'Marta Soto'],
   },
   {
     id: 8,
@@ -123,6 +139,8 @@ export const peliculas: Pelicula[] = [
     esEstreno: false,
     formatos: ['2D'],
     fechaEstreno: '2026-10-06',
+    director: 'Fernando Lozano',
+    reparto: ['Raúl Montero', 'Irene Bustos', 'César Luna'],
   },
   {
     id: 9,
@@ -134,7 +152,9 @@ export const peliculas: Pelicula[] = [
     tono: 45,
     estado: 'proximamente',
     esEstreno: false,
-    formatos: ['2D', '3D', 'VIP'],
+    formatos: ['2D', '3D'],
     fechaEstreno: '2026-10-13',
+    director: 'Clara Espinoza',
+    reparto: ['Óscar Delgado', 'Pilar Navarro', 'Samuel Ibáñez'],
   },
 ]

@@ -20,7 +20,10 @@ export interface Funcion {
 
 const DIAS_CARTELERA = 3
 const DIAS_PREVENTA = 6
-const HORAS = ['14:30', '16:00', '17:45', '19:20', '21:00', '22:30']
+const HORAS = ['11:00', '12:30', '13:40', '14:30', '15:50', '16:00', '17:10', '17:45', '18:30', '19:20', '20:15', '21:00', '21:40', '22:30']
+// Cuántas funciones tiene cada formato + idioma en un cine y día (entre MIN y MAX).
+const MIN_HORAS = 3
+const MAX_HORAS = 6
 
 // Fecha local (toISOString la daría en UTC y de noche se adelanta un día).
 function fechaIso(d: Date): string {
@@ -71,15 +74,13 @@ function generarFunciones(): Funcion[] {
 
         for (const formato of p.formatos.filter((f) => sede.formatos.includes(f))) {
           for (const idioma of idiomas) {
-            lista.push({
-              id: lista.length + 1,
-              peliculaId: p.id,
-              sedeId: sede.id,
-              fecha,
-              hora: HORAS[(semilla + lista.length) % HORAS.length],
-              idioma,
-              formato,
-            })
+            // Horas distintas y repartidas en el día: se salta por la lista con un paso fijo.
+            const cantidad = MIN_HORAS + ((semilla + lista.length) % (MAX_HORAS - MIN_HORAS + 1))
+            const inicio = (semilla + lista.length) % HORAS.length
+            const horas = new Set(Array.from({ length: cantidad }, (_, i) => HORAS[(inicio + i * 3) % HORAS.length]))
+            for (const hora of horas) {
+              lista.push({ id: lista.length + 1, peliculaId: p.id, sedeId: sede.id, fecha, hora, idioma, formato })
+            }
           }
         }
       })

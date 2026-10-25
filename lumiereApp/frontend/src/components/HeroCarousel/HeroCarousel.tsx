@@ -2,6 +2,7 @@ import Autoplay from 'embla-carousel-autoplay'
 import useEmblaCarousel from 'embla-carousel-react'
 import { useCallback, useEffect, useState } from 'react'
 import type { CSSProperties } from 'react'
+import { Link } from 'react-router-dom'
 import type { Pelicula } from '../../data/peliculas.mock.ts'
 import { PeliculaDatos } from '../PeliculaDatos/PeliculaDatos.tsx'
 import { Poster } from '../Poster/Poster.tsx'
@@ -58,12 +59,12 @@ export function HeroCarousel({ peliculas }: Props) {
                   <PeliculaDatos pelicula={p} grande />
                   <p className={styles.sinopsis}>{p.sinopsis}</p>
                   <div className={styles.botones}>
-                    <a href="#cartelera" className={styles.primario}>
+                    <Link to={`/pelicula/${p.id}#horarios`} className={styles.primario}>
                       Comprar entradas
-                    </a>
-                    <a href="#cartelera" className={styles.secundario}>
-                      Ver funciones
-                    </a>
+                    </Link>
+                    <Link to={`/pelicula/${p.id}`} className={styles.secundario}>
+                      Ver detalle
+                    </Link>
                   </div>
                 </div>
                 <Poster pelicula={p} className={styles.poster} />
