@@ -1,132 +1,128 @@
 # Escenarios de Calidad — Sistema Lumiere
 
-## 1 — Dos vendedores venden el mismo asiento - Concurrencia e integridad de datos
+Este documento define los escenarios de calidad del sistema **Lumiere** conforme al estándar de atributos de calidad (Bass, Clements y Kazman). Cada escenario incluye su especificación formal con medida verificable, su instrumento concreto de medición, el responsable del equipo y la decisión arquitectónica (ADR) asociada.
 
-- **Fuente:** Dos empleados: uno en taquilla y otro por teléfono.
-- **Estímulo:** Al mismo tiempo quieren vender el mismo asiento de la misma función.
-- **Artefacto:** El programa que tramita reservas y la base de datos de asientos.
-- **Entorno:** Cine lleno, varios clientes esperando, los dos canales trabajando.
-- **Respuesta:** Solo uno logra venderlo; el otro recibe el aviso "asiento ocupado" y no se guarda nada a medias.
-- **Medida:** En 1000 intentos simultáneos por el mismo asiento: exactamente 1 venta y 999 avisos; el asiento nunca aparece vendido dos veces.
+---
 
-## 2 — Cancelación con registro - Auditoría / trazabilidad
+## 1. Escenarios de Calidad
 
-- **Fuente:** Empleado de taquilla que cancela una reserva.
-- **Estímulo:** Cancela un boleto y escribe un motivo.
-- **Artefacto:** El módulo de cancelaciones y el registro de auditoría.
-- **Entorno:** Cine funcionando normal; después el empleado intenta borrar o cambiar lo registrado.
-- **Respuesta:** El sistema guarda quién canceló, cuándo, qué boleto y qué asientos quedaron libres; los asientos se liberan de inmediato y el empleado no puede modificar ni borrar ese registro.
-- **Medida:** El 100% de las cancelaciones queda con empleado y fecha; 0 registros que el empleado pueda alterar; buscar el historial de un boleto tarda menos de 1 segundo.
+### Escenario 1 (E1) — Fiabilidad: Concurrencia e Integridad de Asientos (P0)
 
-## 3 — Solo administradores en la parte de administración - Seguridad de acceso
+- **Fuente:** Dos usuarios simultáneos (vendedores de taquilla o clientes web).
+- **Estímulo:** Intentan reservar exactamente el mismo asiento de la misma función al mismo milisegundo.
+- **Artefacto:** Módulo de reservas de boletos y base de datos relacional de butacas.
+- **Entorno:** Sistema en producción con sala de alta demanda (estreno comercial con alta contención).
+- **Respuesta:** Exactamente una solicitud confirma la reserva y emite boleto con HTTP 201; la otra es rechazada deterministamente con mensaje `"El asiento ... ya está ocupado"` y código HTTP 400. Ninguna reserva queda en estado intermedio ni existe sobreventa (*overbooking*).
+- **Medida:** En 1000 intentos concurrentes dirigidos al mismo asiento y función: exactamente 1 reserva confirmada y 999 respuestas de rechazo; 0 registros duplicados en base de datos.
+- **Instrumento de Medición:** Script de carga concurrente con **`k6`** disparando 1000 peticiones POST paralelas a `/api/reservas`, seguido de una consulta de verificación SQL directa en PostgreSQL (`SELECT count(*) FROM boletos WHERE funcion_id = ... AND asiento = ...`).
+- **Responsable de Ejecución:** Luis Angel Vargas Ponce.
+- **Decisión Arquitectónica:** [ADR-0003](adr/0003-bloqueo-pesimista-butacas.md) (Restricción atómica `UNIQUE (funcion_id, asiento)` en PostgreSQL con traducción de error `23505` a `AsientoOcupadoError`).
 
-- **Fuente:** Una persona sin usuario, o un vendedor común.
-- **Estímulo:** Intenta usar funciones de administrador: crear película, función o sala.
-- **Artefacto:** El sistema de acceso y permisos del programa.
-- **Entorno:** Cine operando normal, acceso desde cualquier computadora.
-- **Respuesta:** El sistema lo rechaza y no le muestra ni le permite nada de administrador.
-- **Medida:** De 100 intentos sin permiso, los 100 son rechazados y ninguno modifica la cartelera.
+---
 
-## 4 — Vender rápido con el mapa de asientos - Usabilidad
+### Escenario 2 (E2) — Seguridad: Inmutabilidad y Trazabilidad de Auditoría (P1)
 
-- **Fuente:** Vendedor de taquilla con muchos clientes esperando.
-- **Estímulo:** Tiene que vender boletos para una función.
-- **Artefacto:** La pantalla del vendedor con el mapa de asientos.
-- **Entorno:** Cine lleno, vendedor nuevo con poco entrenamiento.
-- **Respuesta:** La venta se hace en pocos pasos mirando el mapa, sin verificar a mano si hay lugar.
-- **Medida:** Cada venta en menos de 5 clics y menos de 60 segundos; solo 1 error por cada 20 ventas; el mapa siempre muestra si el asiento está libre, ocupado o reservado.
+- **Fuente:** Usuario interno (empleado o cajero) con acceso autenticado al sistema.
+- **Estímulo:** Cancela una reserva e intenta posteriormente modificar o eliminar el registro histórico de dicha cancelación.
+- **Artefacto:** Módulo de cancelaciones y tabla histórica de auditoría.
+- **Entorno:** Operación normal del cine; el empleado intenta alterar registros desde la aplicación o alterando consultas.
+- **Respuesta:** El sistema registra de manera inmutable quién canceló, la fecha/hora exacta, el identificador del boleto y los asientos liberados; el sistema rechaza cualquier intento de modificación o borrado posterior.
+- **Medida:** El 100% de las cancelaciones queda registrado con usuario y marca de tiempo; 0 registros pueden ser modificados o eliminados (0 sentencias `UPDATE` o `DELETE` exitosas sobre cancelaciones).
+- **Instrumento de Medición:** Prueba de integración automatizada en **`node:test`** que ejecuta operaciones de cancelación y posteriormente intenta invocar sentencias `UPDATE` y `DELETE` tanto vía API como mediante transacciones SQL directas con el rol operativo, verificando rechazo con código de error de permisos/integridad.
+- **Responsable de Ejecución:** Farid Paolo Zamudio Sánchez.
+- **Decisión Arquitectónica:** [ADR-0001](adr/0001-eleccion-estilo-arquitectonico.md) (Dominio aislado con puertos y adaptadores para registro inmutable).
 
-## 5 — El sistema se cae durante la jornada - Disponibilidad
+---
 
-- **Fuente:** El servidor del sistema se apaga o se reinicia.
-- **Estímulo:** El programa se interrumpe mientras hay ventas en curso.
-- **Artefacto:** El servidor de la aplicación y la base de datos.
-- **Entorno:** Cine lleno, ventas activas al momento de la caída.
-- **Respuesta:** Las ventas ya confirmadas se conservan; las que estaban a medias se descartan sin dejar asientos ocupados por error, y el sistema vuelve a funcionar.
-- **Medida:** Se recupera en menos de 60 segundos; se conservan todas las ventas confirmadas; ningún asiento queda en un estado raro.
+### Escenario 3 (E3) — Seguridad: Control de Acceso por Roles (RBAC) (P1)
 
-## 6 — Consultar la cartelera por cuenta propia - Autoservicio de información
+- **Fuente:** Usuario sin sesión iniciada, o empleado con rol de vendedor estándar.
+- **Estímulo:** Intenta acceder a rutas administrativas restringidas (creación de películas, salas, funciones o reportes de recaudación) directamente mediante peticiones HTTP/API.
+- **Artefacto:** Módulo de autenticación, validación de tokens JWT y middleware de autorización de rutas.
+- **Entorno:** Sistema en funcionamiento accesible desde terminales de taquilla o red local.
+- **Respuesta:** El sistema intercepta las peticiones en el middleware perimetral, deniega el acceso sin ejecutar la lógica de negocio y responde con HTTP 401 Unauthorized o HTTP 403 Forbidden.
+- **Medida:** De 100 peticiones a rutas administrativas sin credenciales de administrador, el 100% (100 de 100) son rechazadas y 0 modifican la configuración del cine.
+- **Instrumento de Medición:** Suite automatizada de pruebas de seguridad HTTP con **`node:test`** y peticiones simuladas con tokens alterados, expirados o con roles insuficientes, integrada en el pipeline de GitHub Actions en cada push.
+- **Responsable de Ejecución:** Gonzalo Alessandro Albornoz Azurza.
+- **Decisión Arquitectónica:** Middleware de autorización por roles y firma de tokens JWT en el adaptador primario Express.
 
-- **Fuente:** Cliente que desea elegir una película y una función.
-- **Estímulo:** Consulta la cartelera y aplica filtros por película, fecha o función disponible.
-- **Artefacto:** Interfaz pública de cartelera y servicio de consulta de funciones.
-- **Entorno:** Cartelera publicada y varios clientes consultando el sistema al mismo tiempo.
-- **Respuesta:** El sistema muestra únicamente funciones vigentes, con película, fecha, hora, sala y disponibilidad de butacas; el cliente puede consultar la información sin ayuda de un empleado.
-- **Medida:** En 100 consultas de cartelera, las 100 responden en menos de 2 segundos y ninguna muestra una función vencida o inexistente.
+---
 
-## 7 — Recuperar la entrada digital - Autoservicio de comprobante
+### Escenario 4 (E4) — Capacidad de Interacción: Agilidad y Usabilidad en Taquilla (P2)
 
-- **Fuente:** Cliente que ya tiene una compra confirmada.
-- **Estímulo:** Solicita consultar o descargar nuevamente su entrada utilizando el identificador de la compra.
-- **Artefacto:** Módulo de consulta de compras y generador de comprobantes digitales.
-- **Entorno:** La compra existe y el cliente accede desde un navegador sin intervención de taquilla.
-- **Respuesta:** El sistema valida la compra y permite visualizar o descargar el comprobante correspondiente, sin crear una venta nueva ni modificar la reserva original.
-- **Medida:** En 100 consultas de compras válidas, las 100 muestran el comprobante correcto en menos de 3 segundos; 0 consultas generan una venta duplicada o muestran datos de otra compra.
+- **Fuente:** Vendedor de taquilla nuevo o con entrenamiento básico en horario pico.
+- **Estímulo:** Atiende a un cliente presencial para seleccionar función, butacas y confirmar la venta.
+- **Artefacto:** Interfaz web de taquilla con mapa interactivo de asientos en tiempo real.
+- **Entorno:** Fila de espera en taquilla física con alta afluencia de público.
+- **Respuesta:** El vendedor completa la transacción en pocos clics visualizando el mapa de asientos con estados claros (libre, reservado, ocupado), sin requerir verificación manual en ventanilla ni cálculos externos.
+- **Medida:** Cada venta se completa en menos de 5 clics y menos de 60 segundos; se produce como máximo 1 error por cada 20 ventas atendidas.
+- **Definición de Error:** *Se define formalmente como error la selección involuntaria de un asiento ocupado, un clic fuera del área activa del mapa interactivo, o el intento de confirmación con datos de cliente incompletos que obligue a reiniciar el formulario de venta.*
+- **Instrumento de Medición:** Sesión presencial de pruebas de usabilidad con 3 operadores de taquilla, tareas guionadas de venta rápida, cronometraje de flujo, grabación de pantalla y registro analítico de eventos de clic en el frontend React.
+- **Responsable de Ejecución:** Carlos Daniel Chavez Oliva.
+- **Decisión Arquitectónica:** Diseño de interfaz SPA en React 18 con sincronización visual de estados de butacas y validaciones reactivas inmediatas.
 
-## 8 — Consultar el estado de una compra - Autoservicio de seguimiento
+---
 
-- **Fuente:** Cliente con una compra confirmada o en proceso.
-- **Estímulo:** Consulta el estado de su operación mediante el identificador proporcionado por el sistema.
-- **Artefacto:** Módulo de consulta de estado de compra y registro de ventas.
-- **Entorno:** Existen compras confirmadas y operaciones que no llegaron a completarse.
-- **Respuesta:** El sistema informa si la operación está confirmada, pendiente o no completada, sin exponer compras de otros clientes y sin permitir que la consulta cambie el estado de la operación.
-- **Medida:** En 100 consultas con identificadores válidos, las 100 devuelven el estado correspondiente; 0 consultas permiten acceder a datos de otra compra y 0 consultas modifican una venta.
+### Escenario 5 (E5) — Fiabilidad: Recuperación ante Caídas y Consistencia Transaccional (P1)
 
-## 9 — Obtener información de una función antes de asistir - Autoservicio de consulta
+- **Fuente:** Falla imprevista de infraestructura (reinicio del proceso Node.js, apagón del servidor o reinicio del contenedor).
+- **Estímulo:** El servidor o base de datos se interrumpe de forma abrupta mientras existen reservas concurrentes en proceso.
+- **Artefacto:** Servidor de aplicación Express y motor PostgreSQL.
+- **Entorno:** Alta carga transaccional al momento de la caída.
+- **Respuesta:** Al restablecerse el servicio, el 100% de las ventas confirmadas antes de la caída permanecen intactas; las reservas que se encontraban a mitad de ejecución se descartan limpiamente (rollback automático), sin dejar asientos bloqueados indefinidamente ni registros corruptos.
+- **Medida:** El sistema se recupera y responde con normalidad en menos de 60 segundos tras el reinicio; el 100% de las transacciones incompletas abortan limpiamente; existen 0 bloqueos residuales (*deadlocks* o *locks* colgados) en la tabla `boletos`.
+- **Instrumento de Medición:** Prueba de resiliencia ejecutando `docker restart` sobre el contenedor de PostgreSQL y la aplicación durante una ráfaga de transacciones, con sondeo concurrente cada 1 segundo al endpoint `/api/health` para cronometrar la recuperación, seguido de un script SQL de reconciliación que verifique la ausencia de bloqueos huérfanos.
+- **Responsable de Ejecución:** Luis Angel Vargas Ponce.
+- **Decisión Arquitectónica:** [ADR-0002](adr/0002-adopcion-de-Postgresql.md) y [ADR-0003](adr/0003-bloqueo-pesimista-butacas.md) (Transacciones ACID y WAL en PostgreSQL).
 
-- **Fuente:** Cliente que necesita conocer los detalles de una función antes de decidir su visita.
-- **Estímulo:** Selecciona una función de la cartelera para consultar sus datos disponibles.
-- **Artefacto:** Vista pública de detalle de la función.
-- **Entorno:** La función está publicada en la cartelera y el cliente no ha iniciado una venta.
-- **Respuesta:** El sistema presenta la información disponible de la película, la clasificación por edad, la sala, la fecha y la hora, sin requerir asistencia del personal.
-- **Medida:** En 100 consultas de funciones publicadas, las 100 muestran la información completa registrada y ninguna permite seleccionar una tarifa incompatible con la clasificación de la película.
+---
 
-## Tabla de priorización actualizada
+### Escenario 6 (E6) — Rendimiento: Latencia de Consulta de Cartelera bajo Carga (P2)
 
-| #   | Escenario                                      | Tipo                        | Impacto | Dificultad | Prioridad |
-| --- | ---------------------------------------------- | --------------------------- | ------- | ---------- | --------- |
-| 1   | Dos vendedores venden el mismo asiento         | Concurrencia / integridad   | Alto    | Alta       | P0        |
-| 2   | Cancelación con registro                       | Auditoría / trazabilidad    | Alto    | Media      | P1        |
-| 3   | Solo administradores en administración         | Seguridad de acceso         | Alto    | Baja       | P1        |
-| 5   | El sistema se cae durante la jornada           | Disponibilidad              | Alto    | Media      | P1        |
-| 6   | Consultar la cartelera por cuenta propia       | Autoservicio de información | Alto    | Baja       | P2        |
-| 4   | Vender rápido con el mapa de asientos          | Usabilidad                  | Medio   | Baja       | P2        |
-| 7   | Recuperar la entrada digital                   | Autoservicio de comprobante | Medio   | Baja       | P2        |
-| 8   | Consultar el estado de una compra              | Autoservicio de seguimiento | Medio   | Baja       | P3        |
-| 9   | Obtener información de una función antes de... | Autoservicio de consulta    | Medio   | Baja       | P3        |
+- **Fuente:** Múltiples clientes concurrentes consultando funciones y películas desde navegadores web.
+- **Estímulo:** Ráfaga sostenida de 500 solicitudes por segundo a las rutas de cartelera y horarios.
+- **Artefacto:** Endpoints `/api/peliculas` y `/api/funciones` del backend y base de datos PostgreSQL.
+- **Entorno:** Viernes por la tarde antes del inicio de funciones de fin de semana.
+- **Respuesta:** El servidor entrega la lista actualizada de funciones vigentes con sus salas y disponibilidad sin degradar el tiempo de respuesta.
+- **Medida:** El 95% de las peticiones (percentil p95) responde en menos de 300 milisegundos, con 0% de errores HTTP 500 bajo una tasa de 500 req/s.
+- **Instrumento de Medición:** Script de rendimiento con **`k6`** simulando 500 usuarios virtuales concurrentes durante 2 minutos hacia los endpoints de lectura, monitoreando latencias p90, p95 y tasa de errores.
+- **Responsable de Ejecución:** Gonzalo Alessandro Albornoz Azurza.
+- **Decisión Arquitectónica:** [ADR-0002](adr/0002-adopcion-de-Postgresql.md) (Consultas optimizadas con índices B-Tree en PostgreSQL) y pool de conexiones `pg.Pool`.
 
-### Justificación del orden
+---
 
-El escenario 1 se mantiene como el P0 indiscutible. Si la concurrencia falla y hay sobreventa, la viabilidad del proyecto se ve comprometida porque no resuelve el problema principal del negocio.
+### Escenario 7 (E7) — Modificabilidad: Adición de un Nuevo Adaptador de Infraestructura (P2)
 
-En el nivel P1 se agrupan los requisitos críticos para proteger la operación: la auditoría (2), la seguridad de acceso (3) y la disponibilidad (5). Estos protegen la operación diaria. Un sistema caído en horas pico o un cajero borrando ventas sin dejar rastro reproduce exactamente el caos que Lumiere quiere evitar. Aunque son críticos, el de acceso (3) es un quick win por su baja dificultad.
+- **Fuente:** Desarrollador del equipo de backend.
+- **Estímulo:** Requerimiento de incorporar un nuevo adaptador de persistencia alternativo (por ejemplo, base de datos de auditoría en MongoDB o almacenamiento en caché Redis) o un nuevo canal de notificación.
+- **Artefacto:** Capa de infraestructura y contratos de puertos en el núcleo de dominio.
+- **Entorno:** Mantenimiento evolutivo del sistema.
+- **Respuesta:** El nuevo adaptador se implementa satisfaciendo la interfaz del puerto existente sin requerir modificaciones en las clases de dominio ni en los casos de uso.
+- **Medida:** Se requiere modificar 0 líneas de código en la capa de dominio (`src/domain/`); el nuevo adaptador pasa las mismas pruebas de contrato de la suite compartida en menos de 2 horas de desarrollo.
+- **Instrumento de Medición:** Revisión de diferencias de Git (`git diff --stat src/domain/`) comprobando 0 cambios en el dominio, y ejecución exitosa de la suite parametrizada de pruebas de contrato (`src/tests/adaptadores.test.ts`).
+- **Responsable de Ejecución:** Farid Paolo Zamudio Sánchez.
+- **Decisión Arquitectónica:** [ADR-0001](adr/0001-eleccion-estilo-arquitectonico.md) y [ADR-0004](adr/0004-adopcion-typescript-backend.md) (Arquitectura Hexagonal con Puertos y Adaptadores).
 
-Para el bloque P2 agrupamos las funcionalidades de interacción directa y ágil: vender rápido en taquilla (4), consultar la cartelera (6) y recuperar la entrada digital (7). Son vitales para que el cine despache rápido y se eviten las colas inmensas. Estos escenarios garantizan la fluidez en el servicio al cliente, pero dependen de la estabilidad y seguridad proporcionada por los niveles P0 y P1.
+---
 
-Finalmente, en P3 dejamos el seguimiento del estado de compra (8) y la consulta detallada antes de asistir (9). Son características excelentes para redondear la experiencia del cliente y darle autonomía, pero si el equipo necesita priorizar tiempos de entrega para salir a producción, el negocio puede sobrevivir la primera semana de estreno sin ellos.
+## 2. Matriz de Priorización y Trazabilidad
 
-## Revisión de escenarios de calidad — Grupo N° 4
+| ID | Atributo de Calidad | Escenario | Impacto en Negocio | Dificultad Técnica | Prioridad | Decisión Arquitectónica que lo Atiende | Instrumento y Responsable |
+|:---:|---|---|:---:|:---:|:---:|---|---|
+| **E1** | **Fiabilidad** | Concurrencia e Integridad de Asientos | Alto (3) | Alta (3) | **P0** | **ADR-0003**: Restricción `UNIQUE` atómica con traducción de error `23505`. | Script k6 (1000 req concurrentes) — Luis Vargas |
+| **E2** | **Seguridad** | Inmutabilidad de Auditoría en Cancelaciones | Alto (3) | Media (2) | **P1** | **ADR-0001**: Núcleo de dominio desacoplado con repositorio inmutable. | Test de rechazo UPDATE/DELETE en `node:test` — Farid Zamudio |
+| **E3** | **Seguridad** | Control de Acceso por Roles (RBAC) | Alto (3) | Baja (1) | **P1** | Middleware de autorización JWT y control de acceso por roles. | Test HTTP automatizado en CI (HTTP 401/403) — Gonzalo Albornoz |
+| **E5** | **Fiabilidad** | Recuperación ante Caídas y Consistencia | Alto (3) | Media (2) | **P1** | **ADR-0002** y **ADR-0003**: Transacciones ACID y recuperación por WAL en PostgreSQL. | Chaos test `docker restart` y sondeo healthcheck — Luis Vargas |
+| **E4** | **Usabilidad** | Agilidad en Venta con Mapa de Asientos | Medio (2) | Baja (1) | **P2** | Interfaz SPA reactiva en React 18 con mapa de butacas en tiempo real. | Sesión de usabilidad con 3 vendedores y grabación — Carlos Chavez |
+| **E6** | **Rendimiento** | Latencia de Cartelera bajo Carga | Medio (2) | Media (2) | **P2** | **ADR-0002**: Índices B-Tree en PostgreSQL y pool de conexiones `pg.Pool`. | Test de carga k6 (500 req/s, p95 < 300 ms) — Gonzalo Albornoz |
+| **E7** | **Modificabilidad** | Adición de Nuevo Adaptador | Medio (2) | Media (2) | **P2** | **ADR-0001** y **ADR-0004**: Puertos y Adaptadores (Hexagonal) en TypeScript. | `git diff --stat` en `src/domain/` y tests de contrato — Farid Zamudio |
 
-Defecto que cruza los 5 escenarios
+---
 
-Ninguno nombra el instrumento. Las medidas están numéricamente bien construidas (número + unidad + condición, que es justo lo que pide la guía), pero la pregunta de la crítica cruzada es literal: ¿con qué instrumento concreto se mide esto, y quién lo va a correr? Aquí no hay un solo k6, pytest, chaos script, OWASP ZAP ni nada. Comparado con el ejemplo de ComedorUNI (que sí nombra k6, toxiproxy, pip-audit), esto es la diferencia entre "sabemos qué queremos medir" y "sabemos cómo lo vamos a medir". Se corrige rápido, pero hay que corregirlo en los 5, no en uno.
+### 2.1. Justificación del Orden y cómo la Prioridad Guio las Decisiones
 
-Por escenario
+El orden de priorización establecido refleja las dependencias críticas del modelo de negocio de exhibición cinematográfica:
 
-1 — Doble venta (Concurrencia). El mejor de los cinco. La medida es agresiva y correcta (1000 intentos, 1 venta, 0 duplicados). Lo único que falta: el mecanismo. "El artefacto es el programa y la BD" no dice si la solución es un lock optimista, un SELECT ... FOR UPDATE, o una unique constraint. Sin nombrar el mecanismo, no sabes si el equipo sabe cómo van a lograrlo o solo qué quieren que pase. Instrumento sugerido: script de carga (k6/locust) disparando 1000 requests concurrentes al mismo asiento, verificado con un SELECT COUNT(\*) agrupado por asiento+función en la BD.
-
-2 — Cancelación con auditoría. Tiene un problema de diseño, no de redacción: mezcla dos atributos de calidad en un solo escenario. "0 registros alterables" es integridad/auditoría (no-repudio). "Buscar el historial en <1s" es eficiencia de desempeño. Son dos exigencias distintas con dos instrumentos distintos (uno se prueba intentando un UPDATE/DELETE contra la tabla de auditoría y esperando rechazo; el otro se prueba con una query de performance). Yo lo partiría en dos escenarios, o sacaría la métrica de tiempo y la dejaría 100% enfocada en inmutabilidad. Instrumento para lo que sí es el foco: intentar UPDATE/DELETE directo sobre la tabla de auditoría (vía API y vía SQL directo) y confirmar que la BD lo rechaza (tabla append-only, o REVOKE UPDATE, DELETE a nivel de rol).
-
-3 — Solo administradores. Este es el que más me preocupa como el "de seguridad de verdad". "Intenta usar funciones de administrador" es ambiguo entre intenta hacer clic en la UI y intenta llamar al endpoint directo con Postman/curl. Si el control solo vive en el frontend (ocultar botones), esto no pasa la prueba de seguridad real — cualquiera con el token de un vendedor común puede pegarle al endpoint admin directo. El escenario tiene que decir explícitamente que el ataque es a nivel de API, no de UI. Instrumento: colección de requests (Postman/Newman o script con requests) golpeando cada endpoint administrativo con un JWT de rol no-admin, esperando 401/403 en el 100% de los casos, corrida en CI en cada deploy — no a mano.
-
-4 — Venta rápida (Usabilidad). El mejor definido en términos de persona ("vendedor nuevo con poco entrenamiento" — eso es exactamente cómo se escribe un escenario de usabilidad, con el perfil del usuario real). Un solo hueco: "1 error por cada 20 ventas" no dice qué cuenta como error (¿vendedor le da clic al asiento equivocado? ¿el sistema no le avisa que ya estaba ocupado?). Sin esa definición, dos personas midiendo el mismo test cuentan errores distintos. Instrumento: sesión de test de usabilidad con N vendedores nuevos, tareas guionadas, grabación de pantalla, conteo de clics por evento instrumentado en el frontend.
-
-5 — Caída del sistema (Disponibilidad). Ojo con lo que en realidad están prometiendo: "se recupera en menos de 60 segundos" describe tiempo de reinicio, no alta disponibilidad. Si el servidor es un solo nodo y la recuperación es "se reinicia y ya", eso es tolerable para un cine (no es un sistema crítico de vida o muerte), pero hay que ser honestos en la ficha: esto es recuperación ante falla, no redundancia activa. Si de verdad hay un balanceador con instancia de respaldo, dilo explícito en el artefacto. Instrumento: chaos test tipo kill -9/docker stop sobre el proceso, con un probe de salud (/health) cada segundo midiendo tiempo de recuperación, y un script de reconciliación que compare el estado de asientos antes/después.
-
-Sobre la tabla de priorización
-
-Está bien pensada — me gusta la columna "Tipo" que agregaron, eso no lo tenía el ejemplo de referencia. Pero el profesor es explícito: "decir que todo es importante equivale a no haber priorizado", y aquí 3 de 5 escenarios comparten P1. El párrafo de abajo sí los desempata en prosa (auditoría, luego acceso por ser quick-win, luego disponibilidad), pero eso debería reflejarse en la tabla con un rango único 1–5, no solo en el texto. Si el profesor pide la tabla como evidencia y alguien la lee sin el párrafo, ve tres empates.
-
-Veredicto tipo crítica cruzada
-
-Si yo fuera el equipo que revisa esto en clase: Escenario 1 pasa. Escenarios 2, 3, 4 y 5 no pasan tal cual están — no porque las medidas estén mal pensadas, sino porque ninguno nombra el instrumento y quién lo corre, que es literalmente la única pregunta que hace la guía. Es una corrección rápida (agregar una frase de instrumento a cada uno), pero es la que tumba escenarios en el paso 04.
+1. **Prioridad P0 (Escenario 1 — Concurrencia de Asientos):** Vender dos veces el mismo asiento a dos clientes distintos representa el fallo operacional y reputacional más severo de un cine. Esta prioridad absoluta guio de manera directa la adopción de **PostgreSQL (ADR-0002)** y el descarte de mecanismos optimistas en favor de la **restricción atómica compuesta de unicidad (ADR-0003)**, garantizando que el motor de base de datos serialice las reservas a nivel de índice B-Tree sin depender de temporizadores frágiles en memoria.
+2. **Prioridad P1 (Escenarios 2, 3 y 5 — Integridad Operacional, Acceso y Disponibilidad):** Un cine no puede operar si los cajeros pueden borrar transacciones para apropiarse de ingresos (E2), si usuarios externos pueden alterar precios o salas (E3), o si un corte de energía deja butacas en estados indeterminados (E5). La necesidad de proteger la integridad financiera y operativa guio la definición de transacciones atómicas con WAL en PostgreSQL y el aislamiento de puertos en el dominio.
+3. **Prioridad P2 (Escenarios 4, 6 y 7 — Fluidez, Rendimiento y Evolución):** Una vez blindada la consistencia transaccional, los escenarios P2 atienden la experiencia del usuario y la mantenibilidad: la rapidez de despacho en taquilla evita colas (E4), la cartelera de alta velocidad sostiene picos de tráfico en estrenos (E6), y la arquitectura hexagonal permite incorporar pasarelas de pago o proveedores alternativos en horas sin tocar el núcleo del negocio (E7), guiando la adopción de **TypeScript y React (ADR-0004)**.
