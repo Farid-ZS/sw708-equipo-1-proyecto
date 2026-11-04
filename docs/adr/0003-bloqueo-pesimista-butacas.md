@@ -1,7 +1,7 @@
-# ADR 0003: Bloqueo pesimista a nivel de fila para la reserva de butacas
+# ADR 0003: Control de concurrencia mediante restricción de unicidad atómica en PostgreSQL para la reserva de butacas
 
-- **Fecha:** 2026-10-17
-- **Estado:** Propuesto
+- **Fecha:** 2026-10-17 (Actualizado: 2026-11-04)
+- **Estado:** Aceptado
 
 ---
 
@@ -9,40 +9,38 @@
 
 El escenario de calidad de mayor prioridad del sistema (**Escenario 1 — P0: Concurrencia e integridad de datos** en `docs/escenarios.md`) exige que, ante intentos simultáneos de compra sobre la misma butaca en una función, exactamente una venta se confirme y las demás sean rechazadas, sin estados intermedios ni sobreventa (*overbooking*).
 
-La verificación realizada únicamente en la capa de aplicación (leer el estado de la butaca y luego reservarla) deja una ventana entre el `SELECT` y el `UPDATE` por la cual dos transacciones concurrentes pueden observar la misma butaca como libre y confirmar una doble venta.
+La verificación realizada únicamente en la capa de aplicación (leer si el asiento existe y luego insertar) introduce una condición de carrera conocida como *time-of-check to time-of-use (TOCTOU)*: dos peticiones concurrentes leen la ausencia del boleto simultáneamente y ambas intentan persistir.
 
-Por ello, se necesita una estrategia de control de concurrencia que garantice la atomicidad de la reserva sobre PostgreSQL, gestor adoptado en el ADR 0002, manteniendo la lógica de reserva aislada en el dominio conforme al ADR 0001.
+Dado que el modelo de datos de reservas de boletos no precarga una fila por cada butaca libre de una sala, el bloqueo pesimista tradicional con `SELECT ... FOR UPDATE` no es aplicable directamente sobre filas inexistentes. Se requiere un mecanismo de control de concurrencia atómico a nivel de motor de base de datos en PostgreSQL (adoptado en el ADR 0002) que garantice la atomicidad sin sobrecostos de mantenimiento de estado artificial, manteniendo el dominio aislado.
 
 ---
 
 ## 2. Alternativas consideradas
 
-### Alternativa 1: Bloqueo optimista con columna de versión
+### Alternativa 1: Tabla de inventario de butacas con bloqueo pesimista (`SELECT ... FOR UPDATE`)
 
-- **Descripción:** Registrar una columna de versión en la butaca o reserva; al confirmar la venta, la transacción verifica que la versión no haya cambiado desde su lectura y reintenta en caso contrario.
-- **Razón de descarte:** Bajo alta contención sobre el mismo asiento en la función estrella, los reintentos generan latencia y errores para el usuario al final del flujo de compra, que es precisamente el caso más crítico del negocio. Se descartó como estrategia principal, aunque permanece válido para operaciones de bajo conflicto.
+- **Descripción:** Pre-poblar una tabla física con todas las butacas para cada función programada (por ejemplo, 100 a 300 filas por función) y ejecutar una transacción que adquiera un bloqueo exclusivo de fila con `SELECT ... FOR UPDATE` antes de cambiar su estado a "reservado".
+- **Razón de descarte:** Incrementa innecesariamente el volumen de datos relacionales y la complejidad operativa al requerir la generación y mantenimiento de cientos de filas por cada nueva función creada en cartelera. Además, retiene conexiones y bloqueos activos en el pool durante la transacción.
 
-### Alternativa 2: Restricción de unicidad sobre la asignación (UNIQUE de función + butaca con venta activa)
+### Alternativa 2: Bloqueo optimista con versión
 
-- **Descripción:** Definir en la base de datos una restricción de unicidad parcial que impida existan dos ventas activas para la misma butaca en la misma función.
-- **Razón de descarte (como estrategia única):** La restricción se mantiene como red de seguridad en la base de datos, pero por sí sola no basta: el flujo de la aplicación necesita un orden determinista de bloqueo para rechazar limpiamente al comprador perdedor y liberar la butaca, en lugar de llegar a una excepción de integridad al final de la transacción.
+- **Descripción:** Agregar una columna de versión a la función o butaca y verificarla al confirmar la reserva.
+- **Razón de descarte:** Bajo contención en funciones de alta demanda (estrenos), los reintentos optimistas fallan en cascada y generan latencia indeseada para el usuario final.
 
-### Alternativa 3: Bloqueo pesimista a nivel de fila (estrategia seleccionada)
+### Alternativa 3: Restricción de unicidad a nivel de motor con traducción de excepciones de integridad (Seleccionada)
 
-- **Descripción:** Ejecutar la reserva dentro de una transacción que adquiere un bloqueo exclusivo sobre la fila de la butaca mediante `SELECT ... FOR UPDATE`, de modo que las transacciones concurrentes sobre la misma butaca se serialicen.
-- **Justificación:** Garantiza que exactamente una transacción confirme la venta, produce rechazos limpios y deterministas para las transacciones perdedoras, y concentra la lógica en un caso de uso de dominio verificable mediante pruebas de concurrencia.
+- **Descripción:** Establecer una restricción de unicidad estricta en PostgreSQL sobre la combinación de función y asiento: `CONSTRAINT uk_boleto_funcion_asiento UNIQUE (funcion_id, asiento)`. En el adaptador de infraestructura (`PostgresBoletoRepository`), capturar la violación de unicidad lanzada por el motor de base de datos (código SQLSTATE `23505` - `unique_violation`) y traducirla limpiamente a la excepción de dominio `AsientoOcupadoError`.
+- **Justificación:** El motor de base de datos garantiza la atomicidad estricta a nivel de índice B-Tree sin necesidad de preinsertar filas ni retener bloqueos manuales. Si dos transacciones intentan reservar el mismo asiento al mismo milisegundo, PostgreSQL serializa la inserción garantizando que exactamente una se confirme y la segunda aborte inmediatamente con un rechazo determinista.
 
 ---
 
 ## 3. Decisión
 
-**Implementamos la reserva de butacas dentro de una transacción con bloqueo pesimista a nivel de fila (`SELECT ... FOR UPDATE` sobre la butaca), en la capa de infraestructura.**
+**Adoptamos la restricción de unicidad atómica en base de datos (`UNIQUE (funcion_id, asiento)`) como mecanismo principal de control de concurrencia para la reserva de butacas en PostgreSQL.**
 
-Las transacciones concurrentes sobre la misma butaca se serializan y solo la primera confirma la venta; las restantes son rechazadas de forma determinista y la butaca queda liberada al finalizar la transacción fallida.
+En la capa de dominio, el caso de uso realiza la verificación preventiva (`buscarPorAsiento`) para responder de forma rápida en flujos secuenciales. En el adaptador de infraestructura de persistencia (`PostgresBoletoRepository`), se captura de forma obligatoria el error de unicidad de PostgreSQL (código `23505`), traduciéndolo inmediatamente a `AsientoOcupadoError`.
 
-Las reglas de negocio que acompañan al bloqueo (validación de estado de la butaca, confirmación de la venta y liberación ante rechazo) residen en el caso de uso de dominio correspondiente, conforme a la arquitectura definida en el ADR 0001; la capa de infraestructura solo materializa el mecanismo de bloqueo sobre PostgreSQL.
-
-Cuando existan butacas múltiples en una misma reserva, se adquieren los bloqueos en un orden determinista (orden ascendente por identificador de butaca) para evitar *deadlocks*.
+El controlador de presentación captura `AsientoOcupadoError` y responde al cliente con código HTTP 400 y mensaje de error descriptivo, garantizando que ninguna excepción interna del driver de base de datos escape al usuario y cerrando por completo la condición de carrera del Escenario 1 (P0).
 
 ---
 
@@ -50,14 +48,11 @@ Cuando existan butacas múltiples en una misma reserva, se adquieren los bloqueo
 
 ### Positivas (Beneficios)
 
-- **Integridad garantizada:** Exactamente una venta se confirma por butaca, sin estados intermedios ni sobreventa, cumpliendo el Escenario 1 — P0.
-- **Lógica centralizada y rastreable:** La reserva reside en un caso de uso de dominio identificable en el código (servicio de reserva), separado del mecanismo de bloqueo que pertenece a la infraestructura.
-- **Comportamiento verificable:** El aislamiento del dominio permite probar las reglas de reserva con pruebas unitarias puras, mientras que la concurrencia se verifica mediante pruebas de integración con transacciones simultáneas contra PostgreSQL.
-- **Rechazos limpios:** El comprador perdedor recibe una respuesta determinista y la butaca queda disponible inmediatamente al finalizar la transacción rechazada.
+- **Atomicidad absoluta garantizada por el motor:** Cumple al 100% el Escenario 1 (P0), evitando sobreventa (*overbooking*) bajo cualquier nivel de concurrencia.
+- **Modelo de datos eficiente:** No requiere poblar previamente millones de filas en una tabla de asientos por función; solo se persisten las reservas activas.
+- **Respuestas deterministas y limpias:** Las peticiones perdedoras reciben un error controlado (`AsientoOcupadoError` / HTTP 400) sin caídas del servicio ni fugas de excepciones de SQL.
+- **Independencia del dominio:** El núcleo de negocio permanece agnóstico a los códigos de error específicos de PostgreSQL; la traducción se realiza en el adaptador de infraestructura.
 
 ### Negativas (Costos y Trade-offs)
 
-- **Retención de bloqueos:** Las transacciones de reserva mantienen locks activos y deben mantenerse cortas para no degradar el rendimiento del sistema bajo carga.
-- **Riesgo de deadlocks:** Si el orden de bloqueo de butacas múltiples no fuera determinista, transacciones simultáneas podrían interbloquearse; se mitiga bloqueando siempre en orden ascendente por identificador de butaca.
-- **Pruebas de integración más complejas:** Verificar la concurrencia exige ejecutar pruebas contra una base de datos PostgreSQL real con transacciones simultáneas, en lugar de mocks exclusivamente.
-- **Acoplamiento al mecanismo del gestor:** La sintaxis de `SELECT ... FOR UPDATE` es específica del gestor; un eventual cambio de base de datos requeriría revisar la implementación en infraestructura, aunque el dominio permanece aislado.
+- **Acoplamiento del adaptador al código SQLSTATE:** El adaptador de PostgreSQL debe conocer el código de error `23505`. Otros adaptadores (como el de memoria) deben replicar la verificación de unicidad en sus propias estructuras.
