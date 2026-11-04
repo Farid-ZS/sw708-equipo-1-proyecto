@@ -71,22 +71,37 @@ psql -h localhost -p 5432 -U sw708 -d boletos_db -f database/lab06_hexagonal/01_
 
 ### 5.3. Backend (API y Rodaja Vertical)
 
-Entra en la carpeta del backend:
+Entra en la carpeta del backend e instala las dependencias:
 
 ```bash
 cd lumiereApp/backend
+npm install
 ```
 
 Configura las variables de entorno:
 
 ```bash
+# En Linux/macOS/Git Bash:
 cp .env.example .env
+
+# O en Windows PowerShell:
+Copy-Item .env.example .env
 ```
 
-*(Edita el archivo `.env` según tus credenciales de PostgreSQL si difieren del valor por defecto).*
+El archivo `.env.example` contiene los valores predeterminados:
+```env
+PORT=3000
+FRONTEND_URL=http://localhost:5173
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/boletos_db
+```
+
+> 💡 **Nota sobre credenciales de PostgreSQL:**
+> - Si levantaste PostgreSQL con **Docker** (sección 5.2, Opción B), ajusta la variable en tu `.env` a:
+>   `DATABASE_URL=postgres://sw708:sw708_lab@localhost:5432/boletos_db`
+> - Si usas **PostgreSQL local** con otra contraseña o usuario, edita `DATABASE_URL` con tus credenciales correspondientes.
 
 #### Ejecución de Pruebas Automatizadas
-Para verificar las reglas de negocio, los adaptadores (en memoria y PostgreSQL) y las pruebas de integración del controlador Express:
+Para verificar las reglas de negocio, los adaptadores (en memoria y PostgreSQL) y las pruebas de integración del controlador Express (no requiere base de datos levantada, pues las suites de dominio y contrato usan el repositorio en memoria por defecto):
 
 ```bash
 npm test
