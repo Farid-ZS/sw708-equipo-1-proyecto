@@ -1,11 +1,12 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API para Lumiere en TypeScript",
   "main": "src/index.ts",
   "scripts": {
     "dev": "node --watch src/index.ts",
     "start": "node src/index.ts",
+    "test": "node --test --experimental-strip-types src/tests/domain.test.ts src/tests/adaptadores.test.ts src/tests/e2e.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
@@ -15,7 +16,7 @@
     "cors": "^2.8.6",
     "dotenv": "^18.0.1",
     "express": "^5.2.1",
-    "pg": "^8.23.0"
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
