@@ -2,7 +2,7 @@
 
 ## 1. Contexto y objetivo
 
-En el Laboratorio 09 de SW708 trabajamos sobre las particiones del sistema Lumiere y su relación con los módulos del build. El objetivo fue comparar dos formas de organizar el sistema, justificar una elección frente a nuestros escenarios de calidad y expresar una frontera verificable mediante paquetes y reglas de dependencia.
+En el Laboratorio 09 de SW708 trabajamos sobre las particiones del sistema Lumiere y su relación con los módulos del build. La guía «Dos particiones, una elegida y la frontera en el build» exige comparar dos formas de organizar el sistema, justificar una elección frente a los escenarios de calidad de la semana 2 y expresar una frontera verificable mediante módulos y reglas de dependencia. Lo que se evalúa es el argumento para descartar la otra partición. Este trabajo corresponde a la sección 9 del informe final.
 
 Esta bitácora reúne el trabajo documentado de identificación de fronteras, comparación, elección, construcción modular y verificación arquitectónica. La revisión corresponde a `develop` en el commit `6c5cc64d49db978c2b820247ec9f64b4fb29122e`. Tomamos como referencia de organización las bitácoras anteriores, especialmente [Laboratorios 04–05](bitacora-ia-lab4-5.md), y como antecedente directo la entrada del Paso 05 en [docs/bitacora-ia.md](bitacora-ia.md).
 
@@ -20,7 +20,7 @@ Distinguimos el sistema heredado, representado con Oracle en su documentación, 
 | Uso de IA y resultados | [Entrada del Paso 05](bitacora-ia.md), [informe del build modular](build-modular-lab09.md), bitácoras de [Lab04–05](bitacora-ia-lab4-5.md) y [Lab06](bitacora-ia-lab6.md), conversación conservada de implementación del Paso 05 e instrucciones de elaboración de esta bitácora. |
 | Historial del equipo | Issues #28, #30, #32 y #34; PR #29, #31, #33, #35 y #36; commits identificados en la sección 11. |
 
-No encontramos la guía completa del Lab09 entre los archivos versionados. El prompt conservado del Paso 05 describe su alcance, pero no sustituye a la guía.
+Revisamos también el texto completo de la guía «Dos particiones, una elegida y la frontera en el build», facilitado como adjunto en la conversación de trabajo. La guía establece seis pasos: A en papel, B en papel, confrontación por escenarios, elección sustentada, construcción modular y reglas de límites con rojo/verde e integración continua. Los pasos 01–04 se realizan sin abrir el editor y se cierran en el aula. No se encontraron fotografías o registros que acrediten esa ejecución presencial; los documentos versionados conservan sus resultados escritos.
 
 ## 3. Uso de IA por paso del laboratorio
 
@@ -44,7 +44,7 @@ Carlos Daniel Chavez Oliva, como Arquitecto de Build, solicitó apoyo de Codex p
 
 La solicitud posterior precisó el issue #34, la rama `refactor/34-build-modular` y el uso exclusivo de npm workspaces. También exigió respetar la partición B, las reglas funcionales, los ADR y las pruebas, sin push, PR ni merge durante esa intervención.
 
-Consultamos Codex para revisar la estructura real, configurar manifests y exports, resolver imports y organizar la compilación. Su participación incluyó la generación y modificación de archivos de configuración, el traslado del código de Reservas y la ejecución de verificaciones. No se limitó a una explicación conceptual. La entrada previa de IA y el informe del build detallan ese alcance.
+La guía permite utilizar IA únicamente para la sintaxis del archivo de construcción, una vez decidida la partición en papel. La elección de B ya estaba documentada antes de esta consulta; no se conserva evidencia de su elaboración en papel. Consultamos Codex para revisar la estructura real, configurar manifests y exports, resolver imports y organizar la compilación. Su participación incluyó la generación y modificación de archivos de configuración, el traslado del código de Reservas y la ejecución de verificaciones. No se limitó a una explicación conceptual. La entrada previa de IA y el informe del build detallan ese alcance. El traslado de código, la modificación de imports y la ejecución asistida de verificaciones excedieron el uso de IA para sintaxis que permite la guía. Registramos esa diferencia sin reducir la intervención a una consulta de configuración.
 
 La responsabilidad del Paso 05 corresponde a Carlos. El commit `c0a48df` y el PR #35 registran su entrega e incorporación a `develop`. Los comandos y resultados quedaron registrados durante la sesión asistida; no hay un acta separada de revisión humana de cada archivo. La restricción inicial de no publicar se refiere a esa sesión: el historial posterior sí confirma la integración del PR #35.
 
@@ -80,6 +80,8 @@ En las secciones 03 y 04, la comparación describe A como monolito con datos com
 | Evolución y escalado | La frontera facilita una separación futura; actualmente todos los componentes siguen en el mismo proceso. |
 | Pruebas | Dominio, adaptadores y controlador pueden verificarse con contratos y dobles de persistencia. |
 
+La guía pide responder las cuatro preguntas para cada escenario de la semana 2 y revisar las cuatro señales de monolito distribuido. El cuadro conservado responde a E1, pero no incluye una comparación equivalente para los demás escenarios de `docs/escenarios.md`. Tampoco se encontró una revisión explícita de aquellas cuatro señales. La evaluación disponible sustenta la elección frente a E1, pero no acredita la comparación completa requerida.
+
 Aceptamos como costo de esta elección la necesidad de contratos explícitos y de coordinar validaciones entre capacidades. El documento considera que una operación administrativa con baja concurrencia favorecería la simplicidad de A. E1, en cambio, exige evitar la doble reserva y establece una meta de 1 confirmación entre 1000 intentos concurrentes.
 
 La documentación aún no utiliza una única descripción de A ni una lista uniforme de capacidades de B. Conservamos esa diferencia como hallazgo: no equivale a una nueva decisión arquitectónica. Asimismo, las menciones a Oracle y bloqueo pesimista en las primeras secciones no describen el mecanismo actual. Los ADR-0002 y 0003 establecen PostgreSQL y `UNIQUE (funcion_id, asiento)`, con traducción de `23505` a `AsientoOcupadoError`.
@@ -107,6 +109,8 @@ El workflow instala dependencias, prepara la tabla PostgreSQL, ejecuta pruebas, 
 
 La [captura roja](evidencias/semana-09/rojo.png) muestra el rechazo de `src/domain/cinema.ts → src/infrastructure/memoria.ts`: una violación, 10 módulos y 17 dependencias. La [captura verde](evidencias/semana-09/verde.png) muestra cero violaciones, 10 módulos y 16 dependencias. La [captura de CI](evidencias/semana-09/ci-verde.png) muestra un check exitoso de «CI - Tests y Regla de Arquitectura / test (pull_request)».
 
+El Paso 06 exige ampliar la regla activa de la semana 6 con la misma herramienta y demostrar el rechazo de un import prohibido entre módulos. Las capturas disponibles muestran una dependencia entre capas de la rodaja de la raíz; no muestran una violación de la frontera del workspace de Reservas. Además, el commit `abe92cd` retira `.importlinter` e incorpora dependency-cruiser al migrar la rodaja de la raíz de Python a TypeScript. El cambio de lenguaje explica el contexto técnico, pero no acredita el requisito de conservar la herramienta.
+
 Hay, por tanto, evidencia de rojo y verde del control arquitectónico de la raíz. El rojo corresponde al linter, no a una falla del compilador TypeScript ni a una ejecución fallida de GitHub Actions. El comando y la relación prohibida permiten identificar el experimento, pero el diff temporal que introdujo el import no quedó conservado. La captura de CI tampoco muestra un SHA o número de ejecución para vincularla de manera independiente con un run concreto.
 
 ## 7. Resultados observados: comandos, errores y correcciones
@@ -129,7 +133,7 @@ Los siguientes resultados proceden del [informe del Paso 05](build-modular-lab09
 
 El entorno registrado fue Windows, Node 24.18.0, npm 11.16.0 y PostgreSQL 16 en un contenedor temporal aislado. Se utilizó `npm.cmd` porque la política de PowerShell bloqueaba `npm.ps1`. El import sin uso se sustituyó por `after`, con cierre del pool al terminar las pruebas. Las comprobaciones HTTP y de concurrencia utilizaron scripts ad hoc; no quedaron como nuevas suites versionadas.
 
-Estas verificaciones respaldan la extracción y la conservación del comportamiento de Reservas. No constituyen una medición de la carga completa de E1 con 1000 solicitudes.
+Estas verificaciones respaldan la extracción y la conservación del comportamiento de Reservas. El Paso 05 admite comenzar con un solo módulo cuando no alcanza el tiempo; el workspace de Reservas cumple esa condición de construcción, sin que ello complete los restantes requisitos del laboratorio. No constituyen una medición de la carga completa de E1 con 1000 solicitudes.
 
 ## 8. Tratamiento de recomendaciones de IA
 
@@ -145,10 +149,13 @@ Para los pasos 01–04 y 06 no contamos con un registro que permita clasificar r
 
 ## 9. Problemas, limitaciones y evidencias pendientes
 
-- Falta la guía completa del Lab09 y el registro de consultas, herramientas y revisión humana de los pasos distintos del 05. El historial acredita aportes e integración, pero no reconstruye esas conversaciones.
+- No se conservan evidencias del trabajo en papel de los pasos 01–04 ni registros de consultas, herramientas y revisión humana de los pasos distintos del 05. La guía sí está disponible como adjunto de la conversación.
+- La comparación cubre E1, pero faltan los cuadros de los demás escenarios y la revisión explícita de las cuatro señales de monolito distribuido.
+- El apoyo de Codex registrado en el Paso 05 excedió la sintaxis del archivo de construcción permitida por la guía. Esta diferencia permanece documentada.
+- La guía pide registrar el uso semanal en `docs/bitacora-ia.md`. La base revisada contiene allí la entrada del Paso 05; esta bitácora independiente amplía el registro, sin sustituir ni modificar aquel archivo.
 - Las secciones de particiones difieren en la definición de A y en las capacidades de B. También mantienen referencias a Oracle, bloqueo pesimista y rutas anteriores a la extracción.
 - Cartelera, Auditoría y otras responsabilidades descritas en los modelos no disponen de workspaces funcionales equivalentes al de Reservas. La existencia de rutas stub no acredita reglas de autorización, programación o auditoría implementadas.
-- La regla y CI actuales verifican la rodaja de la raíz. Falta extender esa cobertura al backend modular y verificar allí ciclos, dependencias hacia el host y aislamiento del dominio.
+- La regla y CI actuales verifican la rodaja de la raíz. Falta ampliar la regla sobre las fronteras del backend modular y conservar su prueba negativa y positiva. Tampoco está acreditada la continuidad de herramienta respecto de la semana 6.
 - No se conserva el diff de la violación temporal ni un identificador de ejecución visible en la captura del CI. Sí se conservan las salidas roja y verde del linter.
 - No hay evidencia de ejecución de k6 para la meta completa de E1. Los scripts ad hoc del Paso 05 y una revisión humana separada de sus resultados tampoco quedaron archivados como entregables reproducibles.
 
@@ -158,7 +165,7 @@ El laboratorio nos permitió relacionar las fronteras del negocio con decisiones
 
 En el Paso 05 usamos Codex como apoyo técnico para configurar y modificar archivos, resolver problemas de compilación y ejecutar verificaciones. Reconocer esa intervención permite explicar con precisión cómo se obtuvo el resultado, manteniendo la responsabilidad del trabajo en el integrante y la decisión arquitectónica en el equipo.
 
-Al contrastar documentación, código y capturas encontramos que una prueba verde tiene un alcance concreto: el control de la raíz no verifica automáticamente el workspace nuevo. Esta distinción fue uno de los aprendizajes más útiles de la revisión. También nos permitió separar los resultados registrados de las metas de calidad todavía no medidas.
+Al contrastar documentación, código y capturas encontramos que una prueba verde tiene un alcance concreto: el control de la raíz no verifica automáticamente el workspace nuevo. Esta distinción fue uno de los aprendizajes más útiles de la revisión. También nos permitió separar los resultados registrados de las metas de calidad todavía no medidas. Al revisar la guía reconocimos otra diferencia: obtener un resultado técnicamente correcto no equivale a respetar el alcance permitido de IA. El registro de la intervención debe conservar esa distinción.
 
 ## 11. Referencias al trabajo del equipo
 
@@ -173,3 +180,5 @@ Los PR #29, #31, #33, #35 y #36 aparecen en la consulta de GitHub filtrada por f
 | Workspace de Reservas | [Issue #34](https://github.com/Farid-ZS/sw708-equipo-1-proyecto/issues/34), [PR #35](https://github.com/Farid-ZS/sw708-equipo-1-proyecto/pull/35) | [c0a48df](https://github.com/Farid-ZS/sw708-equipo-1-proyecto/commit/c0a48dfcd9a08593b555cb1c821b6783b6af4609), Carlos Daniel Chavez Oliva. |
 
 La incorporación del PR #35 está registrada en el merge [6c5cc64](https://github.com/Farid-ZS/sw708-equipo-1-proyecto/commit/6c5cc64d49db978c2b820247ec9f64b4fb29122e). El informe del Paso 05 describe el estado al finalizar la sesión asistida; el historial confirma la integración realizada después.
+
+La guía solicita integrar mediante Squash and merge. En el PR #35 el historial registra un merge con dos padres, por lo que esa integración no siguió la modalidad solicitada. No se encontró evidencia de la entrega individual en UNIVIRTUAL, cuyo plazo indicado en la guía fue el 4 de noviembre de 2026 a las 23:59.
