@@ -1,0 +1,25 @@
+{
+  "name": "sw708-equipo-1-proyecto",
+  "version": "1.0.0",
+  "description": "Rodaja vertical de reserva de boletos con arquitectura hexagonal en TypeScript",
+  "type": "module",
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "scripts": {
+    "test": "node --test --experimental-strip-types src/tests/dominio.test.ts src/tests/adaptadores.test.ts",
+    "typecheck": "tsc --noEmit",
+    "lint:arquitectura": "depcruise src --config .dependency-cruiser.cjs",
+    "demo": "node --experimental-strip-types demo_interfaz.ts",
+    "db:crear-tabla": "node scripts/crear-tabla.mjs"
+  },
+  "dependencies": {
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.10",
+    "dependency-cruiser": "^16.10.4",
+    "typescript": "^5.9.0"
+  }
+}
