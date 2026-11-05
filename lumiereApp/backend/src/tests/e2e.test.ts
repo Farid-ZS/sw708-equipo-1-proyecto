@@ -1,9 +1,9 @@
 import { test, describe, beforeEach } from 'node:test'
 import assert from 'node:assert/strict'
 import type { Request, Response } from 'express'
-import { InMemoryBoletoRepository } from '../infrastructure/memoria.repository.ts'
-import { ReservarBoletoUseCase } from '../domain/cinema.ts'
-import { ReservasController } from '../presentation/reservas.controller.ts'
+import { InMemoryBoletoRepository } from '@lumiere/reservas/memoria'
+import { ReservarBoletoUseCase } from '@lumiere/reservas'
+import { ReservasController } from '@lumiere/reservas/http'
 
 interface MockResponse {
   statusCode: number

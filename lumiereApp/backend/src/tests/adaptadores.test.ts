@@ -1,4 +1,4 @@
-import { test, describe, beforeEach, afterEach } from 'node:test'
+import { test, describe, beforeEach, after } from 'node:test'
 import assert from 'node:assert/strict'
 import crypto from 'node:crypto'
 import pg from 'pg'
@@ -8,9 +8,9 @@ import {
   ReservarBoletoUseCase,
   AsientoOcupadoError,
   DatosInvalidosError,
-} from '../domain/cinema.ts'
-import { InMemoryBoletoRepository } from '../infrastructure/memoria.repository.ts'
-import { PostgresBoletoRepository } from '../infrastructure/postgres.repository.ts'
+} from '@lumiere/reservas'
+import { InMemoryBoletoRepository } from '@lumiere/reservas/memoria'
+import { PostgresBoletoRepository } from '@lumiere/reservas/postgres'
 
 function ejecutarContratoPruebas(
   nombreAdaptador: string,
@@ -92,6 +92,7 @@ const testDbUrl = process.env.TEST_DATABASE_URL
 if (testDbUrl) {
   const pool = new pg.Pool({ connectionString: testDbUrl })
   const pgRepo = new PostgresBoletoRepository(pool)
+  after(() => pool.end())
 
   ejecutarContratoPruebas('PostgreSQL', () => pgRepo)
 } else {

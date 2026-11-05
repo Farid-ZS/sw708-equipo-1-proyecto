@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import { pool } from '../db.ts'
-import { PostgresBoletoRepository } from '../infrastructure/postgres.repository.ts'
+import { PostgresBoletoRepository } from '@lumiere/reservas/postgres'
 import {
   type BoletoRepository,
   ReservarBoletoUseCase,
-} from '../domain/cinema.ts'
-import { ReservasController } from '../presentation/reservas.controller.ts'
+} from '@lumiere/reservas'
+import { ReservasController } from '@lumiere/reservas/http'
 import { stub } from './stub.ts'
 
 export function crearReservasRouter(

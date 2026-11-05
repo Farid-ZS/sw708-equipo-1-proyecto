@@ -71,6 +71,13 @@ psql -h localhost -p 5432 -U sw708 -d boletos_db -f database/lab06_hexagonal/01_
 
 ### 5.3. Backend (API y Rodaja Vertical)
 
+El Paso 05 del Lab09 extrae Reservas al workspace `@lumiere/reservas` dentro de
+`lumiereApp/backend/packages/reservas`. Consulta [build modular](docs/build-modular-lab09.md)
+para la estructura actual, contratos, verificaciones y pendientes del Paso 06.
+Después de instalar, `npm run build` desde el backend compila el paquete y el
+host; `npm run start:compiled` ejecuta el resultado. `npm test` prepara el paquete
+automáticamente antes de ejecutar las pruebas.
+
 Entra en la carpeta del backend e instala las dependencias:
 
 ```bash

@@ -7,7 +7,12 @@
     "dev": "node --watch src/index.ts",
     "start": "node src/index.ts",
     "test": "node --test --experimental-strip-types src/tests/domain.test.ts src/tests/adaptadores.test.ts src/tests/e2e.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "npm run build --workspace @lumiere/reservas && tsc --noEmit",
+    "build": "npm run build --workspace @lumiere/reservas && tsc -p tsconfig.build.json",
+    "pretest": "npm run build --workspace @lumiere/reservas",
+    "predev": "npm run build --workspace @lumiere/reservas",
+    "prestart": "npm run build --workspace @lumiere/reservas",
+    "start:compiled": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +21,8 @@
     "cors": "^2.8.6",
     "dotenv": "^18.0.1",
     "express": "^5.2.1",
-    "pg": "^8.23.1"
+    "pg": "^8.23.1",
+    "@lumiere/reservas": "1.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
@@ -26,5 +32,9 @@
     "ts-node-dev": "^2.0.0",
     "typescript": "^7.0.2"
   },
-  "type": "module"
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "packages/reservas"
+  ]
 }

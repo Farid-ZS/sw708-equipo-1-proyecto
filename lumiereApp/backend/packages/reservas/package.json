@@ -1,0 +1,37 @@
+{
+  "name": "@lumiere/reservas",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/domain/cinema.d.ts",
+      "import": "./dist/domain/cinema.js"
+    },
+    "./memoria": {
+      "types": "./dist/infrastructure/memoria.repository.d.ts",
+      "import": "./dist/infrastructure/memoria.repository.js"
+    },
+    "./postgres": {
+      "types": "./dist/infrastructure/postgres.repository.d.ts",
+      "import": "./dist/infrastructure/postgres.repository.js"
+    },
+    "./http": {
+      "types": "./dist/presentation/reservas.controller.d.ts",
+      "import": "./dist/presentation/reservas.controller.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.2",
+    "@types/pg": "^8.23.1",
+    "typescript": "^7.0.2"
+  }
+}
