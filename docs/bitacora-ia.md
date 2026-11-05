@@ -1,5 +1,7 @@
 # Bitácora de uso de IA — Semana 03 / Laboratorio 03
 
+> La entrada original se conserva. El registro del Laboratorio 09 está al final.
+
 ## 1. Contexto y objetivo
 
 - **Actividad:** «Tu sistema en C4, como código».
@@ -138,3 +140,33 @@ La IA sirvió como apoyo para organizar la documentación y detectar diferencias
 La intervención del equipo fue necesaria para precisar el alcance y corregir esa interpretación. Esto muestra que las respuestas de la IA deben contrastarse con el contexto real del proyecto.
 
 El feedback del Equipo 3 permitió identificar contradicciones concretas entre la leyenda y el DSL. El siguiente paso es evaluar esas observaciones contra el código original y registrar las decisiones del equipo. Un diagrama con sintaxis correcta no garantiza que represente fielmente el sistema.
+
+---
+
+## Laboratorio 09 — Paso 05: build modular, issue #34
+
+- **Fecha:** 4 de noviembre de 2026.
+- **Responsable:** Carlos Daniel Chavez Oliva, Arquitecto de Build.
+- **Herramienta:** Codex.
+- **Tarea solicitada:** implementar exclusivamente el Paso 05 con npm workspaces
+  en `refactor/34-build-modular`, desde `origin/develop`, sin push, PR ni merge.
+- **Decisión previa del equipo:** partición B por capacidad de negocio y propiedad
+  de datos, documentada en `docs/particiones.md`. La IA no eligió esa partición.
+- **Alcance del apoyo:** inspección de Git, documentación y código; configuración
+  de manifests, exports, build TypeScript y lockfile; traslado de Reservas sin
+  cambios funcionales; ajuste de imports; ejecución de verificaciones y registro.
+- **Recomendaciones aplicadas en esta implementación:** un único workspace real
+  `@lumiere/reservas`, exports compilados de dominio/adaptadores/HTTP, dependencia
+  explícita del host, compilación previa al consumo y conservación del pool y
+  rutas en el host. Se corrigió un import de pruebas sin uso y se cerró su pool
+  mediante el hook de finalización. Esto no constituye aprobación del equipo.
+- **Resultados observados:** npm ci, build y typecheck correctos; 20 pruebas del
+  backend y 16 de la raíz pasan con PostgreSQL 16 temporal, sin omisiones. Smoke
+  HTTP compilado 201/400/400 y colisión concurrente UNIQUE/23505 correctos.
+- **Límites:** no se midió la carga E1 de 1000 solicitudes ni se modificaron CI,
+  reglas de dependency-cruiser, ADR, frontend o SQL. La ampliación de cobertura
+  arquitectónica y CI corresponde al Paso 06. No se fabricaron capturas ni se
+  ejecutaron commit, push, PR o merge.
+
+Diagnóstico, comandos, resultados y propuesta de entrega:
+[build modular del Lab09](build-modular-lab09.md).

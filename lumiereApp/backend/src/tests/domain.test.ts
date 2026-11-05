@@ -5,9 +5,9 @@ import {
   ReservarBoletoUseCase,
   AsientoOcupadoError,
   DatosInvalidosError,
-} from '../domain/cinema.ts'
-import { InMemoryBoletoRepository } from '../infrastructure/memoria.repository.ts'
-import { ReservasController } from '../presentation/reservas.controller.ts'
+} from '@lumiere/reservas'
+import { InMemoryBoletoRepository } from '@lumiere/reservas/memoria'
+import { ReservasController } from '@lumiere/reservas/http'
 
 describe('Dominio: ReservarBoletoUseCase', () => {
   let repo: InMemoryBoletoRepository
