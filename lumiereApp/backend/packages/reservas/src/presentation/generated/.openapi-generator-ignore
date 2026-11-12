@@ -1,0 +1,3 @@
+# El cliente fetch (runtime.ts) no se usa: solo necesitamos los DTOs del contrato.
+index.ts
+runtime.ts

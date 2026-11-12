@@ -8,14 +8,21 @@ import { ReservasController } from '@lumiere/reservas/http'
 interface MockResponse {
   statusCode: number
   body: unknown
+  headers: Record<string, string>
   status(code: number): this
   json(data: unknown): this
+  setHeader(nombre: string, valor: string): this
 }
 
 function crearMockResponse(): MockResponse {
   const mock: MockResponse = {
     statusCode: 200,
     body: null,
+    headers: {},
+    setHeader(nombre: string, valor: string) {
+      this.headers[nombre] = valor
+      return this
+    },
     status(code: number) {
       this.statusCode = code
       return this
@@ -55,9 +62,10 @@ describe('Integración HTTP: ReservasController con Express Handler', () => {
     assert.equal(body.status, 201)
     assert.equal(body.data.asiento, 'H12')
     assert.ok(body.data.id)
+    assert.equal(res.headers['Location'], `/api/reservas/${body.data.id}`)
   })
 
-  test('POST /api/reservas rechaza asiento ocupado con HTTP 400', async () => {
+  test('POST /api/reservas rechaza asiento ocupado con HTTP 409', async () => {
     const req1 = {
       body: {
         funcion_id: 'F-E2E-DUP',
@@ -79,9 +87,10 @@ describe('Integración HTTP: ReservasController con Express Handler', () => {
     const res2 = crearMockResponse()
     await controller.reservar(req2, res2 as unknown as Response)
 
-    assert.equal(res2.statusCode, 400)
-    const body = res2.body as { status: number; error: string }
-    assert.equal(body.status, 400)
+    assert.equal(res2.statusCode, 409)
+    const body = res2.body as { status: number; codigo: string; error: string }
+    assert.equal(body.status, 409)
+    assert.equal(body.codigo, 'ASIENTO_OCUPADO')
     assert.match(body.error, /ya está ocupado/)
   })
 

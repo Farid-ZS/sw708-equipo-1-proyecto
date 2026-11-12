@@ -16,7 +16,21 @@ app.use((_req, res) => {
 })
 
 const manejarError: ErrorRequestHandler = (err, _req, res, _next) => {
+  // JSON mal formado: express.json() falla antes de llegar al controlador.
+  // Se responde con el ErrorResponse del contrato (docs/api/openapi.yml).
+  if (err?.type === 'entity.parse.failed') {
+    res.status(400).json({
+      status: 400,
+      codigo: 'DATOS_INVALIDOS',
+      error: 'El cuerpo debe ser un JSON válido',
+    })
+    return
+  }
   console.error(err)
-  res.status(500).json({ error: 'Error interno del servidor' })
+  res.status(500).json({
+    status: 500,
+    codigo: 'ERROR_INTERNO',
+    error: 'Error interno del servidor',
+  })
 }
 app.use(manejarError)

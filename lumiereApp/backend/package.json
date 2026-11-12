@@ -6,25 +6,27 @@
   "scripts": {
     "dev": "node --watch src/index.ts",
     "start": "node src/index.ts",
-    "test": "node --test --experimental-strip-types src/tests/domain.test.ts src/tests/adaptadores.test.ts src/tests/e2e.test.ts src/tests/flujo-eventos.test.ts",
+    "test": "node --test --experimental-strip-types src/tests/domain.test.ts src/tests/adaptadores.test.ts src/tests/e2e.test.ts src/tests/flujo-eventos.test.ts src/tests/contrato-api.test.ts",
     "typecheck": "npm run build --workspace @lumiere/reservas && tsc --noEmit",
     "build": "npm run build --workspace @lumiere/reservas && tsc -p tsconfig.build.json",
     "pretest": "npm run build --workspace @lumiere/reservas",
     "predev": "npm run build --workspace @lumiere/reservas",
     "prestart": "npm run build --workspace @lumiere/reservas",
-    "start:compiled": "node dist/index.js"
+    "start:compiled": "node dist/index.js",
+    "generar:api": "openapi-generator-cli generate -i ../../docs/api/openapi.yaml -g typescript-fetch -o packages/reservas/src/presentation/generated --global-property models,supportingFiles=index.ts --additional-properties=importFileExtension=.ts,supportsES6=true,modelPropertyNaming=original,withoutRuntimeChecks=true"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@lumiere/reservas": "1.0.0",
     "cors": "^2.8.6",
     "dotenv": "^18.0.1",
     "express": "^5.2.1",
-    "pg": "^8.23.1",
-    "@lumiere/reservas": "1.0.0"
+    "pg": "^8.23.1"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.42.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.2",

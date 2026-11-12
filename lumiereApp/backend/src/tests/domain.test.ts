@@ -99,7 +99,7 @@ describe('Presentación: ReservasController', () => {
     assert.equal(resp.data?.nombre_cliente, 'Carlos')
   })
 
-  test('asiento ocupado devuelve status 400 y mensaje de error', async () => {
+  test('asiento ocupado devuelve status 409 ASIENTO_OCUPADO', async () => {
     const datos = {
       funcion_id: 'F001',
       asiento: 'B2',
@@ -109,11 +109,12 @@ describe('Presentación: ReservasController', () => {
     await controller.ejecutar(datos)
     const resp = await controller.ejecutar(datos)
 
-    assert.equal(resp.status, 400)
+    assert.equal(resp.status, 409)
+    assert.equal(resp.codigo, 'ASIENTO_OCUPADO')
     assert.match(resp.error ?? '', /ya está ocupado/)
   })
 
-  test('datos incompletos devuelve status 400', async () => {
+  test('datos incompletos devuelve status 400 DATOS_INVALIDOS', async () => {
     const resp = await controller.ejecutar({
       funcion_id: 'F001',
       asiento: '',
@@ -121,6 +122,7 @@ describe('Presentación: ReservasController', () => {
     })
 
     assert.equal(resp.status, 400)
+    assert.equal(resp.codigo, 'DATOS_INVALIDOS')
     assert.match(resp.error ?? '', /datos obligatorios/)
   })
 })
