@@ -52,3 +52,9 @@ jobs:
 
       - name: Verificar tipos
         run: npm run typecheck
+
+      - name: Instalar dependencias del backend
+        run: npm ci --prefix lumiereApp/backend
+
+      - name: Pruebas del backend (incluye el flujo por eventos)
+        run: npm test --prefix lumiereApp/backend

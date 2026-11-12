@@ -51,11 +51,64 @@ export interface BoletoRepository {
   buscarPorAsiento(funcionId: string, asiento: string): Promise<Boleto | null>
 }
 
+/**
+ * Evento de dominio: una reserva quedó guardada. Es un hecho ya ocurrido
+ * (nombre en pasado) e inmutable: todos sus campos son de solo lectura y la
+ * instancia queda congelada.
+ */
+export class ReservaConfirmada {
+  readonly nombre = 'ReservaConfirmada'
+  readonly boletoId: string
+  readonly funcionId: string
+  readonly asiento: string
+  readonly nombreCliente: string
+  readonly ocurridoEn: string
+
+  constructor(
+    boletoId: string,
+    funcionId: string,
+    asiento: string,
+    nombreCliente: string,
+    ocurridoEn: string
+  ) {
+    this.boletoId = boletoId
+    this.funcionId = funcionId
+    this.asiento = asiento
+    this.nombreCliente = nombreCliente
+    this.ocurridoEn = ocurridoEn
+    Object.freeze(this)
+  }
+
+  static desde(boleto: Boleto): ReservaConfirmada {
+    return new ReservaConfirmada(
+      boleto.id,
+      boleto.funcionId,
+      boleto.asiento,
+      boleto.nombreCliente,
+      boleto.reservadoEn.toISOString()
+    )
+  }
+}
+
+/** Puerto de salida: el dominio publica eventos sin saber quién los recibe. */
+export interface PublicadorDeEventos {
+  publicar(evento: ReservaConfirmada): Promise<void>
+}
+
+const publicadorNulo: PublicadorDeEventos = {
+  async publicar(): Promise<void> {},
+}
+
 export class ReservarBoletoUseCase {
   private readonly repository: BoletoRepository
+  private readonly publicador: PublicadorDeEventos
 
-  constructor(repository: BoletoRepository) {
+  constructor(
+    repository: BoletoRepository,
+    publicador: PublicadorDeEventos = publicadorNulo
+  ) {
     this.repository = repository
+    this.publicador = publicador
   }
 
   async ejecutar(
@@ -78,6 +131,7 @@ export class ReservarBoletoUseCase {
 
     const boleto = Boleto.crear(fId, asnt, cliente)
     await this.repository.guardar(boleto)
+    await this.publicador.publicar(ReservaConfirmada.desde(boleto))
     return boleto
   }
 }

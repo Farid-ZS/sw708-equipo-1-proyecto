@@ -3,16 +3,19 @@ import { pool } from '../db.ts'
 import { PostgresBoletoRepository } from '@lumiere/reservas/postgres'
 import {
   type BoletoRepository,
+  type PublicadorDeEventos,
   ReservarBoletoUseCase,
 } from '@lumiere/reservas'
 import { ReservasController } from '@lumiere/reservas/http'
+import { bus } from '../composicion.ts'
 import { stub } from './stub.ts'
 
 export function crearReservasRouter(
-  repo: BoletoRepository = new PostgresBoletoRepository(pool)
+  repo: BoletoRepository = new PostgresBoletoRepository(pool),
+  publicador: PublicadorDeEventos = bus
 ): Router {
   const router = Router()
-  const useCase = new ReservarBoletoUseCase(repo)
+  const useCase = new ReservarBoletoUseCase(repo, publicador)
   const controller = new ReservasController(useCase)
 
   // Endpoints funcionales de la rodaja vertical:

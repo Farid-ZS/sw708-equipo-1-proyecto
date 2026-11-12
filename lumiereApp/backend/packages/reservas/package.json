@@ -12,6 +12,10 @@
       "types": "./dist/infrastructure/memoria.repository.d.ts",
       "import": "./dist/infrastructure/memoria.repository.js"
     },
+    "./eventos": {
+      "types": "./dist/infrastructure/eventos.memoria.d.ts",
+      "import": "./dist/infrastructure/eventos.memoria.js"
+    },
     "./postgres": {
       "types": "./dist/infrastructure/postgres.repository.d.ts",
       "import": "./dist/infrastructure/postgres.repository.js"
