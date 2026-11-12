@@ -1,5 +1,4 @@
 import { randomUUID } from 'node:crypto'
-import type { Request } from 'express' // Violacion intencional de prueba
 
 export class Boleto {
   readonly id: string
