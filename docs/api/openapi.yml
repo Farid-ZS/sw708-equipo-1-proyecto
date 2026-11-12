@@ -1,0 +1,233 @@
+
+openapi: 3.1.0
+
+info:
+  title: Lumiere - API de Reservas
+  version: 1.0.0
+  description: |
+    Contrato del módulo Reservas del sistema Lumiere,
+    elaborado para el Lab 10 de SW708.
+
+    Reglas acordadas:
+    - Los campos funcion_id, asiento y nombre_cliente son obligatorios.
+    - Ningún campo puede estar vacío o contener solo espacios.
+    - Una butaca solo puede reservarse una vez por función.
+    - El mismo asiento puede reservarse para funciones distintas.
+    - Cada reserva exitosa recibe un UUID y una fecha de creación.
+    - Repetir una solicitud con la misma función y asiento
+      devuelve 409 Conflict. No se ofrece clave de idempotencia.
+
+    Versionado semántico:
+    Los cambios incompatibles de rutas, campos obligatorios
+    o estructuras de respuesta incrementan la versión mayor.
+    La versión del contrato no implica un prefijo /v1 en la ruta.
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor local de desarrollo
+
+paths:
+  /api/reservas:
+    post:
+      tags:
+        - Reservas
+
+      summary: Crear una reserva de boleto
+      operationId: crearReserva
+
+      description: |
+        Reserva un asiento para una función de cine.
+        La operación se realiza únicamente si el asiento
+        no se encuentra reservado para la misma función.
+
+      requestBody:
+        required: true
+        description: Datos necesarios para realizar la reserva.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearReservaRequest'
+            examples:
+              reservaValida:
+                summary: Reserva para una función
+                value:
+                  funcion_id: F001
+                  asiento: A12
+                  nombre_cliente: Ana Pérez
+
+      responses:
+        '201':
+          description: Reserva creada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservaCreadaResponse'
+              examples:
+                creada:
+                  value:
+                    status: 201
+                    data:
+                      id: 550e8400-e29b-41d4-a716-446655440000
+                      funcion_id: F001
+                      asiento: A12
+                      nombre_cliente: Ana Pérez
+                      reservado_en: '2026-11-07T15:00:00.000Z'
+
+        '400':
+          description: |
+            Solicitud inválida por datos obligatorios
+            ausentes o vacíos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                datosInvalidos:
+                  value:
+                    status: 400
+                    codigo: DATOS_INVALIDOS
+                    error: Faltan datos obligatorios
+
+        '409':
+          description: |
+            El asiento ya está reservado para
+            esa misma función.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                asientoOcupado:
+                  value:
+                    status: 409
+                    codigo: ASIENTO_OCUPADO
+                    error: El asiento A12 ya está ocupado
+
+        '500':
+          description: |
+            Error interno inesperado.
+            No se exponen detalles de infraestructura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                errorInterno:
+                  value:
+                    status: 500
+                    codigo: ERROR_INTERNO
+                    error: Error interno del servidor
+
+components:
+  schemas:
+
+    CrearReservaRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - funcion_id
+        - asiento
+        - nombre_cliente
+
+      properties:
+        funcion_id:
+          type: string
+          minLength: 1
+          pattern: '.*\S.*'
+          description: |
+            Identificador de la función.
+            No puede contener solo espacios.
+          example: F001
+
+        asiento:
+          type: string
+          minLength: 1
+          pattern: '.*\S.*'
+          description: |
+            Código del asiento dentro de la función.
+            No puede contener solo espacios.
+          example: A12
+
+        nombre_cliente:
+          type: string
+          minLength: 1
+          pattern: '.*\S.*'
+          description: |
+            Nombre de la persona que reserva.
+            No puede contener solo espacios.
+          example: Ana Pérez
+
+    Reserva:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - funcion_id
+        - asiento
+        - nombre_cliente
+        - reservado_en
+
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: |
+            Identificador único de la reserva,
+            generado por el servidor.
+
+        funcion_id:
+          type: string
+
+        asiento:
+          type: string
+
+        nombre_cliente:
+          type: string
+
+        reservado_en:
+          type: string
+          format: date-time
+          description: |
+            Fecha y hora de creación
+            en formato ISO 8601 UTC.
+
+    ReservaCreadaResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - data
+
+      properties:
+        status:
+          type: integer
+          const: 201
+
+        data:
+          $ref: '#/components/schemas/Reserva'
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - codigo
+        - error
+
+      properties:
+        status:
+          type: integer
+          enum: [400, 409, 500]
+
+        codigo:
+          type: string
+          enum:
+            - DATOS_INVALIDOS
+            - ASIENTO_OCUPADO
+            - ERROR_INTERNO
+
+        error:
+          type: string
+          description: |
+            Mensaje legible para el consumidor,
+            sin detalles de infraestructura.
