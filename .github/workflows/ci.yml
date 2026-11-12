@@ -1,4 +1,3 @@
-
 name: CI - Tests y Regla de Arquitectura
 
 on:
@@ -42,6 +41,9 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      - name: Verificar regla de arquitectura
+        run: npm run lint:arquitectura
+
       - name: Crear tabla de pruebas
         run: node scripts/crear-tabla.mjs
 
@@ -50,6 +52,3 @@ jobs:
 
       - name: Verificar tipos
         run: npm run typecheck
-
-      - name: Verificar regla de arquitectura
-        run: npm run lint:arquitectura

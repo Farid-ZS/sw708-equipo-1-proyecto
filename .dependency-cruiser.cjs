@@ -8,10 +8,18 @@ module.exports = {
       from: { path: '^src/domain/' },
       to: { path: '^src/(infrastructure|presentation)/' },
     },
+    {
+      name: 'dominio-sin-framework',
+      severity: 'error',
+      comment: 'El dominio no puede importar frameworks de presentación ni dependencias HTTP (Express, etc.)',
+      from: { path: '^src/domain/' },
+      to: {
+        path: '(express|@types/express|cors|body-parser|fastapi|flask)',
+      },
+    },
   ],
   options: {
     doNotFollow: { path: 'node_modules' },
-    exclude: { path: 'node_modules' },
     tsConfig: { fileName: 'tsconfig.json' },
     tsPreCompilationDeps: true,
     enhancedResolveOptions: {
