@@ -6,7 +6,7 @@ import {
   type PublicadorDeEventos,
   ReservarBoletoUseCase,
 } from '@lumiere/reservas'
-import { ReservasController } from '@lumiere/reservas/http'
+import { ReservasController, exigirJson } from '@lumiere/reservas/http'
 import { bus } from '../composicion.ts'
 import { stub } from './stub.ts'
 
@@ -19,8 +19,8 @@ export function crearReservasRouter(
   const controller = new ReservasController(useCase)
 
   // Endpoints funcionales de la rodaja vertical:
-  router.post('/', controller.reservar)
-  router.post('/reservar', controller.reservar)
+  router.post('/', exigirJson, controller.reservar)
+  router.post('/reservar', exigirJson, controller.reservar)
 
   // Endpoints complementarios para etapas siguientes:
   router.get('/:id', stub('Detalle de reserva'))
