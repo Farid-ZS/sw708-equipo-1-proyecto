@@ -1,0 +1,292 @@
+openapi: 3.1.0
+
+info:
+  title: Lumiere - API de Reservas
+  version: 1.1.0
+  description: |
+    Contrato del módulo Reservas del sistema Cines Lumiere,
+    elaborado y actualizado para el Lab 10 de SW708.
+
+    Versión 1.1.0 (Corregida tras resolución de ambigüedades con el Equipo 3).
+
+    Reglas de negocio y comportamiento arquitectónico acordadas:
+    - Los campos funcion_id, asiento y nombre_cliente son estrictamente obligatorios.
+    - No se aceptan valores null, cadenas vacías ni secuencias compuestas únicamente de espacios en blanco.
+    - Una butaca física solo puede reservarse una vez por función (garantía de no sobreventa respaldada por ADR-0003).
+    - El mismo código de asiento puede ser reservado para diferentes funciones.
+    - Cada reserva exitosa genera un UUID v4 y marca temporal en formato ISO 8601 UTC.
+    - La respuesta 201 Created emite la cabecera HTTP 'Location' con la URI del recurso creado.
+    - La llamada POST /api/reservas NO es idempotente por naturaleza. La repetición de una solicitud
+      con la misma función y asiento devuelve 409 Conflict (ASIENTO_OCUPADO), protegiendo la integridad
+      del estado del cine.
+    - Las peticiones con Content-Type distinto de application/json devuelven 415 Unsupported Media Type.
+
+    Versionado semántico:
+    - Versión actual: 1.1.0 (incorporación retrocompatible de cabecera Location, validaciones y códigos de error).
+    - Los cambios incompatibles (breaking changes) incrementan la versión mayor.
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor local de desarrollo
+
+paths:
+  /api/reservas:
+    post:
+      tags:
+        - Reservas
+
+      summary: Crear una reserva de boleto
+      operationId: crearReserva
+
+      description: |
+        Registra la reserva de un asiento para una función cinematográfica determinada.
+        La operación se realiza únicamente si la butaca no se encuentra reservada previamente
+        para la misma función.
+
+        Comportamiento ante reintentos (no idempotente):
+        Si la petición se reintenta tras un corte de red habiendo sido procesada previamente,
+        el sistema retornará 409 Conflict garantizando que no se duplique el asiento ni se
+        corrompa el estado.
+
+      requestBody:
+        required: true
+        description: Carga útil con los datos obligatorios para la reserva.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearReservaRequest'
+            examples:
+              reservaEstandar:
+                summary: Petición válida de reserva
+                value:
+                  funcion_id: F001
+                  asiento: A12
+                  nombre_cliente: Ana Pérez
+
+      responses:
+        '201':
+          description: Reserva creada y persistida exitosamente.
+          headers:
+            Location:
+              description: URI canónica del recurso de reserva recién creado.
+              schema:
+                type: string
+                example: /api/reservas/550e8400-e29b-41d4-a716-446655440000
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservaCreadaResponse'
+              examples:
+                reservaExitosa:
+                  summary: Confirmación de reserva creada
+                  value:
+                    status: 201
+                    data:
+                      id: 550e8400-e29b-41d4-a716-446655440000
+                      funcion_id: F001
+                      asiento: A12
+                      nombre_cliente: Ana Pérez
+                      reservado_en: '2026-11-11T20:30:00.000Z'
+
+        '400':
+          description: |
+            Solicitud inválida. Ocurre si falta algún campo obligatorio,
+            si contiene únicamente espacios en blanco, o si se envían tipos de datos incompatibles.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                campoFaltante:
+                  summary: Omisión de campo obligatorio
+                  value:
+                    status: 400
+                    codigo: DATOS_INVALIDOS
+                    error: Faltan datos obligatorios
+                espaciosEnBlanco:
+                  summary: Campo compuesto solo por espacios
+                  value:
+                    status: 400
+                    codigo: DATOS_INVALIDOS
+                    error: Faltan datos obligatorios
+
+        '404':
+          description: La función especificada no existe en la cartelera del cine.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                funcionInexistente:
+                  value:
+                    status: 404
+                    codigo: FUNCION_NO_ENCONTRADA
+                    error: La función indicada no existe
+
+        '409':
+          description: |
+            Conflicto de reserva: el asiento solicitado ya se encuentra ocupado
+            para la función indicada (o fue reservado en un intento previo).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                asientoOcupado:
+                  summary: Asiento duplicado
+                  value:
+                    status: 409
+                    codigo: ASIENTO_OCUPADO
+                    error: El asiento A12 ya está ocupado
+
+        '415':
+          description: El tipo de medio enviado en Content-Type no es application/json.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                tipoInvalido:
+                  value:
+                    status: 415
+                    codigo: SOLICITUD_MALFORMADA
+                    error: Content-Type no soportado. Se requiere application/json
+
+        '500':
+          description: |
+            Fallo interno no controlado en el servidor.
+            No se exponen trazas internas ni detalles de infraestructura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                errorInterno:
+                  value:
+                    status: 500
+                    codigo: ERROR_INTERNO
+                    error: Error interno del servidor
+
+components:
+  schemas:
+
+    CrearReservaRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - funcion_id
+        - asiento
+        - nombre_cliente
+
+      properties:
+        funcion_id:
+          type: string
+          minLength: 1
+          pattern: '.*\S.*'
+          description: |
+            Identificador alfanumérico de la función en cartelera.
+            No admite valores nulos, cadenas vacías ni únicamente espacios.
+          example: F001
+
+        asiento:
+          type: string
+          minLength: 2
+          maxLength: 4
+          pattern: '^[A-Za-z][0-9]{1,2}$'
+          description: |
+            Código identificador de la butaca (letra de fila seguida de número).
+            Se normaliza a mayúsculas en el servidor.
+          example: A12
+
+        nombre_cliente:
+          type: string
+          minLength: 1
+          maxLength: 120
+          pattern: '.*\S.*'
+          description: |
+            Nombre y apellido del cliente que reserva.
+            No puede estar vacío ni contener solo espacios.
+          example: Ana Pérez
+
+    Reserva:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - funcion_id
+        - asiento
+        - nombre_cliente
+        - reservado_en
+
+      properties:
+        id:
+          type: string
+          format: uuid
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          description: Identificador universal único (UUID v4) asignado por el servidor.
+          example: 550e8400-e29b-41d4-a716-446655440000
+
+        funcion_id:
+          type: string
+          example: F001
+
+        asiento:
+          type: string
+          example: A12
+
+        nombre_cliente:
+          type: string
+          example: Ana Pérez
+
+        reservado_en:
+          type: string
+          format: date-time
+          description: Marca temporal de creación en formato ISO 8601 UTC.
+          example: '2026-11-11T20:30:00.000Z'
+
+    ReservaCreadaResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - data
+
+      properties:
+        status:
+          type: integer
+          const: 201
+          example: 201
+
+        data:
+          $ref: '#/components/schemas/Reserva'
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - codigo
+        - error
+
+      properties:
+        status:
+          type: integer
+          description: Código numérico idéntico al estado HTTP devuelto en el protocolo.
+          enum: [400, 404, 409, 415, 500]
+          example: 400
+
+        codigo:
+          type: string
+          description: Constante categórica inmutable para toma de decisiones en el cliente consumidor.
+          enum:
+            - DATOS_INVALIDOS
+            - FUNCION_NO_ENCONTRADA
+            - ASIENTO_OCUPADO
+            - SOLICITUD_MALFORMADA
+            - ERROR_INTERNO
+          example: DATOS_INVALIDOS
+
+        error:
+          type: string
+          description: Mensaje legible para humanos explicando el motivo del fallo sin revelar detalles internos.
+          example: Faltan datos obligatorios
