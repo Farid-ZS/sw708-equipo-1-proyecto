@@ -98,7 +98,7 @@ Copy-Item .env.example .env
 El archivo `.env.example` contiene los valores predeterminados:
 ```env
 PORT=3000
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=http://localhost:5180
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/boletos_db
 ```
 
@@ -145,7 +145,35 @@ npm install
 npm run dev
 ```
 
-La interfaz web quedará disponible en: **`http://localhost:5173`**
+La interfaz web quedará disponible en: **`http://localhost:5180`**
+
+### 5.5. Levantamiento completo con Docker Compose
+
+Desde la raíz del repositorio se puede levantar PostgreSQL, el backend y el frontend desde cero:
+
+```powershell
+Copy-Item .env.example .env
+docker compose up --build
+```
+
+Servicios disponibles:
+
+- Frontend: <http://localhost:5180>
+- Backend: <http://localhost:3000>
+- Health check: <http://localhost:3000/api/health>
+- PostgreSQL: puerto `5432`, base `boletos_db`
+
+Para detener los contenedores y conservar los datos:
+
+```powershell
+docker compose down
+```
+
+Para eliminar también el volumen de PostgreSQL:
+
+```powershell
+docker compose down -v
+```
 
 ---
 

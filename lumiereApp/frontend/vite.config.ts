@@ -8,6 +8,6 @@ export default defineConfig({
     port: 5180,
     strictPort: true,
     // El frontend llama a /api/... y Vite lo reenvía al backend.
-    proxy: { '/api': 'http://localhost:4000' },
+    proxy: { '/api': 'http://backend:3000' },
   },
 })
