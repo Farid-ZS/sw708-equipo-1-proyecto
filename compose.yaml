@@ -1,0 +1,48 @@
+# ==============================================================================
+# Orquestación local de Lumiere (Paso 02 - segunda mitad)
+#
+# Levanta el backend (imagen construida con el Dockerfile de la raíz) y una base
+# PostgreSQL 16. Todas las variables tienen un valor por defecto de desarrollo
+# (${VAR:-valor}), así que `docker compose up` funciona sin un .env previo.
+# Para personalizar: cp .env.example .env
+# ==============================================================================
+
+services:
+  db:
+    image: docker.io/library/postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-boletos_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      # Scripts de esquema: se ejecutan solo la primera vez que se crea el volumen
+      - ./database/lab06_hexagonal:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: ${APP_PORT:-3000}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      # Dentro de la red de compose la base se alcanza por el nombre del servicio "db"
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-boletos_db}
+    ports:
+      - "${APP_PORT:-3000}:${APP_PORT:-3000}"
+
+volumes:
+  db-data:
