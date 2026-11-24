@@ -9,9 +9,12 @@ import {
 import { ReservasController, exigirJson } from '@lumiere/reservas/http'
 import { bus } from '../composicion.ts'
 import { stub } from './stub.ts'
+import { BoletoRepositoryConCircuitBreaker } from '../infrastructure/resiliencia.ts'
 
 export function crearReservasRouter(
-  repo: BoletoRepository = new PostgresBoletoRepository(pool),
+  repo: BoletoRepository = new BoletoRepositoryConCircuitBreaker(
+    new PostgresBoletoRepository(pool)
+  ),
   publicador: PublicadorDeEventos = bus
 ): Router {
   const router = Router()

@@ -3,6 +3,7 @@ import {
   ReservarBoletoUseCase,
   AsientoOcupadoError,
   DatosInvalidosError,
+  ServicioNoDisponibleError,
   type Boleto,
 } from '../domain/cinema.ts'
 import {
@@ -30,12 +31,24 @@ const PATRON_ASIENTO = /^[A-Za-z][0-9]{1,2}$/
 const MAX_NOMBRE_CLIENTE = 120
 
 /**
+ * 503 cuando la base no responde (circuito abierto o timeout).
+ * Pendiente: el contrato 1.1.0 aún no declara este caso en openapi.yaml.
+ */
+export interface ErrorServicioNoDisponible {
+  status: 503
+  codigo: 'SERVICIO_NO_DISPONIBLE'
+  error: string
+  data?: never
+}
+
+/**
  * Respuesta del endpoint: o la reserva creada o un error del contrato.
  * Los `?: never` permiten leer `resp.data` o `resp.error` sin estrechar el tipo.
  */
 export type ResultadoReserva =
   | (ReservaCreadaResponse & { codigo?: never; error?: never })
   | (ErrorResponse & { data?: never })
+  | ErrorServicioNoDisponible
 
 const CAMPOS_PERMITIDOS: ReadonlyArray<keyof CrearReservaRequest> = [
   'funcion_id',
@@ -177,6 +190,13 @@ export class ReservasController {
       }
       if (error instanceof AsientoOcupadoError) {
         return errorAsientoOcupado(error.message)
+      }
+      if (error instanceof ServicioNoDisponibleError) {
+        return {
+          status: 503,
+          codigo: 'SERVICIO_NO_DISPONIBLE',
+          error: error.message,
+        }
       }
       // No se exponen detalles de infraestructura al consumidor.
       console.error('Error no esperado en reserva:', error)

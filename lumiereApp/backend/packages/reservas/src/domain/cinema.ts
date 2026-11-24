@@ -46,6 +46,15 @@ export class DatosInvalidosError extends Error {
   }
 }
 
+export class ServicioNoDisponibleError extends Error {
+  constructor(
+    mensaje: string = 'El servicio de reservas no está disponible. Intenta de nuevo en unos segundos'
+  ) {
+    super(mensaje)
+    this.name = 'ServicioNoDisponibleError'
+  }
+}
+
 export interface BoletoRepository {
   guardar(boleto: Boleto): Promise<void>
   buscarPorAsiento(funcionId: string, asiento: string): Promise<Boleto | null>
