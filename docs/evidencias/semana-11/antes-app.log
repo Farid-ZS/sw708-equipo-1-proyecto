@@ -1,0 +1,407 @@
+app-1  | 2026-11-25T21:45:40.560307792Z ◇ injected env (0) from .env
+app-1  | 2026-11-25T21:45:40.589155704Z Backend escuchando en http://localhost:13000
+app-1  | 2026-11-25T21:46:51.710553300Z node:events:497
+app-1  | 2026-11-25T21:46:51.710610599Z       throw er; // Unhandled 'error' event
+app-1  | 2026-11-25T21:46:51.710620829Z       ^
+app-1  | 2026-11-25T21:46:51.710627040Z 
+app-1  | 2026-11-25T21:46:51.710632250Z error: terminating connection due to administrator command
+app-1  | 2026-11-25T21:46:51.710638272Z     at parseErrorMessage (/app/node_modules/pg-protocol/dist/parser.js:306:11)
+app-1  | 2026-11-25T21:46:51.710659292Z     at Parser.handlePacket (/app/node_modules/pg-protocol/dist/parser.js:143:27)
+app-1  | 2026-11-25T21:46:51.710668660Z     at Parser.parse (/app/node_modules/pg-protocol/dist/parser.js:37:38)
+app-1  | 2026-11-25T21:46:51.710672307Z     at Socket.<anonymous> (/app/node_modules/pg-protocol/dist/index.js:12:42)
+app-1  | 2026-11-25T21:46:51.710675823Z     at Socket.emit (node:events:519:28)
+app-1  | 2026-11-25T21:46:51.710679540Z     at addChunk (node:internal/streams/readable:561:12)
+app-1  | 2026-11-25T21:46:51.710682917Z     at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+app-1  | 2026-11-25T21:46:51.710686213Z     at Readable.push (node:internal/streams/readable:392:5)
+app-1  | 2026-11-25T21:46:51.710689519Z     at TCP.onStreamRead (node:internal/stream_base_commons:189:23)
+app-1  | 2026-11-25T21:46:51.710692735Z Emitted 'error' event on BoundPool instance at:
+app-1  | 2026-11-25T21:46:51.710696002Z     at Client.idleListener (/app/node_modules/pg-pool/index.js:62:10)
+app-1  | 2026-11-25T21:46:51.710699228Z     at Client.emit (node:events:519:28)
+app-1  | 2026-11-25T21:46:51.710702434Z     at Client._handleErrorEvent (/app/node_modules/pg/lib/client.js:422:10)
+app-1  | 2026-11-25T21:46:51.710705650Z     at Client._handleErrorMessage (/app/node_modules/pg/lib/client.js:433:12)
+app-1  | 2026-11-25T21:46:51.710708946Z     at Connection.emit (node:events:519:28)
+app-1  | 2026-11-25T21:46:51.710712182Z     at /app/node_modules/pg/lib/connection.js:143:12
+app-1  | 2026-11-25T21:46:51.710715439Z     at Parser.parse (/app/node_modules/pg-protocol/dist/parser.js:38:17)
+app-1  | 2026-11-25T21:46:51.710718665Z     at Socket.<anonymous> (/app/node_modules/pg-protocol/dist/index.js:12:42)
+app-1  | 2026-11-25T21:46:51.710721871Z     at Socket.emit (node:events:519:28)
+app-1  | 2026-11-25T21:46:51.710725087Z     at addChunk (node:internal/streams/readable:561:12) {
+app-1  | 2026-11-25T21:46:51.710728273Z   length: 116,
+app-1  | 2026-11-25T21:46:51.710731489Z   severity: 'FATAL',
+app-1  | 2026-11-25T21:46:51.710735196Z   code: '57P01',
+app-1  | 2026-11-25T21:46:51.710738402Z   detail: undefined,
+app-1  | 2026-11-25T21:46:51.710741578Z   hint: undefined,
+app-1  | 2026-11-25T21:46:51.710744774Z   position: undefined,
+app-1  | 2026-11-25T21:46:51.710747940Z   internalPosition: undefined,
+app-1  | 2026-11-25T21:46:51.710751577Z   internalQuery: undefined,
+app-1  | 2026-11-25T21:46:51.710754733Z   where: undefined,
+app-1  | 2026-11-25T21:46:51.710759062Z   schema: undefined,
+app-1  | 2026-11-25T21:46:51.710764492Z   table: undefined,
+app-1  | 2026-11-25T21:46:51.710773018Z   column: undefined,
+app-1  | 2026-11-25T21:46:51.710780152Z   dataType: undefined,
+app-1  | 2026-11-25T21:46:51.710785021Z   constraint: undefined,
+app-1  | 2026-11-25T21:46:51.710789770Z   file: 'postgres.c',
+app-1  | 2026-11-25T21:46:51.710794178Z   line: '3286',
+app-1  | 2026-11-25T21:46:51.710798807Z   routine: 'ProcessInterrupts',
+app-1  | 2026-11-25T21:46:51.710806582Z   client: Client {
+app-1  | 2026-11-25T21:46:51.710817042Z     _events: [Object: null prototype] { error: [Function (anonymous)] },
+app-1  | 2026-11-25T21:46:51.710823404Z     _eventsCount: 1,
+app-1  | 2026-11-25T21:46:51.710830027Z     _maxListeners: undefined,
+app-1  | 2026-11-25T21:46:51.710833493Z     connectionParameters: ConnectionParameters {
+app-1  | 2026-11-25T21:46:51.710836749Z       user: 'postgres',
+app-1  | 2026-11-25T21:46:51.710839956Z       database: 'boletos_db',
+app-1  | 2026-11-25T21:46:51.710845676Z       port: 5432,
+app-1  | 2026-11-25T21:46:51.710850355Z       host: 'db',
+app-1  | 2026-11-25T21:46:51.710853692Z       binary: false,
+app-1  | 2026-11-25T21:46:51.710856908Z       options: undefined,
+app-1  | 2026-11-25T21:46:51.710860184Z       ssl: false,
+app-1  | 2026-11-25T21:46:51.710863450Z       sslnegotiation: undefined,
+app-1  | 2026-11-25T21:46:51.710866636Z       client_encoding: '',
+app-1  | 2026-11-25T21:46:51.710869802Z       replication: undefined,
+app-1  | 2026-11-25T21:46:51.710873029Z       isDomainSocket: false,
+app-1  | 2026-11-25T21:46:51.710876215Z       application_name: undefined,
+app-1  | 2026-11-25T21:46:51.710879431Z       fallback_application_name: undefined,
+app-1  | 2026-11-25T21:46:51.710882637Z       statement_timeout: false,
+app-1  | 2026-11-25T21:46:51.710897796Z       lock_timeout: false,
+app-1  | 2026-11-25T21:46:51.710900000Z       idle_in_transaction_session_timeout: false,
+app-1  | 2026-11-25T21:46:51.710902064Z       query_timeout: false,
+app-1  | 2026-11-25T21:46:51.710903937Z       connect_timeout: 0
+app-1  | 2026-11-25T21:46:51.710905821Z     },
+app-1  | 2026-11-25T21:46:51.710907815Z     user: 'postgres',
+app-1  | 2026-11-25T21:46:51.710909678Z     database: 'boletos_db',
+app-1  | 2026-11-25T21:46:51.710911542Z     port: 5432,
+app-1  | 2026-11-25T21:46:51.710913496Z     host: 'db',
+app-1  | 2026-11-25T21:46:51.710915620Z     replication: undefined,
+app-1  | 2026-11-25T21:46:51.710917553Z     _Promise: [Function: Promise],
+app-1  | 2026-11-25T21:46:51.710919427Z     _types: TypeOverrides {
+app-1  | 2026-11-25T21:46:51.710921320Z       _types: {
+app-1  | 2026-11-25T21:46:51.710923204Z         getTypeParser: [Function: getTypeParser],
+app-1  | 2026-11-25T21:46:51.710925088Z         setTypeParser: [Function: setTypeParser],
+app-1  | 2026-11-25T21:46:51.710927051Z         arrayParser: { create: [Function: create] },
+app-1  | 2026-11-25T21:46:51.710928975Z         builtins: {
+app-1  | 2026-11-25T21:46:51.710930879Z           BOOL: 16,
+app-1  | 2026-11-25T21:46:51.710932732Z           BYTEA: 17,
+app-1  | 2026-11-25T21:46:51.710934596Z           CHAR: 18,
+app-1  | 2026-11-25T21:46:51.710936489Z           INT8: 20,
+app-1  | 2026-11-25T21:46:51.710938363Z           INT2: 21,
+app-1  | 2026-11-25T21:46:51.710940287Z           INT4: 23,
+app-1  | 2026-11-25T21:46:51.710942120Z           REGPROC: 24,
+app-1  | 2026-11-25T21:46:51.710943984Z           TEXT: 25,
+app-1  | 2026-11-25T21:46:51.710945837Z           OID: 26,
+app-1  | 2026-11-25T21:46:51.710947691Z           TID: 27,
+app-1  | 2026-11-25T21:46:51.710949524Z           XID: 28,
+app-1  | 2026-11-25T21:46:51.710951408Z           CID: 29,
+app-1  | 2026-11-25T21:46:51.710953241Z           JSON: 114,
+app-1  | 2026-11-25T21:46:51.710955105Z           XML: 142,
+app-1  | 2026-11-25T21:46:51.710956948Z           PG_NODE_TREE: 194,
+app-1  | 2026-11-25T21:46:51.710958812Z           SMGR: 210,
+app-1  | 2026-11-25T21:46:51.710960675Z           PATH: 602,
+app-1  | 2026-11-25T21:46:51.710962539Z           POLYGON: 604,
+app-1  | 2026-11-25T21:46:51.710964412Z           CIDR: 650,
+app-1  | 2026-11-25T21:46:51.710966286Z           FLOAT4: 700,
+app-1  | 2026-11-25T21:46:51.710968170Z           FLOAT8: 701,
+app-1  | 2026-11-25T21:46:51.710970003Z           ABSTIME: 702,
+app-1  | 2026-11-25T21:46:51.710971877Z           RELTIME: 703,
+app-1  | 2026-11-25T21:46:51.710973740Z           TINTERVAL: 704,
+app-1  | 2026-11-25T21:46:51.710975644Z           CIRCLE: 718,
+app-1  | 2026-11-25T21:46:51.710977537Z           MACADDR8: 774,
+app-1  | 2026-11-25T21:46:51.710979401Z           MONEY: 790,
+app-1  | 2026-11-25T21:46:51.710981285Z           MACADDR: 829,
+app-1  | 2026-11-25T21:46:51.710983118Z           INET: 869,
+app-1  | 2026-11-25T21:46:51.710984972Z           ACLITEM: 1033,
+app-1  | 2026-11-25T21:46:51.710986865Z           BPCHAR: 1042,
+app-1  | 2026-11-25T21:46:51.710988739Z           VARCHAR: 1043,
+app-1  | 2026-11-25T21:46:51.710992746Z           DATE: 1082,
+app-1  | 2026-11-25T21:46:51.710995261Z           TIME: 1083,
+app-1  | 2026-11-25T21:46:51.710998557Z           TIMESTAMP: 1114,
+app-1  | 2026-11-25T21:46:51.711006032Z           TIMESTAMPTZ: 1184,
+app-1  | 2026-11-25T21:46:51.711014167Z           INTERVAL: 1186,
+app-1  | 2026-11-25T21:46:51.711017113Z           TIMETZ: 1266,
+app-1  | 2026-11-25T21:46:51.711020509Z           BIT: 1560,
+app-1  | 2026-11-25T21:46:51.711029075Z           VARBIT: 1562,
+app-1  | 2026-11-25T21:46:51.711031861Z           NUMERIC: 1700,
+app-1  | 2026-11-25T21:46:51.711034526Z           REFCURSOR: 1790,
+app-1  | 2026-11-25T21:46:51.711037241Z           REGPROCEDURE: 2202,
+app-1  | 2026-11-25T21:46:51.711039876Z           REGOPER: 2203,
+app-1  | 2026-11-25T21:46:51.711042331Z           REGOPERATOR: 2204,
+app-1  | 2026-11-25T21:46:51.711044916Z           REGCLASS: 2205,
+app-1  | 2026-11-25T21:46:51.711047551Z           REGTYPE: 2206,
+app-1  | 2026-11-25T21:46:51.711050256Z           UUID: 2950,
+app-1  | 2026-11-25T21:46:51.711053352Z           TXID_SNAPSHOT: 2970,
+app-1  | 2026-11-25T21:46:51.711056357Z           PG_LSN: 3220,
+app-1  | 2026-11-25T21:46:51.711059393Z           PG_NDISTINCT: 3361,
+app-1  | 2026-11-25T21:46:51.711065845Z           PG_DEPENDENCIES: 3402,
+app-1  | 2026-11-25T21:46:51.711070815Z           TSVECTOR: 3614,
+app-1  | 2026-11-25T21:46:51.711074121Z           TSQUERY: 3615,
+app-1  | 2026-11-25T21:46:51.711078269Z           GTSVECTOR: 3642,
+app-1  | 2026-11-25T21:46:51.711084711Z           REGCONFIG: 3734,
+app-1  | 2026-11-25T21:46:51.711088078Z           REGDICTIONARY: 3769,
+app-1  | 2026-11-25T21:46:51.711091224Z           JSONB: 3802,
+app-1  | 2026-11-25T21:46:51.711094650Z           REGNAMESPACE: 4089,
+app-1  | 2026-11-25T21:46:51.711097706Z           REGROLE: 4096
+app-1  | 2026-11-25T21:46:51.711101072Z         }
+app-1  | 2026-11-25T21:46:51.711104549Z       },
+app-1  | 2026-11-25T21:46:51.711115931Z       text: {},
+app-1  | 2026-11-25T21:46:51.711118836Z       binary: {}
+app-1  | 2026-11-25T21:46:51.711121431Z     },
+app-1  | 2026-11-25T21:46:51.711123996Z     _ending: true,
+app-1  | 2026-11-25T21:46:51.711126711Z     _ended: false,
+app-1  | 2026-11-25T21:46:51.711129406Z     _connecting: false,
+app-1  | 2026-11-25T21:46:51.711132071Z     _connected: true,
+app-1  | 2026-11-25T21:46:51.711134476Z     _connectionError: false,
+app-1  | 2026-11-25T21:46:51.711137071Z     _queryable: false,
+app-1  | 2026-11-25T21:46:51.711139646Z     _activeQuery: null,
+app-1  | 2026-11-25T21:46:51.711142321Z     _txStatus: 'I',
+app-1  | 2026-11-25T21:46:51.711144936Z     enableChannelBinding: false,
+app-1  | 2026-11-25T21:46:51.711147591Z     scramMaxIterations: 100000,
+app-1  | 2026-11-25T21:46:51.711150487Z     connection: Connection {
+app-1  | 2026-11-25T21:46:51.711153392Z       _events: [Object: null prototype] {
+app-1  | 2026-11-25T21:46:51.711158231Z         newListener: [Function (anonymous)],
+app-1  | 2026-11-25T21:46:51.711163782Z         connect: [Function (anonymous)],
+app-1  | 2026-11-25T21:46:51.711170495Z         sslconnect: [Function (anonymous)],
+app-1  | 2026-11-25T21:46:51.711175594Z         authenticationCleartextPassword: [Function: bound _handleAuthCleartextPassword],
+app-1  | 2026-11-25T21:46:51.711179792Z         authenticationMD5Password: [Function: bound _handleAuthMD5Password],
+app-1  | 2026-11-25T21:46:51.711183189Z         authenticationSASL: [Function: bound _handleAuthSASL],
+app-1  | 2026-11-25T21:46:51.711186245Z         authenticationSASLContinue: [Function: bound _handleAuthSASLContinue] AsyncFunction,
+app-1  | 2026-11-25T21:46:51.711189040Z         authenticationSASLFinal: [Function: bound _handleAuthSASLFinal],
+app-1  | 2026-11-25T21:46:51.711191695Z         backendKeyData: [Function: bound _handleBackendKeyData],
+app-1  | 2026-11-25T21:46:51.711194540Z         error: [Function: bound _handleErrorEvent],
+app-1  | 2026-11-25T21:46:51.711197095Z         errorMessage: [Function: bound _handleErrorMessage],
+app-1  | 2026-11-25T21:46:51.711199570Z         readyForQuery: [Function: bound _handleReadyForQuery],
+app-1  | 2026-11-25T21:46:51.711202025Z         notice: [Function: bound _handleNotice],
+app-1  | 2026-11-25T21:46:51.711204620Z         rowDescription: [Function: bound _handleRowDescription],
+app-1  | 2026-11-25T21:46:51.711207204Z         dataRow: [Function: bound _handleDataRow],
+app-1  | 2026-11-25T21:46:51.711210060Z         portalSuspended: [Function: bound _handlePortalSuspended],
+app-1  | 2026-11-25T21:46:51.711212575Z         emptyQuery: [Function: bound _handleEmptyQuery],
+app-1  | 2026-11-25T21:46:51.711215250Z         commandComplete: [Function: bound _handleCommandComplete],
+app-1  | 2026-11-25T21:46:51.711217885Z         parseComplete: [Function: bound _handleParseComplete],
+app-1  | 2026-11-25T21:46:51.711220750Z         copyInResponse: [Function: bound _handleCopyInResponse],
+app-1  | 2026-11-25T21:46:51.711223345Z         copyData: [Function: bound _handleCopyData],
+app-1  | 2026-11-25T21:46:51.711226080Z         notification: [Function: bound _handleNotification],
+app-1  | 2026-11-25T21:46:51.711228755Z         end: [
+app-1  | 2026-11-25T21:46:51.711231411Z           [Function: bound onceWrapper] {
+app-1  | 2026-11-25T21:46:51.711234015Z             listener: [Function (anonymous)]
+app-1  | 2026-11-25T21:46:51.711236811Z           },
+app-1  | 2026-11-25T21:46:51.711240748Z           [Function: bound onceWrapper] {
+app-1  | 2026-11-25T21:46:51.711244085Z             listener: [Function (anonymous)]
+app-1  | 2026-11-25T21:46:51.711247171Z           }
+app-1  | 2026-11-25T21:46:51.711250236Z         ]
+app-1  | 2026-11-25T21:46:51.711256398Z       },
+app-1  | 2026-11-25T21:46:51.711260666Z       _eventsCount: 23,
+app-1  | 2026-11-25T21:46:51.711264043Z       _maxListeners: undefined,
+app-1  | 2026-11-25T21:46:51.711267159Z       stream: Socket {
+app-1  | 2026-11-25T21:46:51.711270475Z         connecting: false,
+app-1  | 2026-11-25T21:46:51.711273691Z         _hadError: false,
+app-1  | 2026-11-25T21:46:51.711276556Z         _parent: null,
+app-1  | 2026-11-25T21:46:51.711279672Z         _host: 'db',
+app-1  | 2026-11-25T21:46:51.711282628Z         _closeAfterHandlingError: false,
+app-1  | 2026-11-25T21:46:51.711289231Z         _events: {
+app-1  | 2026-11-25T21:46:51.711292918Z           close: [Function (anonymous)],
+app-1  | 2026-11-25T21:46:51.711296474Z           error: [Function: reportStreamError],
+app-1  | 2026-11-25T21:46:51.711299490Z           prefinish: undefined,
+app-1  | 2026-11-25T21:46:51.711301905Z           finish: undefined,
+app-1  | 2026-11-25T21:46:51.711304269Z           drain: undefined,
+app-1  | 2026-11-25T21:46:51.711306594Z           data: [Function (anonymous)],
+app-1  | 2026-11-25T21:46:51.711308557Z           end: [ [Function: onReadableStreamEnd], [Function (anonymous)] ],
+app-1  | 2026-11-25T21:46:51.711320861Z           readable: undefined,
+app-1  | 2026-11-25T21:46:51.711322985Z           connect: undefined
+app-1  | 2026-11-25T21:46:51.711324908Z         },
+app-1  | 2026-11-25T21:46:51.711326842Z         _readableState: ReadableState {
+app-1  | 2026-11-25T21:46:51.711328756Z           highWaterMark: 65536,
+app-1  | 2026-11-25T21:46:51.711330679Z           buffer: [],
+app-1  | 2026-11-25T21:46:51.711332613Z           bufferIndex: 0,
+app-1  | 2026-11-25T21:46:51.711334507Z           length: 0,
+app-1  | 2026-11-25T21:46:51.711336360Z           pipes: [],
+app-1  | 2026-11-25T21:46:51.711338464Z           awaitDrainWriters: null,
+app-1  | 2026-11-25T21:46:51.711340418Z           [Symbol(kState)]: 194519348
+app-1  | 2026-11-25T21:46:51.711342271Z         },
+app-1  | 2026-11-25T21:46:51.711344195Z         _writableState: WritableState {
+app-1  | 2026-11-25T21:46:51.711346059Z           highWaterMark: 65536,
+app-1  | 2026-11-25T21:46:51.711347952Z           length: 0,
+app-1  | 2026-11-25T21:46:51.711349866Z           corked: 0,
+app-1  | 2026-11-25T21:46:51.711351729Z           onwrite: [Function: bound onwrite],
+app-1  | 2026-11-25T21:46:51.711353603Z           writelen: 0,
+app-1  | 2026-11-25T21:46:51.711355467Z           bufferedIndex: 0,
+app-1  | 2026-11-25T21:46:51.711357350Z           pendingcb: 0,
+app-1  | 2026-11-25T21:46:51.711359254Z           [Symbol(kState)]: 17563956,
+app-1  | 2026-11-25T21:46:51.711361167Z           [Symbol(kBufferedValue)]: null,
+app-1  | 2026-11-25T21:46:51.711363061Z           [Symbol(kWriteCbValue)]: null
+app-1  | 2026-11-25T21:46:51.711364905Z         },
+app-1  | 2026-11-25T21:46:51.711366868Z         allowHalfOpen: false,
+app-1  | 2026-11-25T21:46:51.711368802Z         _maxListeners: undefined,
+app-1  | 2026-11-25T21:46:51.711370726Z         _eventsCount: 4,
+app-1  | 2026-11-25T21:46:51.711372639Z         _sockname: null,
+app-1  | 2026-11-25T21:46:51.711374533Z         _pendingData: null,
+app-1  | 2026-11-25T21:46:51.711376436Z         _pendingEncoding: '',
+app-1  | 2026-11-25T21:46:51.711378330Z         server: null,
+app-1  | 2026-11-25T21:46:51.711380224Z         _server: null,
+app-1  | 2026-11-25T21:46:51.711382117Z         [Symbol(async_id_symbol)]: 60,
+app-1  | 2026-11-25T21:46:51.711384051Z         [Symbol(kHandle)]: null,
+app-1  | 2026-11-25T21:46:51.711385955Z         [Symbol(lastWriteQueueSize)]: 0,
+app-1  | 2026-11-25T21:46:51.711387828Z         [Symbol(timeout)]: null,
+app-1  | 2026-11-25T21:46:51.711389742Z         [Symbol(kBuffer)]: null,
+app-1  | 2026-11-25T21:46:51.711391605Z         [Symbol(kBufferCb)]: null,
+app-1  | 2026-11-25T21:46:51.711393499Z         [Symbol(kBufferGen)]: null,
+app-1  | 2026-11-25T21:46:51.711395363Z         [Symbol(shapeMode)]: true,
+app-1  | 2026-11-25T21:46:51.711398689Z         [Symbol(kCapture)]: false,
+app-1  | 2026-11-25T21:46:51.711402596Z         [Symbol(kSetNoDelay)]: true,
+app-1  | 2026-11-25T21:46:51.711404540Z         [Symbol(kSetKeepAlive)]: false,
+app-1  | 2026-11-25T21:46:51.711406404Z         [Symbol(kSetKeepAliveInitialDelay)]: 0,
+app-1  | 2026-11-25T21:46:51.711408287Z         [Symbol(kBytesRead)]: 2867,
+app-1  | 2026-11-25T21:46:51.711410992Z         [Symbol(kBytesWritten)]: 4819
+app-1  | 2026-11-25T21:46:51.711414198Z       },
+app-1  | 2026-11-25T21:46:51.711416172Z       _keepAlive: false,
+app-1  | 2026-11-25T21:46:51.711418076Z       _keepAliveInitialDelayMillis: 0,
+app-1  | 2026-11-25T21:46:51.711419949Z       parsedStatements: {},
+app-1  | 2026-11-25T21:46:51.711421853Z       submittedNamedStatements: {},
+app-1  | 2026-11-25T21:46:51.711423716Z       ssl: false,
+app-1  | 2026-11-25T21:46:51.711425570Z       sslNegotiation: 'postgres',
+app-1  | 2026-11-25T21:46:51.711427454Z       _ending: false,
+app-1  | 2026-11-25T21:46:51.711429347Z       _emitMessage: false,
+app-1  | 2026-11-25T21:46:51.711431261Z       _connecting: true,
+app-1  | 2026-11-25T21:46:51.711433164Z       [Symbol(shapeMode)]: false,
+app-1  | 2026-11-25T21:46:51.711435048Z       [Symbol(kCapture)]: false
+app-1  | 2026-11-25T21:46:51.711436912Z     },
+app-1  | 2026-11-25T21:46:51.711438935Z     _queryQueue: [],
+app-1  | 2026-11-25T21:46:51.711440809Z     _sentQueryQueue: [],
+app-1  | 2026-11-25T21:46:51.711442663Z     pipeline: false,
+app-1  | 2026-11-25T21:46:51.711444546Z     binary: false,
+app-1  | 2026-11-25T21:46:51.711446400Z     processID: 170,
+app-1  | 2026-11-25T21:46:51.711448293Z     secretKey: 1194989139,
+app-1  | 2026-11-25T21:46:51.711450137Z     ssl: false,
+app-1  | 2026-11-25T21:46:51.711452080Z     sslNegotiation: 'postgres',
+app-1  | 2026-11-25T21:46:51.711454024Z     _connectionTimeoutMillis: 0,
+app-1  | 2026-11-25T21:46:51.711455978Z     _connectionCallback: null,
+app-1  | 2026-11-25T21:46:51.711457831Z     saslSession: null,
+app-1  | 2026-11-25T21:46:51.711459705Z     release: [Function (anonymous)],
+app-1  | 2026-11-25T21:46:51.711461599Z     readyForQuery: true,
+app-1  | 2026-11-25T21:46:51.711476507Z     hasExecuted: true,
+app-1  | 2026-11-25T21:46:51.711480044Z     _poolUseCount: 20,
+app-1  | 2026-11-25T21:46:51.711483310Z     [Symbol(shapeMode)]: false,
+app-1  | 2026-11-25T21:46:51.711486376Z     [Symbol(kCapture)]: false
+app-1  | 2026-11-25T21:46:51.711489291Z   }
+app-1  | 2026-11-25T21:46:51.711492648Z }
+app-1  | 2026-11-25T21:46:51.711495884Z 
+app-1  | 2026-11-25T21:46:51.711498799Z Node.js v22.23.5
+app-1  | 2026-11-25T21:46:52.431760229Z ◇ injected env (0) from .env
+app-1  | 2026-11-25T21:46:52.465517333Z Backend escuchando en http://localhost:13000
+app-1  | 2026-11-25T21:46:57.159007136Z Error no esperado en reserva: Error: getaddrinfo ENOTFOUND db
+app-1  | 2026-11-25T21:46:57.159047072Z     at /app/node_modules/pg-pool/index.js:45:11
+app-1  | 2026-11-25T21:46:57.159053384Z     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+app-1  | 2026-11-25T21:46:57.159059175Z     at async PostgresBoletoRepository.buscarPorAsiento (file:///app/packages/reservas/dist/infrastructure/postgres.repository.js:28:21)
+app-1  | 2026-11-25T21:46:57.159064585Z     at async ReservarBoletoUseCase.ejecutar (file:///app/packages/reservas/dist/domain/cinema.js:72:27)
+app-1  | 2026-11-25T21:46:57.159069885Z     at async ReservasController.ejecutar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:124:28)
+app-1  | 2026-11-25T21:46:57.159074725Z     at async reservar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:141:27) {
+app-1  | 2026-11-25T21:46:57.159079524Z   errno: -3008,
+app-1  | 2026-11-25T21:46:57.159084704Z   code: 'ENOTFOUND',
+app-1  | 2026-11-25T21:46:57.159089894Z   syscall: 'getaddrinfo',
+app-1  | 2026-11-25T21:46:57.159094973Z   hostname: 'db'
+app-1  | 2026-11-25T21:46:57.159099812Z }
+app-1  | 2026-11-25T21:47:02.118423394Z Error no esperado en reserva: Error: getaddrinfo ENOTFOUND db
+app-1  | 2026-11-25T21:47:02.118496603Z     at /app/node_modules/pg-pool/index.js:45:11
+app-1  | 2026-11-25T21:47:02.118505490Z     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+app-1  | 2026-11-25T21:47:02.118511241Z     at async PostgresBoletoRepository.buscarPorAsiento (file:///app/packages/reservas/dist/infrastructure/postgres.repository.js:28:21)
+app-1  | 2026-11-25T21:47:02.118516802Z     at async ReservarBoletoUseCase.ejecutar (file:///app/packages/reservas/dist/domain/cinema.js:72:27)
+app-1  | 2026-11-25T21:47:02.118522222Z     at async ReservasController.ejecutar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:124:28)
+app-1  | 2026-11-25T21:47:02.118527402Z     at async reservar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:141:27) {
+app-1  | 2026-11-25T21:47:02.118532311Z   errno: -3008,
+app-1  | 2026-11-25T21:47:02.118537411Z   code: 'ENOTFOUND',
+app-1  | 2026-11-25T21:47:02.118542361Z   syscall: 'getaddrinfo',
+app-1  | 2026-11-25T21:47:02.118547470Z   hostname: 'db'
+app-1  | 2026-11-25T21:47:02.118552390Z }
+app-1  | 2026-11-25T21:47:07.111567544Z Error no esperado en reserva: Error: getaddrinfo ENOTFOUND db
+app-1  | 2026-11-25T21:47:07.111597721Z     at /app/node_modules/pg-pool/index.js:45:11
+app-1  | 2026-11-25T21:47:07.111644991Z     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+app-1  | 2026-11-25T21:47:07.111651283Z     at async PostgresBoletoRepository.buscarPorAsiento (file:///app/packages/reservas/dist/infrastructure/postgres.repository.js:28:21)
+app-1  | 2026-11-25T21:47:07.111656313Z     at async ReservarBoletoUseCase.ejecutar (file:///app/packages/reservas/dist/domain/cinema.js:72:27)
+app-1  | 2026-11-25T21:47:07.111660661Z     at async ReservasController.ejecutar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:124:28)
+app-1  | 2026-11-25T21:47:07.111665030Z     at async reservar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:141:27) {
+app-1  | 2026-11-25T21:47:07.111669167Z   errno: -3008,
+app-1  | 2026-11-25T21:47:07.111673876Z   code: 'ENOTFOUND',
+app-1  | 2026-11-25T21:47:07.111678355Z   syscall: 'getaddrinfo',
+app-1  | 2026-11-25T21:47:07.111682773Z   hostname: 'db'
+app-1  | 2026-11-25T21:47:07.111687112Z }
+app-1  | 2026-11-25T21:47:12.078502769Z Error no esperado en reserva: Error: getaddrinfo ENOTFOUND db
+app-1  | 2026-11-25T21:47:12.078534670Z     at /app/node_modules/pg-pool/index.js:45:11
+app-1  | 2026-11-25T21:47:12.078538948Z     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+app-1  | 2026-11-25T21:47:12.078542855Z     at async PostgresBoletoRepository.buscarPorAsiento (file:///app/packages/reservas/dist/infrastructure/postgres.repository.js:28:21)
+app-1  | 2026-11-25T21:47:12.078559226Z     at async ReservarBoletoUseCase.ejecutar (file:///app/packages/reservas/dist/domain/cinema.js:72:27)
+app-1  | 2026-11-25T21:47:12.078562142Z     at async ReservasController.ejecutar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:124:28)
+app-1  | 2026-11-25T21:47:12.078564146Z     at async reservar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:141:27) {
+app-1  | 2026-11-25T21:47:12.078566240Z   errno: -3008,
+app-1  | 2026-11-25T21:47:12.078568785Z   code: 'ENOTFOUND',
+app-1  | 2026-11-25T21:47:12.078570959Z   syscall: 'getaddrinfo',
+app-1  | 2026-11-25T21:47:12.078573023Z   hostname: 'db'
+app-1  | 2026-11-25T21:47:12.078574906Z }
+app-1  | 2026-11-25T21:47:17.052639482Z Error no esperado en reserva: Error: getaddrinfo ENOTFOUND db
+app-1  | 2026-11-25T21:47:17.052674098Z     at /app/node_modules/pg-pool/index.js:45:11
+app-1  | 2026-11-25T21:47:17.052680690Z     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+app-1  | 2026-11-25T21:47:17.052688896Z     at async PostgresBoletoRepository.buscarPorAsiento (file:///app/packages/reservas/dist/infrastructure/postgres.repository.js:28:21)
+app-1  | 2026-11-25T21:47:17.052693274Z     at async ReservarBoletoUseCase.ejecutar (file:///app/packages/reservas/dist/domain/cinema.js:72:27)
+app-1  | 2026-11-25T21:47:17.052697111Z     at async ReservasController.ejecutar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:124:28)
+app-1  | 2026-11-25T21:47:17.052700728Z     at async reservar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:141:27) {
+app-1  | 2026-11-25T21:47:17.052704315Z   errno: -3008,
+app-1  | 2026-11-25T21:47:17.052707932Z   code: 'ENOTFOUND',
+app-1  | 2026-11-25T21:47:17.052711529Z   syscall: 'getaddrinfo',
+app-1  | 2026-11-25T21:47:17.052715126Z   hostname: 'db'
+app-1  | 2026-11-25T21:47:17.052718041Z }
+app-1  | 2026-11-25T21:47:22.046615831Z Error no esperado en reserva: Error: getaddrinfo ENOTFOUND db
+app-1  | 2026-11-25T21:47:22.046652631Z     at /app/node_modules/pg-pool/index.js:45:11
+app-1  | 2026-11-25T21:47:22.046660887Z     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+app-1  | 2026-11-25T21:47:22.046670465Z     at async PostgresBoletoRepository.buscarPorAsiento (file:///app/packages/reservas/dist/infrastructure/postgres.repository.js:28:21)
+app-1  | 2026-11-25T21:47:22.046674583Z     at async ReservarBoletoUseCase.ejecutar (file:///app/packages/reservas/dist/domain/cinema.js:72:27)
+app-1  | 2026-11-25T21:47:22.046678080Z     at async ReservasController.ejecutar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:124:28)
+app-1  | 2026-11-25T21:47:22.046681817Z     at async reservar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:141:27) {
+app-1  | 2026-11-25T21:47:22.046684823Z   errno: -3008,
+app-1  | 2026-11-25T21:47:22.046688229Z   code: 'ENOTFOUND',
+app-1  | 2026-11-25T21:47:22.046695112Z   syscall: 'getaddrinfo',
+app-1  | 2026-11-25T21:47:22.046699531Z   hostname: 'db'
+app-1  | 2026-11-25T21:47:22.046702897Z }
+app-1  | 2026-11-25T21:47:27.043879438Z Error no esperado en reserva: Error: getaddrinfo ENOTFOUND db
+app-1  | 2026-11-25T21:47:27.043931387Z     at /app/node_modules/pg-pool/index.js:45:11
+app-1  | 2026-11-25T21:47:27.043937018Z     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+app-1  | 2026-11-25T21:47:27.043941165Z     at async PostgresBoletoRepository.buscarPorAsiento (file:///app/packages/reservas/dist/infrastructure/postgres.repository.js:28:21)
+app-1  | 2026-11-25T21:47:27.043944712Z     at async ReservarBoletoUseCase.ejecutar (file:///app/packages/reservas/dist/domain/cinema.js:72:27)
+app-1  | 2026-11-25T21:47:27.043947918Z     at async ReservasController.ejecutar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:124:28)
+app-1  | 2026-11-25T21:47:27.043950804Z     at async reservar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:141:27) {
+app-1  | 2026-11-25T21:47:27.043953399Z   errno: -3008,
+app-1  | 2026-11-25T21:47:27.043956224Z   code: 'ENOTFOUND',
+app-1  | 2026-11-25T21:47:27.043959220Z   syscall: 'getaddrinfo',
+app-1  | 2026-11-25T21:47:27.043961945Z   hostname: 'db'
+app-1  | 2026-11-25T21:47:27.043964510Z }
+app-1  | 2026-11-25T21:47:32.029069913Z Error no esperado en reserva: Error: getaddrinfo ENOTFOUND db
+app-1  | 2026-11-25T21:47:32.030550580Z     at /app/node_modules/pg-pool/index.js:45:11
+app-1  | 2026-11-25T21:47:32.030562824Z     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+app-1  | 2026-11-25T21:47:32.030602299Z     at async PostgresBoletoRepository.buscarPorAsiento (file:///app/packages/reservas/dist/infrastructure/postgres.repository.js:28:21)
+app-1  | 2026-11-25T21:47:32.030614261Z     at async ReservarBoletoUseCase.ejecutar (file:///app/packages/reservas/dist/domain/cinema.js:72:27)
+app-1  | 2026-11-25T21:47:32.030622076Z     at async ReservasController.ejecutar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:124:28)
+app-1  | 2026-11-25T21:47:32.030629430Z     at async reservar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:141:27) {
+app-1  | 2026-11-25T21:47:32.030635372Z   errno: -3008,
+app-1  | 2026-11-25T21:47:32.030642686Z   code: 'ENOTFOUND',
+app-1  | 2026-11-25T21:47:32.030649879Z   syscall: 'getaddrinfo',
+app-1  | 2026-11-25T21:47:32.030657093Z   hostname: 'db'
+app-1  | 2026-11-25T21:47:32.030664417Z }
+app-1  | 2026-11-25T21:47:37.027829261Z Error no esperado en reserva: Error: getaddrinfo ENOTFOUND db
+app-1  | 2026-11-25T21:47:37.027857124Z     at /app/node_modules/pg-pool/index.js:45:11
+app-1  | 2026-11-25T21:47:37.027859989Z     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+app-1  | 2026-11-25T21:47:37.027862674Z     at async PostgresBoletoRepository.buscarPorAsiento (file:///app/packages/reservas/dist/infrastructure/postgres.repository.js:28:21)
+app-1  | 2026-11-25T21:47:37.027864969Z     at async ReservarBoletoUseCase.ejecutar (file:///app/packages/reservas/dist/domain/cinema.js:72:27)
+app-1  | 2026-11-25T21:47:37.027867984Z     at async ReservasController.ejecutar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:124:28)
+app-1  | 2026-11-25T21:47:37.027871160Z     at async reservar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:141:27) {
+app-1  | 2026-11-25T21:47:37.027874637Z   errno: -3008,
+app-1  | 2026-11-25T21:47:37.027880448Z   code: 'ENOTFOUND',
+app-1  | 2026-11-25T21:47:37.027885167Z   syscall: 'getaddrinfo',
+app-1  | 2026-11-25T21:47:37.027888403Z   hostname: 'db'
+app-1  | 2026-11-25T21:47:37.027891349Z }
+app-1  | 2026-11-25T21:47:38.629837097Z Error no esperado en reserva: Error: connect ECONNREFUSED 172.22.0.3:5432
+app-1  | 2026-11-25T21:47:38.629866964Z     at /app/node_modules/pg-pool/index.js:45:11
+app-1  | 2026-11-25T21:47:38.629873466Z     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+app-1  | 2026-11-25T21:47:38.629879147Z     at async PostgresBoletoRepository.buscarPorAsiento (file:///app/packages/reservas/dist/infrastructure/postgres.repository.js:28:21)
+app-1  | 2026-11-25T21:47:38.629884387Z     at async ReservarBoletoUseCase.ejecutar (file:///app/packages/reservas/dist/domain/cinema.js:72:27)
+app-1  | 2026-11-25T21:47:38.629889807Z     at async ReservasController.ejecutar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:124:28)
+app-1  | 2026-11-25T21:47:38.629895328Z     at async reservar (file:///app/packages/reservas/dist/presentation/reservas.controller.js:141:27) {
+app-1  | 2026-11-25T21:47:38.629900267Z   errno: -111,
+app-1  | 2026-11-25T21:47:38.629905718Z   code: 'ECONNREFUSED',
+app-1  | 2026-11-25T21:47:38.629911088Z   syscall: 'connect',
+app-1  | 2026-11-25T21:47:38.629915957Z   address: '172.22.0.3',
+app-1  | 2026-11-25T21:47:38.629920776Z   port: 5432
+app-1  | 2026-11-25T21:47:38.629925596Z }
