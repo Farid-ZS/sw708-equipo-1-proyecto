@@ -1,0 +1,75 @@
+db-1  | 2026-11-25T21:45:34.702075553Z The files belonging to this database system will be owned by user "postgres".
+db-1  | 2026-11-25T21:45:34.702112824Z This user must also own the server process.
+db-1  | 2026-11-25T21:45:34.702116050Z 
+db-1  | 2026-11-25T21:45:34.704601741Z The database cluster will be initialized with locale "en_US.utf8".
+db-1  | 2026-11-25T21:45:34.704620116Z The default database encoding has accordingly been set to "UTF8".
+db-1  | 2026-11-25T21:45:34.704622902Z The default text search configuration will be set to "english".
+db-1  | 2026-11-25T21:45:34.704625296Z 
+db-1  | 2026-11-25T21:45:34.704627500Z Data page checksums are disabled.
+db-1  | 2026-11-25T21:45:34.704630195Z 
+db-1  | 2026-11-25T21:45:34.704774960Z fixing permissions on existing directory /var/lib/postgresql/data ... ok
+db-1  | 2026-11-25T21:45:34.716302447Z creating subdirectories ... ok
+db-1  | 2026-11-25T21:45:34.716501034Z selecting dynamic shared memory implementation ... posix
+db-1  | 2026-11-25T21:45:34.740274170Z selecting default max_connections ... 100
+db-1  | 2026-11-25T21:45:34.768729164Z selecting default shared_buffers ... 128MB
+db-1  | 2026-11-25T21:45:34.801315592Z selecting default time zone ... Etc/UTC
+db-1  | 2026-11-25T21:45:34.803853411Z creating configuration files ... ok
+db-1  | 2026-11-25T21:45:35.006968160Z running bootstrap script ... ok
+db-1  | 2026-11-25T21:45:35.499269235Z performing post-bootstrap initialization ... ok
+db-1  | 2026-11-25T21:45:35.691072652Z initdb: warning: enabling "trust" authentication for local connections
+db-1  | 2026-11-25T21:45:35.691100114Z initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+db-1  | 2026-11-25T21:45:35.691173637Z syncing data to disk ... ok
+db-1  | 2026-11-25T21:45:35.691189858Z 
+db-1  | 2026-11-25T21:45:35.691193375Z 
+db-1  | 2026-11-25T21:45:35.691196571Z Success. You can now start the database server using:
+db-1  | 2026-11-25T21:45:35.691199617Z 
+db-1  | 2026-11-25T21:45:35.691202472Z     pg_ctl -D /var/lib/postgresql/data -l logfile start
+db-1  | 2026-11-25T21:45:35.691205358Z 
+db-1  | 2026-11-25T21:45:35.750195787Z waiting for server to start....2026-11-25 21:45:35.749 UTC [48] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+db-1  | 2026-11-25T21:45:35.751743562Z 2026-11-25 21:45:35.751 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2026-11-25T21:45:35.757370310Z 2026-11-25 21:45:35.757 UTC [51] LOG:  database system was shut down at 2026-11-25 21:45:35 UTC
+db-1  | 2026-11-25T21:45:35.763410769Z 2026-11-25 21:45:35.762 UTC [48] LOG:  database system is ready to accept connections
+db-1  | 2026-11-25T21:45:35.819250062Z  done
+db-1  | 2026-11-25T21:45:35.819276082Z server started
+db-1  | 2026-11-25T21:45:35.969885264Z CREATE DATABASE
+db-1  | 2026-11-25T21:45:35.970935483Z 
+db-1  | 2026-11-25T21:45:35.973759898Z 
+db-1  | 2026-11-25T21:45:35.973774916Z /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/01_create_boletos.sql
+db-1  | 2026-11-25T21:45:36.018415002Z CREATE TABLE
+db-1  | 2026-11-25T21:45:36.019735794Z 
+db-1  | 2026-11-25T21:45:36.019742868Z 
+db-1  | 2026-11-25T21:45:36.021223391Z 2026-11-25 21:45:36.021 UTC [48] LOG:  received fast shutdown request
+db-1  | 2026-11-25T21:45:36.022333208Z waiting for server to shut down....2026-11-25 21:45:36.022 UTC [48] LOG:  aborting any active transactions
+db-1  | 2026-11-25T21:45:36.024085797Z 2026-11-25 21:45:36.023 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
+db-1  | 2026-11-25T21:45:36.024897723Z 2026-11-25 21:45:36.024 UTC [49] LOG:  shutting down
+db-1  | 2026-11-25T21:45:36.025975254Z 2026-11-25 21:45:36.025 UTC [49] LOG:  checkpoint starting: shutdown immediate
+db-1  | 2026-11-25T21:45:36.103838777Z 2026-11-25 21:45:36.103 UTC [49] LOG:  checkpoint complete: wrote 929 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.029 s, sync=0.045 s, total=0.079 s; sync files=304, longest=0.002 s, average=0.001 s; distance=4285 kB, estimate=4285 kB; lsn=0/1922228, redo lsn=0/1922228
+db-1  | 2026-11-25T21:45:36.112168177Z 2026-11-25 21:45:36.111 UTC [48] LOG:  database system is shut down
+db-1  | 2026-11-25T21:45:36.121484160Z  done
+db-1  | 2026-11-25T21:45:36.121506052Z server stopped
+db-1  | 2026-11-25T21:45:36.123654961Z 
+db-1  | 2026-11-25T21:45:36.123665451Z PostgreSQL init process complete; ready for start up.
+db-1  | 2026-11-25T21:45:36.123669770Z 
+db-1  | 2026-11-25T21:45:36.152743542Z 2026-11-25 21:45:36.152 UTC [1] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+db-1  | 2026-11-25T21:45:36.153405558Z 2026-11-25 21:45:36.153 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1  | 2026-11-25T21:45:36.153414755Z 2026-11-25 21:45:36.153 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1  | 2026-11-25T21:45:36.156071896Z 2026-11-25 21:45:36.155 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2026-11-25T21:45:36.161042300Z 2026-11-25 21:45:36.160 UTC [66] LOG:  database system was shut down at 2026-11-25 21:45:36 UTC
+db-1  | 2026-11-25T21:45:36.166335016Z 2026-11-25 21:45:36.166 UTC [1] LOG:  database system is ready to accept connections
+db-1  | 2026-11-25T21:46:51.702077863Z 2026-11-25 21:46:51.701 UTC [1] LOG:  received fast shutdown request
+db-1  | 2026-11-25T21:46:51.703414231Z 2026-11-25 21:46:51.703 UTC [1] LOG:  aborting any active transactions
+db-1  | 2026-11-25T21:46:51.704481066Z 2026-11-25 21:46:51.704 UTC [170] FATAL:  terminating connection due to administrator command
+db-1  | 2026-11-25T21:46:51.707038107Z 2026-11-25 21:46:51.706 UTC [1] LOG:  background worker "logical replication launcher" (PID 69) exited with exit code 1
+db-1  | 2026-11-25T21:46:51.709418471Z 2026-11-25 21:46:51.709 UTC [64] LOG:  shutting down
+db-1  | 2026-11-25T21:46:51.711295945Z 2026-11-25 21:46:51.711 UTC [64] LOG:  checkpoint starting: shutdown immediate
+db-1  | 2026-11-25T21:46:51.728990716Z 2026-11-25 21:46:51.728 UTC [64] LOG:  checkpoint complete: wrote 51 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.007 s, sync=0.006 s, total=0.020 s; sync files=18, longest=0.003 s, average=0.001 s; distance=249 kB, estimate=249 kB; lsn=0/19609F0, redo lsn=0/19609F0
+db-1  | 2026-11-25T21:46:51.735988733Z 2026-11-25 21:46:51.735 UTC [1] LOG:  database system is shut down
+db-1  | 2026-11-25T21:47:38.634968165Z 
+db-1  | 2026-11-25T21:47:38.634991549Z PostgreSQL Database directory appears to contain a database; Skipping initialization
+db-1  | 2026-11-25T21:47:38.634998242Z 
+db-1  | 2026-11-25T21:47:38.666947500Z 2026-11-25 21:47:38.666 UTC [1] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+db-1  | 2026-11-25T21:47:38.667211593Z 2026-11-25 21:47:38.666 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1  | 2026-11-25T21:47:38.667225199Z 2026-11-25 21:47:38.666 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1  | 2026-11-25T21:47:38.670275850Z 2026-11-25 21:47:38.669 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2026-11-25T21:47:38.675723783Z 2026-11-25 21:47:38.675 UTC [29] LOG:  database system was shut down at 2026-11-25 21:46:51 UTC
+db-1  | 2026-11-25T21:47:38.682589520Z 2026-11-25 21:47:38.682 UTC [1] LOG:  database system is ready to accept connections

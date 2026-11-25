@@ -1,0 +1,301 @@
+app-1  | 2026-11-25T21:46:21.230134340Z ◇ injected env (0) from .env
+app-1  | 2026-11-25T21:46:21.289112626Z Backend escuchando en http://localhost:13001
+app-1  | 2026-11-25T21:47:45.254783952Z node:events:497
+app-1  | 2026-11-25T21:47:45.254817346Z       throw er; // Unhandled 'error' event
+app-1  | 2026-11-25T21:47:45.254823758Z       ^
+app-1  | 2026-11-25T21:47:45.254827705Z 
+app-1  | 2026-11-25T21:47:45.254831823Z error: terminating connection due to administrator command
+app-1  | 2026-11-25T21:47:45.254836672Z     at parseErrorMessage (/app/node_modules/pg-protocol/dist/parser.js:306:11)
+app-1  | 2026-11-25T21:47:45.254841772Z     at Parser.handlePacket (/app/node_modules/pg-protocol/dist/parser.js:143:27)
+app-1  | 2026-11-25T21:47:45.254846752Z     at Parser.parse (/app/node_modules/pg-protocol/dist/parser.js:37:38)
+app-1  | 2026-11-25T21:47:45.254857853Z     at Socket.<anonymous> (/app/node_modules/pg-protocol/dist/index.js:12:42)
+app-1  | 2026-11-25T21:47:45.254863624Z     at Socket.emit (node:events:519:28)
+app-1  | 2026-11-25T21:47:45.254868924Z     at addChunk (node:internal/streams/readable:561:12)
+app-1  | 2026-11-25T21:47:45.254876919Z     at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+app-1  | 2026-11-25T21:47:45.254882109Z     at Readable.push (node:internal/streams/readable:392:5)
+app-1  | 2026-11-25T21:47:45.254917155Z     at TCP.onStreamRead (node:internal/stream_base_commons:189:23)
+app-1  | 2026-11-25T21:47:45.254927545Z Emitted 'error' event on BoundPool instance at:
+app-1  | 2026-11-25T21:47:45.255184458Z     at Client.idleListener (/app/node_modules/pg-pool/index.js:62:10)
+app-1  | 2026-11-25T21:47:45.255197062Z     at Client.emit (node:events:519:28)
+app-1  | 2026-11-25T21:47:45.255203223Z     at Client._handleErrorEvent (/app/node_modules/pg/lib/client.js:422:10)
+app-1  | 2026-11-25T21:47:45.255206810Z     at Client._handleErrorMessage (/app/node_modules/pg/lib/client.js:433:12)
+app-1  | 2026-11-25T21:47:45.255212892Z     at Connection.emit (node:events:519:28)
+app-1  | 2026-11-25T21:47:45.255216368Z     at /app/node_modules/pg/lib/connection.js:143:12
+app-1  | 2026-11-25T21:47:45.255219745Z     at Parser.parse (/app/node_modules/pg-protocol/dist/parser.js:38:17)
+app-1  | 2026-11-25T21:47:45.255223041Z     at Socket.<anonymous> (/app/node_modules/pg-protocol/dist/index.js:12:42)
+app-1  | 2026-11-25T21:47:45.255226287Z     at Socket.emit (node:events:519:28)
+app-1  | 2026-11-25T21:47:45.255229534Z     at addChunk (node:internal/streams/readable:561:12) {
+app-1  | 2026-11-25T21:47:45.255232750Z   length: 116,
+app-1  | 2026-11-25T21:47:45.255236367Z   severity: 'FATAL',
+app-1  | 2026-11-25T21:47:45.255240094Z   code: '57P01',
+app-1  | 2026-11-25T21:47:45.255243300Z   detail: undefined,
+app-1  | 2026-11-25T21:47:45.255246496Z   hint: undefined,
+app-1  | 2026-11-25T21:47:45.255249692Z   position: undefined,
+app-1  | 2026-11-25T21:47:45.255252888Z   internalPosition: undefined,
+app-1  | 2026-11-25T21:47:45.255256645Z   internalQuery: undefined,
+app-1  | 2026-11-25T21:47:45.255259831Z   where: undefined,
+app-1  | 2026-11-25T21:47:45.255263067Z   schema: undefined,
+app-1  | 2026-11-25T21:47:45.255266243Z   table: undefined,
+app-1  | 2026-11-25T21:47:45.255269399Z   column: undefined,
+app-1  | 2026-11-25T21:47:45.255272575Z   dataType: undefined,
+app-1  | 2026-11-25T21:47:45.255275751Z   constraint: undefined,
+app-1  | 2026-11-25T21:47:45.255278948Z   file: 'postgres.c',
+app-1  | 2026-11-25T21:47:45.255282154Z   line: '3286',
+app-1  | 2026-11-25T21:47:45.255285600Z   routine: 'ProcessInterrupts',
+app-1  | 2026-11-25T21:47:45.255288756Z   client: Client {
+app-1  | 2026-11-25T21:47:45.255291992Z     _events: [Object: null prototype] { error: [Function (anonymous)] },
+app-1  | 2026-11-25T21:47:45.255295219Z     _eventsCount: 1,
+app-1  | 2026-11-25T21:47:45.255298405Z     _maxListeners: undefined,
+app-1  | 2026-11-25T21:47:45.255302332Z     connectionParameters: ConnectionParameters {
+app-1  | 2026-11-25T21:47:45.255309245Z       user: 'postgres',
+app-1  | 2026-11-25T21:47:45.255317501Z       database: 'boletos_db',
+app-1  | 2026-11-25T21:47:45.255322310Z       port: 5432,
+app-1  | 2026-11-25T21:47:45.255329123Z       host: 'db',
+app-1  | 2026-11-25T21:47:45.255333972Z       binary: false,
+app-1  | 2026-11-25T21:47:45.255338591Z       options: undefined,
+app-1  | 2026-11-25T21:47:45.255343170Z       ssl: false,
+app-1  | 2026-11-25T21:47:45.255348059Z       sslnegotiation: undefined,
+app-1  | 2026-11-25T21:47:45.255353329Z       client_encoding: '',
+app-1  | 2026-11-25T21:47:45.255361986Z       replication: undefined,
+app-1  | 2026-11-25T21:47:45.255367085Z       isDomainSocket: false,
+app-1  | 2026-11-25T21:47:45.255372295Z       application_name: undefined,
+app-1  | 2026-11-25T21:47:45.255375722Z       fallback_application_name: undefined,
+app-1  | 2026-11-25T21:47:45.255379028Z       statement_timeout: false,
+app-1  | 2026-11-25T21:47:45.255395730Z       lock_timeout: false,
+app-1  | 2026-11-25T21:47:45.255398084Z       idle_in_transaction_session_timeout: false,
+app-1  | 2026-11-25T21:47:45.255400098Z       query_timeout: 1000,
+app-1  | 2026-11-25T21:47:45.255401962Z       connect_timeout: 1
+app-1  | 2026-11-25T21:47:45.255404166Z     },
+app-1  | 2026-11-25T21:47:45.255406220Z     user: 'postgres',
+app-1  | 2026-11-25T21:47:45.255410207Z     database: 'boletos_db',
+app-1  | 2026-11-25T21:47:45.255412271Z     port: 5432,
+app-1  | 2026-11-25T21:47:45.255414135Z     host: 'db',
+app-1  | 2026-11-25T21:47:45.255415998Z     replication: undefined,
+app-1  | 2026-11-25T21:47:45.255417902Z     _Promise: [Function: Promise],
+app-1  | 2026-11-25T21:47:45.255419806Z     _types: TypeOverrides {
+app-1  | 2026-11-25T21:47:45.255421669Z       _types: {
+app-1  | 2026-11-25T21:47:45.255423553Z         getTypeParser: [Function: getTypeParser],
+app-1  | 2026-11-25T21:47:45.255425466Z         setTypeParser: [Function: setTypeParser],
+app-1  | 2026-11-25T21:47:45.255427320Z         arrayParser: { create: [Function: create] },
+app-1  | 2026-11-25T21:47:45.255429234Z         builtins: {
+app-1  | 2026-11-25T21:47:45.255431117Z           BOOL: 16,
+app-1  | 2026-11-25T21:47:45.255432971Z           BYTEA: 17,
+app-1  | 2026-11-25T21:47:45.255434874Z           CHAR: 18,
+app-1  | 2026-11-25T21:47:45.255436698Z           INT8: 20,
+app-1  | 2026-11-25T21:47:45.255438561Z           INT2: 21,
+app-1  | 2026-11-25T21:47:45.255440405Z           INT4: 23,
+app-1  | 2026-11-25T21:47:45.255442268Z           REGPROC: 24,
+app-1  | 2026-11-25T21:47:45.255444132Z           TEXT: 25,
+app-1  | 2026-11-25T21:47:45.255445975Z           OID: 26,
+app-1  | 2026-11-25T21:47:45.255447809Z           TID: 27,
+app-1  | 2026-11-25T21:47:45.255449642Z           XID: 28,
+app-1  | 2026-11-25T21:47:45.255451486Z           CID: 29,
+app-1  | 2026-11-25T21:47:45.255453339Z           JSON: 114,
+app-1  | 2026-11-25T21:47:45.255455173Z           XML: 142,
+app-1  | 2026-11-25T21:47:45.255457036Z           PG_NODE_TREE: 194,
+app-1  | 2026-11-25T21:47:45.255458930Z           SMGR: 210,
+app-1  | 2026-11-25T21:47:45.255460804Z           PATH: 602,
+app-1  | 2026-11-25T21:47:45.255462657Z           POLYGON: 604,
+app-1  | 2026-11-25T21:47:45.255464511Z           CIDR: 650,
+app-1  | 2026-11-25T21:47:45.255466344Z           FLOAT4: 700,
+app-1  | 2026-11-25T21:47:45.255468218Z           FLOAT8: 701,
+app-1  | 2026-11-25T21:47:45.255470061Z           ABSTIME: 702,
+app-1  | 2026-11-25T21:47:45.255471925Z           RELTIME: 703,
+app-1  | 2026-11-25T21:47:45.255473768Z           TINTERVAL: 704,
+app-1  | 2026-11-25T21:47:45.255475632Z           CIRCLE: 718,
+app-1  | 2026-11-25T21:47:45.255477596Z           MACADDR8: 774,
+app-1  | 2026-11-25T21:47:45.255479479Z           MONEY: 790,
+app-1  | 2026-11-25T21:47:45.255481323Z           MACADDR: 829,
+app-1  | 2026-11-25T21:47:45.255483166Z           INET: 869,
+app-1  | 2026-11-25T21:47:45.255485040Z           ACLITEM: 1033,
+app-1  | 2026-11-25T21:47:45.255486893Z           BPCHAR: 1042,
+app-1  | 2026-11-25T21:47:45.255488737Z           VARCHAR: 1043,
+app-1  | 2026-11-25T21:47:45.255490590Z           DATE: 1082,
+app-1  | 2026-11-25T21:47:45.255492434Z           TIME: 1083,
+app-1  | 2026-11-25T21:47:45.255494287Z           TIMESTAMP: 1114,
+app-1  | 2026-11-25T21:47:45.255496151Z           TIMESTAMPTZ: 1184,
+app-1  | 2026-11-25T21:47:45.255498024Z           INTERVAL: 1186,
+app-1  | 2026-11-25T21:47:45.255499858Z           TIMETZ: 1266,
+app-1  | 2026-11-25T21:47:45.255501731Z           BIT: 1560,
+app-1  | 2026-11-25T21:47:45.255507172Z           VARBIT: 1562,
+app-1  | 2026-11-25T21:47:45.255510648Z           NUMERIC: 1700,
+app-1  | 2026-11-25T21:47:45.255514195Z           REFCURSOR: 1790,
+app-1  | 2026-11-25T21:47:45.255517501Z           REGPROCEDURE: 2202,
+app-1  | 2026-11-25T21:47:45.255520106Z           REGOPER: 2203,
+app-1  | 2026-11-25T21:47:45.255522000Z           REGOPERATOR: 2204,
+app-1  | 2026-11-25T21:47:45.255523974Z           REGCLASS: 2205,
+app-1  | 2026-11-25T21:47:45.255526949Z           REGTYPE: 2206,
+app-1  | 2026-11-25T21:47:45.255528813Z           UUID: 2950,
+app-1  | 2026-11-25T21:47:45.255530847Z           TXID_SNAPSHOT: 2970,
+app-1  | 2026-11-25T21:47:45.255532740Z           PG_LSN: 3220,
+app-1  | 2026-11-25T21:47:45.255534654Z           PG_NDISTINCT: 3361,
+app-1  | 2026-11-25T21:47:45.255536658Z           PG_DEPENDENCIES: 3402,
+app-1  | 2026-11-25T21:47:45.255538932Z           TSVECTOR: 3614,
+app-1  | 2026-11-25T21:47:45.255540876Z           TSQUERY: 3615,
+app-1  | 2026-11-25T21:47:45.255542739Z           GTSVECTOR: 3642,
+app-1  | 2026-11-25T21:47:45.255544593Z           REGCONFIG: 3734,
+app-1  | 2026-11-25T21:47:45.255546437Z           REGDICTIONARY: 3769,
+app-1  | 2026-11-25T21:47:45.255548280Z           JSONB: 3802,
+app-1  | 2026-11-25T21:47:45.255550114Z           REGNAMESPACE: 4089,
+app-1  | 2026-11-25T21:47:45.255551987Z           REGROLE: 4096
+app-1  | 2026-11-25T21:47:45.255553831Z         }
+app-1  | 2026-11-25T21:47:45.255555754Z       },
+app-1  | 2026-11-25T21:47:45.255564832Z       text: {},
+app-1  | 2026-11-25T21:47:45.255568378Z       binary: {}
+app-1  | 2026-11-25T21:47:45.255571464Z     },
+app-1  | 2026-11-25T21:47:45.255573498Z     _ending: true,
+app-1  | 2026-11-25T21:47:45.255575432Z     _ended: false,
+app-1  | 2026-11-25T21:47:45.255577325Z     _connecting: false,
+app-1  | 2026-11-25T21:47:45.255579189Z     _connected: true,
+app-1  | 2026-11-25T21:47:45.255581042Z     _connectionError: false,
+app-1  | 2026-11-25T21:47:45.255582896Z     _queryable: false,
+app-1  | 2026-11-25T21:47:45.255584769Z     _activeQuery: null,
+app-1  | 2026-11-25T21:47:45.255586693Z     _txStatus: 'I',
+app-1  | 2026-11-25T21:47:45.255588587Z     enableChannelBinding: false,
+app-1  | 2026-11-25T21:47:45.255590460Z     scramMaxIterations: 100000,
+app-1  | 2026-11-25T21:47:45.255592414Z     connection: Connection {
+app-1  | 2026-11-25T21:47:45.255594378Z       _events: [Object: null prototype] {
+app-1  | 2026-11-25T21:47:45.255596552Z         newListener: [Function (anonymous)],
+app-1  | 2026-11-25T21:47:45.255598886Z         connect: [Function (anonymous)],
+app-1  | 2026-11-25T21:47:45.255602253Z         sslconnect: [Function (anonymous)],
+app-1  | 2026-11-25T21:47:45.255605950Z         authenticationCleartextPassword: [Function: bound _handleAuthCleartextPassword],
+app-1  | 2026-11-25T21:47:45.255609687Z         authenticationMD5Password: [Function: bound _handleAuthMD5Password],
+app-1  | 2026-11-25T21:47:45.255612723Z         authenticationSASL: [Function: bound _handleAuthSASL],
+app-1  | 2026-11-25T21:47:45.255615708Z         authenticationSASLContinue: [Function: bound _handleAuthSASLContinue] AsyncFunction,
+app-1  | 2026-11-25T21:47:45.255618644Z         authenticationSASLFinal: [Function: bound _handleAuthSASLFinal],
+app-1  | 2026-11-25T21:47:45.255621810Z         backendKeyData: [Function: bound _handleBackendKeyData],
+app-1  | 2026-11-25T21:47:45.255625818Z         error: [Function: bound _handleErrorEvent],
+app-1  | 2026-11-25T21:47:45.255631058Z         errorMessage: [Function: bound _handleErrorMessage],
+app-1  | 2026-11-25T21:47:45.255639904Z         readyForQuery: [Function: bound _handleReadyForQuery],
+app-1  | 2026-11-25T21:47:45.255643401Z         notice: [Function: bound _handleNotice],
+app-1  | 2026-11-25T21:47:45.255647058Z         rowDescription: [Function: bound _handleRowDescription],
+app-1  | 2026-11-25T21:47:45.255649132Z         dataRow: [Function: bound _handleDataRow],
+app-1  | 2026-11-25T21:47:45.255651136Z         portalSuspended: [Function: bound _handlePortalSuspended],
+app-1  | 2026-11-25T21:47:45.255655193Z         emptyQuery: [Function: bound _handleEmptyQuery],
+app-1  | 2026-11-25T21:47:45.255657087Z         commandComplete: [Function: bound _handleCommandComplete],
+app-1  | 2026-11-25T21:47:45.255659021Z         parseComplete: [Function: bound _handleParseComplete],
+app-1  | 2026-11-25T21:47:45.255660984Z         copyInResponse: [Function: bound _handleCopyInResponse],
+app-1  | 2026-11-25T21:47:45.255662938Z         copyData: [Function: bound _handleCopyData],
+app-1  | 2026-11-25T21:47:45.255666385Z         notification: [Function: bound _handleNotification],
+app-1  | 2026-11-25T21:47:45.255668429Z         end: [
+app-1  | 2026-11-25T21:47:45.255670312Z           [Function: bound onceWrapper] {
+app-1  | 2026-11-25T21:47:45.255673007Z             listener: [Function (anonymous)]
+app-1  | 2026-11-25T21:47:45.255676354Z           },
+app-1  | 2026-11-25T21:47:45.255683287Z           [Function: bound onceWrapper] {
+app-1  | 2026-11-25T21:47:45.255687084Z             listener: [Function (anonymous)]
+app-1  | 2026-11-25T21:47:45.255690621Z           }
+app-1  | 2026-11-25T21:47:45.255693546Z         ]
+app-1  | 2026-11-25T21:47:45.255696362Z       },
+app-1  | 2026-11-25T21:47:45.255699247Z       _eventsCount: 23,
+app-1  | 2026-11-25T21:47:45.255702764Z       _maxListeners: undefined,
+app-1  | 2026-11-25T21:47:45.255711370Z       stream: Socket {
+app-1  | 2026-11-25T21:47:45.255717011Z         connecting: false,
+app-1  | 2026-11-25T21:47:45.255720167Z         _hadError: false,
+app-1  | 2026-11-25T21:47:45.255722902Z         _parent: null,
+app-1  | 2026-11-25T21:47:45.255725597Z         _host: 'db',
+app-1  | 2026-11-25T21:47:45.255728363Z         _closeAfterHandlingError: false,
+app-1  | 2026-11-25T21:47:45.255731719Z         _events: {
+app-1  | 2026-11-25T21:47:45.255734384Z           close: [Function (anonymous)],
+app-1  | 2026-11-25T21:47:45.255737350Z           error: [Function: reportStreamError],
+app-1  | 2026-11-25T21:47:45.255740345Z           prefinish: undefined,
+app-1  | 2026-11-25T21:47:45.255746337Z           finish: undefined,
+app-1  | 2026-11-25T21:47:45.255750966Z           drain: undefined,
+app-1  | 2026-11-25T21:47:45.255754302Z           data: [Function (anonymous)],
+app-1  | 2026-11-25T21:47:45.255757388Z           end: [ [Function: onReadableStreamEnd], [Function (anonymous)] ],
+app-1  | 2026-11-25T21:47:45.255766285Z           readable: undefined,
+app-1  | 2026-11-25T21:47:45.255768499Z           connect: undefined
+app-1  | 2026-11-25T21:47:45.255770413Z         },
+app-1  | 2026-11-25T21:47:45.255772376Z         _readableState: ReadableState {
+app-1  | 2026-11-25T21:47:45.255774300Z           highWaterMark: 65536,
+app-1  | 2026-11-25T21:47:45.255776194Z           buffer: [],
+app-1  | 2026-11-25T21:47:45.255778117Z           bufferIndex: 0,
+app-1  | 2026-11-25T21:47:45.255780021Z           length: 0,
+app-1  | 2026-11-25T21:47:45.255784479Z           pipes: [],
+app-1  | 2026-11-25T21:47:45.255786473Z           awaitDrainWriters: null,
+app-1  | 2026-11-25T21:47:45.255788357Z           [Symbol(kState)]: 194519348
+app-1  | 2026-11-25T21:47:45.255790311Z         },
+app-1  | 2026-11-25T21:47:45.255792204Z         _writableState: WritableState {
+app-1  | 2026-11-25T21:47:45.255794068Z           highWaterMark: 65536,
+app-1  | 2026-11-25T21:47:45.255795971Z           length: 0,
+app-1  | 2026-11-25T21:47:45.255798326Z           corked: 0,
+app-1  | 2026-11-25T21:47:45.255801362Z           onwrite: [Function: bound onwrite],
+app-1  | 2026-11-25T21:47:45.255804357Z           writelen: 0,
+app-1  | 2026-11-25T21:47:45.255807443Z           bufferedIndex: 0,
+app-1  | 2026-11-25T21:47:45.255810569Z           pendingcb: 0,
+app-1  | 2026-11-25T21:47:45.255813605Z           [Symbol(kState)]: 17563956,
+app-1  | 2026-11-25T21:47:45.255820388Z           [Symbol(kBufferedValue)]: null,
+app-1  | 2026-11-25T21:47:45.255823504Z           [Symbol(kWriteCbValue)]: null
+app-1  | 2026-11-25T21:47:45.255825858Z         },
+app-1  | 2026-11-25T21:47:45.255827752Z         allowHalfOpen: false,
+app-1  | 2026-11-25T21:47:45.255829675Z         _maxListeners: undefined,
+app-1  | 2026-11-25T21:47:45.255833132Z         _eventsCount: 4,
+app-1  | 2026-11-25T21:47:45.255835236Z         _sockname: null,
+app-1  | 2026-11-25T21:47:45.255837130Z         _pendingData: null,
+app-1  | 2026-11-25T21:47:45.255839013Z         _pendingEncoding: '',
+app-1  | 2026-11-25T21:47:45.255840937Z         server: null,
+app-1  | 2026-11-25T21:47:45.255842841Z         _server: null,
+app-1  | 2026-11-25T21:47:45.255844724Z         [Symbol(async_id_symbol)]: 23,
+app-1  | 2026-11-25T21:47:45.255846708Z         [Symbol(kHandle)]: null,
+app-1  | 2026-11-25T21:47:45.255848622Z         [Symbol(lastWriteQueueSize)]: 0,
+app-1  | 2026-11-25T21:47:45.255850495Z         [Symbol(timeout)]: null,
+app-1  | 2026-11-25T21:47:45.255852399Z         [Symbol(kBuffer)]: null,
+app-1  | 2026-11-25T21:47:45.255854292Z         [Symbol(kBufferCb)]: null,
+app-1  | 2026-11-25T21:47:45.255856176Z         [Symbol(kBufferGen)]: null,
+app-1  | 2026-11-25T21:47:45.255858130Z         [Symbol(shapeMode)]: true,
+app-1  | 2026-11-25T21:47:45.255859993Z         [Symbol(kCapture)]: false,
+app-1  | 2026-11-25T21:47:45.255861847Z         [Symbol(kSetNoDelay)]: true,
+app-1  | 2026-11-25T21:47:45.255863700Z         [Symbol(kSetKeepAlive)]: false,
+app-1  | 2026-11-25T21:47:45.255865564Z         [Symbol(kSetKeepAliveInitialDelay)]: 0,
+app-1  | 2026-11-25T21:47:45.255867487Z         [Symbol(kBytesRead)]: 2867,
+app-1  | 2026-11-25T21:47:45.255870744Z         [Symbol(kBytesWritten)]: 4819
+app-1  | 2026-11-25T21:47:45.255872798Z       },
+app-1  | 2026-11-25T21:47:45.255876334Z       _keepAlive: false,
+app-1  | 2026-11-25T21:47:45.255878298Z       _keepAliveInitialDelayMillis: 0,
+app-1  | 2026-11-25T21:47:45.255880252Z       parsedStatements: {},
+app-1  | 2026-11-25T21:47:45.255882235Z       submittedNamedStatements: {},
+app-1  | 2026-11-25T21:47:45.255884179Z       ssl: false,
+app-1  | 2026-11-25T21:47:45.255886043Z       sslNegotiation: 'postgres',
+app-1  | 2026-11-25T21:47:45.255887916Z       _ending: false,
+app-1  | 2026-11-25T21:47:45.255891082Z       _emitMessage: false,
+app-1  | 2026-11-25T21:47:45.255892946Z       _connecting: true,
+app-1  | 2026-11-25T21:47:45.255894910Z       [Symbol(shapeMode)]: false,
+app-1  | 2026-11-25T21:47:45.255897014Z       [Symbol(kCapture)]: false
+app-1  | 2026-11-25T21:47:45.255898917Z     },
+app-1  | 2026-11-25T21:47:45.255900861Z     _queryQueue: [],
+app-1  | 2026-11-25T21:47:45.255903185Z     _sentQueryQueue: [],
+app-1  | 2026-11-25T21:47:45.255906582Z     pipeline: false,
+app-1  | 2026-11-25T21:47:45.255909417Z     binary: false,
+app-1  | 2026-11-25T21:47:45.255912353Z     processID: 193,
+app-1  | 2026-11-25T21:47:45.255915308Z     secretKey: -949169916,
+app-1  | 2026-11-25T21:47:45.255918344Z     ssl: false,
+app-1  | 2026-11-25T21:47:45.255920438Z     sslNegotiation: 'postgres',
+app-1  | 2026-11-25T21:47:45.255922382Z     _connectionTimeoutMillis: 1000,
+app-1  | 2026-11-25T21:47:45.255924306Z     _connectionCallback: null,
+app-1  | 2026-11-25T21:47:45.255926179Z     connectionTimeoutHandle: Timeout {
+app-1  | 2026-11-25T21:47:45.255928043Z       _idleTimeout: -1,
+app-1  | 2026-11-25T21:47:45.255930327Z       _idlePrev: null,
+app-1  | 2026-11-25T21:47:45.255948261Z       _idleNext: null,
+app-1  | 2026-11-25T21:47:45.255954343Z       _idleStart: 73572,
+app-1  | 2026-11-25T21:47:45.255960064Z       _onTimeout: null,
+app-1  | 2026-11-25T21:47:45.255962909Z       _timerArgs: undefined,
+app-1  | 2026-11-25T21:47:45.255965825Z       _repeat: null,
+app-1  | 2026-11-25T21:47:45.255969151Z       _destroyed: true,
+app-1  | 2026-11-25T21:47:45.255974671Z       [Symbol(refed)]: false,
+app-1  | 2026-11-25T21:47:45.255984550Z       [Symbol(kHasPrimitive)]: false,
+app-1  | 2026-11-25T21:47:45.255989860Z       [Symbol(asyncId)]: 22,
+app-1  | 2026-11-25T21:47:45.255993036Z       [Symbol(triggerId)]: 17,
+app-1  | 2026-11-25T21:47:45.255999378Z       [Symbol(kAsyncContextFrame)]: undefined
+app-1  | 2026-11-25T21:47:45.256001633Z     },
+app-1  | 2026-11-25T21:47:45.256003687Z     saslSession: null,
+app-1  | 2026-11-25T21:47:45.256005650Z     release: [Function (anonymous)],
+app-1  | 2026-11-25T21:47:45.256007564Z     readyForQuery: true,
+app-1  | 2026-11-25T21:47:45.256009448Z     hasExecuted: true,
+app-1  | 2026-11-25T21:47:45.256011391Z     _poolUseCount: 20,
+app-1  | 2026-11-25T21:47:45.256013235Z     [Symbol(shapeMode)]: false,
+app-1  | 2026-11-25T21:47:45.256015128Z     [Symbol(kCapture)]: false
+app-1  | 2026-11-25T21:47:45.256017132Z   }
+app-1  | 2026-11-25T21:47:45.256019156Z }
+app-1  | 2026-11-25T21:47:45.256021140Z 
+app-1  | 2026-11-25T21:47:45.256089800Z Node.js v22.23.5
+app-1  | 2026-11-25T21:47:46.102162310Z ◇ injected env (0) from .env
+app-1  | 2026-11-25T21:47:46.142272461Z Backend escuchando en http://localhost:13001
