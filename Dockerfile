@@ -5,20 +5,16 @@ FROM docker.io/library/node:22-alpine AS builder
 
 WORKDIR /app
 
-# 1. Copiar manifiestos de paquetes primero para aprovechar la caché de capas
-COPY lumiereApp/backend/package*.json ./
-COPY lumiereApp/backend/packages/reservas/package*.json ./packages/reservas/
-
-# 2. Instalar dependencias completas para la compilación (limpio y determinista)
-RUN npm ci
-
-# 3. Copiar el código fuente completo del backend y paquetes
+# 1. Copiar el backend completo para que npm pueda enlazar el workspace
 COPY lumiereApp/backend ./
 
-# 4. Compilar los paquetes de reservas y el host Express
+# 2. Instalar dependencias completas y enlazar el workspace
+RUN npm ci
+
+# 3. Compilar el paquete de reservas y el host Express
 RUN npm run build
 
-# 5. Podar dependencias de desarrollo para dejar solo las de producción
+# 4. Podar dependencias de desarrollo para dejar solo las de producción
 RUN npm prune --omit=dev
 
 # ==============================================================================
