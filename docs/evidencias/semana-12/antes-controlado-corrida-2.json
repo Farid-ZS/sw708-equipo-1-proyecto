@@ -1,0 +1,164 @@
+{
+    "metrics": {
+        "iteration_duration": {
+            "p(95)": 115.66663584999998,
+            "avg": 96.51076284489304,
+            "min": 28.42221,
+            "med": 93.9320175,
+            "max": 563.395209,
+            "p(90)": 107.8513939
+        },
+        "vus_max": {
+            "value": 100,
+            "min": 100,
+            "max": 100
+        },
+        "http_req_duration{expected_response:true}": {
+            "max": 502.507509,
+            "p(90)": 87.2106668,
+            "p(95)": 95.07031495,
+            "avg": 75.85200856376538,
+            "min": 7.103703,
+            "med": 73.3463895
+        },
+        "iterations": {
+            "rate": 1034.8587212116072,
+            "count": 31114
+        },
+        "http_reqs": {
+            "count": 31114,
+            "rate": 1034.8587212116072
+        },
+        "http_req_waiting": {
+            "p(90)": 87.08912319999999,
+            "p(95)": 94.97020499999999,
+            "avg": 75.74224831323595,
+            "min": 6.865721,
+            "med": 73.23495650000001,
+            "max": 502.441553
+        },
+        "latencia_reservas_ms": {
+            "p(95)": 95,
+            "avg": 76.02111589638105,
+            "min": 8,
+            "med": 73,
+            "max": 543,
+            "p(90)": 87
+        },
+        "data_sent": {
+            "count": 8194502,
+            "rate": 272551.0015004807
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "tasa_error_tecnico": {
+            "passes": 0,
+            "fails": 31114,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        },
+        "vus": {
+            "min": 100,
+            "max": 100,
+            "value": 100
+        },
+        "http_req_duration": {
+            "p(90)": 87.2106668,
+            "p(95)": 95.07031495,
+            "avg": 75.85200856376538,
+            "min": 7.103703,
+            "med": 73.3463895,
+            "max": 502.507509,
+            "thresholds": {
+                "p(95)<300": false
+            }
+        },
+        "data_received": {
+            "count": 17684272,
+            "rate": 588182.9114700209
+        },
+        "http_req_blocked": {
+            "max": 40.089066,
+            "p(90)": 0.007484,
+            "p(95)": 0.008727,
+            "avg": 0.08383645172591402,
+            "min": 0.001784,
+            "med": 0.00523
+        },
+        "http_req_receiving": {
+            "p(95)": 0.154414,
+            "avg": 0.08549983142636797,
+            "min": 0.017794,
+            "med": 0.07714199999999999,
+            "max": 3.063045,
+            "p(90)": 0.1296661
+        },
+        "http_req_connecting": {
+            "med": 0,
+            "max": 36.46369,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.06156295757536799,
+            "min": 0
+        },
+        "checks": {
+            "fails": 37,
+            "passes": 93305,
+            "value": 0.9996036082363781
+        },
+        "reservas_exitosas_201": {
+            "count": 31114,
+            "rate": 1034.8587212116072
+        },
+        "http_req_sending": {
+            "p(90)": 0.046405300000000003,
+            "p(95)": 0.056668499999999955,
+            "avg": 0.024260419103940407,
+            "min": 0.007063,
+            "med": 0.017343,
+            "max": 1.727984
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 31114,
+            "value": 0
+        }
+    },
+    "root_group": {
+        "groups": {},
+        "checks": {
+                "código es 201 o 409 (respuesta de negocio válida)": {
+                    "id": "3e0078b72ac70a6d0bf063acf1ed591a",
+                    "passes": 31114,
+                    "fails": 0,
+                    "name": "código es 201 o 409 (respuesta de negocio válida)",
+                    "path": "::código es 201 o 409 (respuesta de negocio válida)"
+                },
+                "tiempo de respuesta < 300ms": {
+                    "path": "::tiempo de respuesta < 300ms",
+                    "id": "e012cb9d9624a7da5bfce848042f1e76",
+                    "passes": 31077,
+                    "fails": 37,
+                    "name": "tiempo de respuesta < 300ms"
+                },
+                "cabecera Content-Type es JSON": {
+                    "path": "::cabecera Content-Type es JSON",
+                    "id": "514a26e53948c54a826a68077a7a1f91",
+                    "passes": 31114,
+                    "fails": 0,
+                    "name": "cabecera Content-Type es JSON"
+                }
+            },
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e"
+    }
+}
