@@ -1,0 +1,18 @@
+sw708-equipo-1-proyecto-app-1 CPU=101.26% MEM=106.3MiB / 2.841GiB
+sw708-equipo-1-proyecto-db-1 CPU=35.29% MEM=86.24MiB / 2.841GiB
+conexiones=11 activas=5
+sw708-equipo-1-proyecto-app-1 CPU=100.01% MEM=143.8MiB / 2.841GiB
+sw708-equipo-1-proyecto-db-1 CPU=54.99% MEM=88.08MiB / 2.841GiB
+conexiones=11 activas=1
+sw708-equipo-1-proyecto-app-1 CPU=107.45% MEM=157MiB / 2.841GiB
+sw708-equipo-1-proyecto-db-1 CPU=64.21% MEM=89.07MiB / 2.841GiB
+conexiones=11 activas=1
+sw708-equipo-1-proyecto-app-1 CPU=97.17% MEM=164.1MiB / 2.841GiB
+sw708-equipo-1-proyecto-db-1 CPU=55.78% MEM=91.21MiB / 2.841GiB
+conexiones=11 activas=1
+sw708-equipo-1-proyecto-app-1 CPU=113.49% MEM=178.1MiB / 2.841GiB
+sw708-equipo-1-proyecto-db-1 CPU=56.73% MEM=92.72MiB / 2.841GiB
+conexiones=11 activas=3
+sw708-equipo-1-proyecto-app-1 CPU=97.11% MEM=186.4MiB / 2.841GiB
+sw708-equipo-1-proyecto-db-1 CPU=53.61% MEM=94.62MiB / 2.841GiB
+conexiones=11 activas=6
