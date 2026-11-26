@@ -1,0 +1,9 @@
+sw708-equipo-1-proyecto-app-1 CPU=121.23% MEM=287.9MiB / 15.08GiB
+sw708-equipo-1-proyecto-db-1 CPU=85.34% MEM=89.44MiB / 15.08GiB
+conexiones=10 activas=1
+sw708-equipo-1-proyecto-app-1 CPU=107.04% MEM=307.3MiB / 15.08GiB
+sw708-equipo-1-proyecto-db-1 CPU=84.03% MEM=92.07MiB / 15.08GiB
+conexiones=10 activas=5
+sw708-equipo-1-proyecto-app-1 CPU=106.12% MEM=328.6MiB / 15.08GiB
+sw708-equipo-1-proyecto-db-1 CPU=83.12% MEM=95.65MiB / 15.08GiB
+conexiones=10 activas=3
