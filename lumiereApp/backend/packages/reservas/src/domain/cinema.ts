@@ -133,11 +133,6 @@ export class ReservarBoletoUseCase {
     const asnt = asiento.trim()
     const cliente = nombreCliente.trim()
 
-    const existente = await this.repository.buscarPorAsiento(fId, asnt)
-    if (existente !== null) {
-      throw new AsientoOcupadoError(`El asiento ${asnt} ya está ocupado`)
-    }
-
     const boleto = Boleto.crear(fId, asnt, cliente)
     await this.repository.guardar(boleto)
     await this.publicador.publicar(ReservaConfirmada.desde(boleto))

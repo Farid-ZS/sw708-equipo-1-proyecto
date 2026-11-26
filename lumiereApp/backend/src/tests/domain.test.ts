@@ -5,6 +5,7 @@ import {
   ReservarBoletoUseCase,
   AsientoOcupadoError,
   DatosInvalidosError,
+  type BoletoRepository,
 } from '@lumiere/reservas'
 import { InMemoryBoletoRepository } from '@lumiere/reservas/memoria'
 import { ReservasController } from '@lumiere/reservas/http'
@@ -27,6 +28,21 @@ describe('Dominio: ReservarBoletoUseCase', () => {
     assert.equal(boleto.nombreCliente, 'Ana')
     assert.ok(boleto.id)
     assert.ok(boleto.reservadoEn instanceof Date)
+  })
+
+  test('reserva sin consultar disponibilidad antes de guardar', async () => {
+    let consultas = 0
+    const repositorio: BoletoRepository = {
+      async guardar() {},
+      async buscarPorAsiento() {
+        consultas++
+        return null
+      },
+    }
+
+    await new ReservarBoletoUseCase(repositorio).ejecutar('F001', 'A1', 'Ana')
+
+    assert.equal(consultas, 0)
   })
 
   test('asiento ocupado lanza AsientoOcupadoError', async () => {
