@@ -163,4 +163,252 @@ El cuello de botella está en la aplicación (proceso Node), que se satura de CP
 
 - Una sola corrida por nivel, con `k6` en la misma máquina que el sistema medido.
 - Estas pruebas se hicieron en Windows con Docker Desktop y la sección "Antes" en Linux, por lo que los valores absolutos no son comparables entre ambas (con 100 usuarios: p95 de 97 ms aquí y 29,76 ms en "Antes"). Este diagnóstico se interpreta comparando los tres niveles medidos aquí.
-- No se perfiló el proceso Node, así que no se sabe qué parte exacta del código consume la CPU.
+- No se perfiló el proceso Node, así que no se sabe qué parte exacta del código consume la CPU. 
+
+---
+## Después de la mejora (Paso 06)
+
+### Mejora aplicada
+
+Mediante el commit `8b20309` se eliminó la consulta `SELECT` previa al
+registro de una reserva. La detección de asientos ocupados se delegó a
+la restricción de unicidad de PostgreSQL
+`uk_boleto_funcion_asiento`.
+
+Con este cambio, una reserva exitosa requiere una consulta menos a la
+base de datos. No se modificaron el pool de conexiones, los índices,
+el escenario de carga ni los parámetros del sistema.
+
+### Entorno
+
+| Dato | Valor |
+|---|---|
+| Fecha | 2026-11-25 |
+| Commit medido | `a5ccef8` |
+| Máquina | AMD Ryzen 5 7535HS (6 núcleos, 12 hilos), 32 GB RAM, Windows |
+| Recursos de Docker | 12 procesadores lógicos y 15,28 GiB RAM |
+| Stack | Docker Compose, Node 22 + Express 5 + PostgreSQL 16 |
+| Generador de carga | `grafana/k6:1.3.0` |
+| Carga | 100 VUs constantes, 30 s, pausa de 20 ms por iteración |
+| Base de datos | Volumen independiente de pruebas |
+| Ruido conocido | Dos contenedores PostgreSQL de otros proyectos activos |
+| Evidencias | [`semana-12/`](../evidencias/semana-12/) |
+
+Se utilizó el puerto externo 15432 para PostgreSQL debido a que los
+puertos 5432 y 5433 estaban ocupados. La comunicación interna entre
+la aplicación y PostgreSQL se mantuvo mediante `db:5432`.
+
+El sistema se levantó con:
+
+```powershell
+$env:POSTGRES_PORT = "15432"
+
+docker compose -p lumiere-lab12-despues -f compose.yaml up -d --build
+```
+
+### Corridas del Después
+
+Se ejecutó el mismo script de carga utilizado en la línea base,
+manteniendo los 100 VUs, los 30 segundos de duración y la pausa de
+20 ms por iteración.
+
+La primera corrida se descartó por calentamiento. El resultado del
+Después corresponde al promedio de las corridas 2 y 3.
+
+| Corrida | p95 | Throughput | Tasa de error técnico | Peticiones (201 / 409 / 5xx) | ¿Se usa? |
+|---|---:|---:|---:|---|---|
+| 1 (fría) | 88,96 ms | 1 256,91 req/s | 0 % | 37 784 / 0 / 0 | No |
+| 2 | 97,34 ms | 1 107,05 req/s | 0,3004 % | 33 186 / 0 / 100 | Sí |
+| 3 | 84,16 ms | 1 211,36 req/s | 0,3049 % | 36 297 / 0 / 111 | Sí |
+| **Después (promedio 2–3)** | **90,75 ms** | **1 159,21 req/s** | **0,3027 %** | — | |
+
+Los umbrales configurados en k6 se cumplieron en las tres corridas:
+p95 menor a 300 ms y tasa de error técnico menor al 1 %.
+
+Sin embargo, durante las dos corridas válidas se registraron 211
+respuestas HTTP 5xx. Los logs consultados de Node.js y PostgreSQL
+no permitieron determinar la causa específica de estos errores.
+
+### Reproducción de la línea base en la misma máquina
+
+La línea base original se realizó en Linux con un procesador Intel
+Core Ultra 7 155H, mientras que el Después se ejecutó en Windows
+con un procesador AMD Ryzen 5 7535HS.
+
+Comparar directamente ambos resultados no permite determinar si las
+diferencias se deben a la mejora o al entorno de ejecución.
+
+Por este motivo, se reprodujo la línea base en la misma máquina
+utilizada para el Después. Se recuperó el commit `6ff0350`, anterior
+a la mejora, mediante `git worktree`:
+
+```powershell
+git worktree add --detach "$env:TEMP\lumiere-lab12-antes" 6ff0350
+```
+
+Se verificó la igualdad del script de carga mediante SHA256:
+
+```powershell
+Get-FileHash "carga/escenario.js"
+Get-FileHash "$env:TEMP\lumiere-lab12-antes\carga\escenario.js"
+```
+
+Ambos archivos presentaron el mismo hash:
+
+`A1101C44F9DCD82F3F4C9DF11AEEFBEB36AA711F3FD617C07403F1E156AE3CD7`
+
+Se utilizaron proyectos Docker Compose independientes para evitar
+compartir los datos generados entre ambas versiones. Se mantuvieron
+la misma máquina, versión de k6, duración, usuarios virtuales y
+configuración de carga.
+
+| Corrida | p95 | Throughput | Tasa de error técnico | Peticiones (201 / 409 / 5xx) | ¿Se usa? |
+|---|---:|---:|---:|---|---|
+| 1 (fría) | 134,62 ms | 922,33 req/s | 0 % | 27 727 / 0 / 0 | No |
+| 2 | 95,07 ms | 1 034,86 req/s | 0 % | 31 114 / 0 / 0 | Sí |
+| 3 | 113,52 ms | 939,08 req/s | 0,2656 % | 28 162 / 0 / 75 | Sí |
+| **Antes reproducido (promedio 2–3)** | **104,30 ms** | **986,97 req/s** | **0,1328 %** | — | |
+
+La línea base original se conserva como evidencia del Paso 03.
+La reproducción local constituye una medición complementaria para
+evaluar el efecto de la mejora bajo condiciones más comparables.
+
+### Comparación Antes vs. Después
+
+| Qué | Antes reproducido | Después | Qué significa |
+|---|---:|---:|---|
+| Latencia p95 | 104,30 ms | 90,75 ms | Reducción aproximada del 13 % |
+| Throughput | 986,97 req/s | 1 159,21 req/s | Incremento aproximado del 17,45 % |
+| Tasa de error técnico | 0,1328 % | 0,3027 % | Aumento aproximado de 0,17 puntos porcentuales |
+| Carga aplicada | 100 VUs, 30 s | 100 VUs, 30 s | Misma carga |
+| Pausa entre iteraciones | 20 ms | 20 ms | Sin cambios |
+
+La eliminación del `SELECT` previo mostró resultados favorables
+en la comparación local:
+
+- El p95 disminuyó aproximadamente 13,55 ms.
+- El throughput aumentó aproximadamente 172,24 req/s.
+- La tasa de error técnico aumentó aproximadamente 0,17 puntos
+  porcentuales.
+- Los errores HTTP 5xx pasaron de 75 a 211 en las corridas válidas.
+
+Estos resultados indican una mejora observada en el rendimiento,
+acompañada de un incremento en los errores. La cantidad reducida
+de corridas no permite establecer una conclusión causal definitiva
+sobre este incremento.
+
+### Comparación con la línea base original
+
+| Métrica | Antes original (Linux) | Antes reproducido (Windows) | Después (Windows) |
+|---|---:|---:|---:|
+| p95 | 29,76 ms | 104,30 ms | 90,75 ms |
+| Throughput | 2 810,10 req/s | 986,97 req/s | 1 159,21 req/s |
+| Error técnico | 0 % | 0,1328 % | 0,3027 % |
+| Usuarios virtuales | 100 | 100 | 100 |
+| Duración | 30 s | 30 s | 30 s |
+
+Los resultados originales de Linux y los obtenidos en Windows no
+son directamente comparables debido a las diferencias de hardware,
+sistema operativo y configuración de red.
+
+Por ello, las conclusiones sobre la mejora se sustentan principalmente
+en las mediciones reproducidas en Windows.
+
+### Comparación con la hipótesis
+
+La hipótesis original identificaba al pool de conexiones de
+PostgreSQL como el principal cuello de botella.
+
+El diagnóstico del Paso 04 señaló que el proceso Node.js era el
+componente más exigido bajo carga y que el pool de conexiones
+todavía disponía de capacidad.
+
+Aunque eliminar el `SELECT` previo mostró una reducción de latencia
+y un aumento de throughput, esto no demuestra que PostgreSQL fuera
+el cuello de botella. El cambio también reduce el trabajo que
+realiza la aplicación al procesar cada reserva.
+
+Por lo tanto, **la hipótesis original permanece refutada** por las
+mediciones disponibles.
+
+### Cumplimiento del escenario de calidad
+
+| Criterio | Antes reproducido | Después | ¿Cumple después? |
+|---|---:|---:|---|
+| p95 menor a 300 ms | 104,30 ms | 90,75 ms | Sí |
+| Errores HTTP 5xx iguales a 0 | 75 errores | 211 errores | No |
+| Error técnico menor al 1 % (k6) | 0,1328 % | 0,3027 % | Sí |
+
+El escenario E6 no se cumple completamente. Si bien la latencia
+se encuentra dentro del límite establecido, todavía se producen
+respuestas HTTP 5xx.
+
+El cumplimiento de los umbrales configurados en k6 no implica
+necesariamente el cumplimiento de todos los requisitos del escenario
+de calidad.
+
+### Decisión
+
+Se propone mantener provisionalmente la mejora, debido a la reducción
+observada del p95, el incremento del throughput y la eliminación de
+una consulta redundante.
+
+No obstante, su aceptación definitiva queda condicionada a investigar
+los errores HTTP 5xx y verificar que el incremento observado no sea
+una regresión de fiabilidad asociada al cambio.
+
+Como siguiente actividad se propone:
+
+- Identificar la causa de las respuestas HTTP 5xx.
+- Perfilar el proceso Node.js para identificar las operaciones
+  que consumen mayor tiempo de CPU.
+- Repetir las mediciones para verificar la estabilidad de los
+  resultados.
+
+No se aplicaron estas modificaciones durante el laboratorio,
+respetando la condición de introducir una sola mejora.
+
+### Limitaciones
+
+- La línea base original y el Después se ejecutaron inicialmente
+  en máquinas diferentes.
+- La comparación local se realizó ejecutando primero la versión
+  optimizada y después la versión anterior.
+- Se utilizaron volúmenes independientes y la misma generación
+  de datos, pero no conjuntos de registros idénticos.
+- Solo se consideraron dos corridas válidas por versión.
+- El generador de carga y el sistema compartieron los recursos
+  de Docker Desktop.
+- Existían otros dos contenedores PostgreSQL activos durante
+  las mediciones.
+- No se determinó la causa específica de los errores HTTP 5xx.
+- El p95 y la tasa de error reportados corresponden al promedio
+  de las dos corridas válidas, no a una agregación global de
+  todas las peticiones.
+
+### Evidencias
+
+**Después de la mejora:**
+
+- [Corrida 1 — JSON](../evidencias/semana-12/despues-corrida-1.json)
+- [Corrida 1 — TXT](../evidencias/semana-12/despues-corrida-1.txt)
+- [Corrida 2 — JSON](../evidencias/semana-12/despues-corrida-2.json)
+- [Corrida 2 — TXT](../evidencias/semana-12/despues-corrida-2.txt)
+- [Corrida 3 — JSON](../evidencias/semana-12/despues-corrida-3.json)
+- [Corrida 3 — TXT](../evidencias/semana-12/despues-corrida-3.txt)
+
+**Reproducción de la línea base:**
+
+- [Corrida 1 — JSON](../evidencias/semana-12/antes-controlado-corrida-1.json)
+- [Corrida 1 — TXT](../evidencias/semana-12/antes-controlado-corrida-1.txt)
+- [Corrida 2 — JSON](../evidencias/semana-12/antes-controlado-corrida-2.json)
+- [Corrida 2 — TXT](../evidencias/semana-12/antes-controlado-corrida-2.txt)
+- [Corrida 3 — JSON](../evidencias/semana-12/antes-controlado-corrida-3.json)
+- [Corrida 3 — TXT](../evidencias/semana-12/antes-controlado-corrida-3.txt)
+
+**Evidencias complementarias:**
+
+- [Logs de Node.js](../evidencias/semana-12/despues-app.log)
+- [Logs de PostgreSQL](../evidencias/semana-12/despues-db.log)
+- [Commit de la mejora](https://github.com/Farid-ZS/sw708-equipo-1-proyecto/commit/8b20309)
+- [Issue #62](https://github.com/Farid-ZS/sw708-equipo-1-proyecto/issues/62)
