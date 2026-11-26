@@ -101,3 +101,66 @@ pool) ataca un componente que **no** fue el cuello en esta medición, así que n
 se espera que mueva el p95. Antes de optimizar conviene repetir la medición con
 más carga (p. ej. 200, 400 y 800 VUs) para ubicar el punto de saturación y
 confirmar si el límite es el proceso Node.
+
+## Diagnóstico de cuello de botella (`POST /api/reservas`)
+
+Objetivo: identificar qué parte del sistema limita el rendimiento de `POST /api/reservas` cuando aumentan los usuarios simultáneos, y compararlo con lo que planteaba `hipotesis.md` (que no fue modificada).
+
+### Cómo se midió
+
+- Se ejecutó `k6` durante 30 s con 100, 200 y 600 usuarios virtuales (VUs), una corrida por nivel.
+- Mientras corría cada prueba se registró el uso de CPU y memoria de la aplicación (`app`) y de la base de datos (`db`) con `docker stats`, y las conexiones a PostgreSQL con `pg_stat_activity`. Se tomaron seis muestras por prueba.
+- Todo corrió en una misma máquina con Windows y Docker Desktop.
+
+### Resultados
+
+| Usuarios (VUs) | Peticiones por segundo | Mediana | p95 | Errores | CPU `app` | CPU `db` | Conexiones activas (de 10) |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 100 | 1 177 | 61 ms | 97 ms | 0,00 % | ~97–113 % | ~35–64 % | 1–6 |
+| 200 | 1 121 | 150 ms | 219 ms | 0,00 % | ~98–117 % | ~31–60 % | 1–6 |
+| 600 | 1 083 | 514 ms | 650 ms | 0,32 % | ~91–122 % | ~17–59 % | 1–8 |
+
+- El límite de la prueba (p95 menor a 300 ms) se cumple con 100 y 200 usuarios, y no se cumple con 600.
+- Los errores de 600 usuarios fueron 106 peticiones rechazadas con `connection refused` al iniciar la prueba, cuando los 600 usuarios se conectan a la vez. No hubo errores 5xx ni 409.
+- La memoria no fue un problema: `app` usó entre 106 y 230 MiB y `db` entre 86 y 109 MiB, de 2,84 GiB disponibles.
+- Se vieron 11 conexiones abiertas a la base de datos en total; el pool de la aplicación es de 10.
+
+### Verificación de la consulta de reservas
+
+```sql
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT * FROM boletos WHERE funcion_id = '1' AND asiento = 'A1';
+```
+
+La consulta usa el índice `uk_boleto_funcion_asiento` y tarda ~0,05 ms. Esto cubre la consulta previa a la reserva; el `INSERT` no se midió por separado.
+
+### Qué se observó
+
+1. **El sistema deja de atender más peticiones aunque haya más usuarios.** De 100 a 600 usuarios las peticiones por segundo se mantienen en torno a 1 100 (bajan 8 %), pero la mediana de espera pasa de 61 ms a 514 ms. Más usuarios solo significan más espera.
+2. **La base de datos tiene margen.** Su CPU no superó el 64 %, y como máximo 8 de las 10 conexiones del pool estaban activas, así que el pool nunca se llenó.
+3. **La aplicación está al límite.** El contenedor `app` está en torno al 100 % de CPU o por encima en todas las pruebas. Node ejecuta el código de la aplicación en un solo hilo, de modo que ese hilo es el que se satura.
+
+### Comparación con la hipótesis
+
+La hipótesis decía que el límite estaba en el pool de conexiones de la base de datos y que Node no era el problema. Lo medido no lo respalda:
+
+| Lo que planteaba la hipótesis | Lo medido | ¿Coincide? |
+| :--- | :--- | :---: |
+| El límite es el pool de conexiones | El pool nunca se llenó (1–8 activas de 10) | No |
+| `app` está lejos del 100 % de CPU | `app` está en torno al 100 % o más | No |
+| p95 ≈ 250 ms con 100 usuarios | 97 ms | No |
+| p95 ≈ 450 ms con 200 usuarios | 219 ms | No |
+| Throughput estancado en ≈ 600 req/s | Estancado, pero en ≈ 1 100 req/s | Solo la forma |
+| Con 600 usuarios, errores 503 por timeouts | 0,32 % de error, sin ningún 503 | No |
+
+Coincide el comportamiento general (las peticiones por segundo dejan de crecer y la espera aumenta), pero no la causa.
+
+### Conclusión
+
+El cuello de botella está en la aplicación (proceso Node), que se satura de CPU cuando hay muchos usuarios a la vez. No está en la consulta a `boletos` ni en el pool de conexiones de la base de datos. Por eso las mejoras que proponía la hipótesis (quitar la consulta previa y agrandar el pool) no deberían mejorar el rendimiento. El siguiente paso es perfilar el proceso Node para saber qué parte del trabajo por petición consume la CPU.
+
+### Limitaciones
+
+- Una sola corrida por nivel, con `k6` en la misma máquina que el sistema medido.
+- Estas pruebas se hicieron en Windows con Docker Desktop y la sección "Antes" en Linux, por lo que los valores absolutos no son comparables entre ambas (con 100 usuarios: p95 de 97 ms aquí y 29,76 ms en "Antes"). Este diagnóstico se interpreta comparando los tres niveles medidos aquí.
+- No se perfiló el proceso Node, así que no se sabe qué parte exacta del código consume la CPU.
